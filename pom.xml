@@ -1,0 +1,119 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <groupId>com.tcmj.iso</groupId>
+    <artifactId>tcmj-iso</artifactId>
+    <version>20.17.5.30</version>
+
+    <name>tcmj-iso</name>
+    <description>
+        Provides high quality ISO data in form of java enum classes.
+        Contains all elements to create them on the fly.
+        All modules were separated by an official API.
+        There are already several implementations ready to use.
+        Choose:
+        a DataProvider to load your data e.g. from an URL or Json file
+        a ClassBuilder to construct your enum in java source code
+        a SourceCodeFormatter and NamingStrategy to adjust the final look
+        a EnumExporter to write your enum to a file or compile it directly onto a classloader
+        To further simplify this process you can use a Fluent builder pattern which directs you step by step
+    </description>
+
+    <inceptionYear>2017</inceptionYear>
+    <url>https://github.com/tcmj/tcmj-iso.git</url>
+    <developers>
+        <developer>
+            <id>tcmj</id>
+            <name>Thomas Deutsch</name>
+            <email>tomdeu@gmail.com</email>
+            <organization>tcmj</organization>
+            <organizationUrl>http://www.tcmj.de</organizationUrl>
+            <roles>
+                <role>owner</role>
+                <role>developer</role>
+            </roles>
+            <timezone>Europe/Berlin</timezone>
+        </developer>
+    </developers>
+    <organization>
+        <name>tcmj</name>
+        <url>https://github.com/tcmj</url>
+    </organization>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <java.source.level.version>${java.version}</java.source.level.version>
+        <org.slf4j.version>1.7.25</org.slf4j.version>
+        <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.tcmj.iso</groupId>
+                <artifactId>tcmj-iso-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tcmj.iso</groupId>
+                <artifactId>tcmj-iso-builder</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tcmj.iso</groupId>
+                <artifactId>tcmj-iso-exporter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tcmj.iso</groupId>
+                <artifactId>tcmj-iso-datasources</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tcmj.iso</groupId>
+                <artifactId>tcmj-iso-generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.5</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${ch.qos.logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>21.0</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <modules>
+        <module>api</module>
+        <module>builder</module>
+        <module>datasources</module>
+        <module>exporter</module>
+        <module>generator</module>
+    </modules>
+</project>

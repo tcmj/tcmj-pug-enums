@@ -1,0 +1,25 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>com.tcmj.iso</groupId>
+        <artifactId>tcmj-iso</artifactId>
+        <version>20.17.5.30</version>
+    </parent>
+
+    <groupId>com.tcmj.iso</groupId>
+    <artifactId>tcmj-iso-api</artifactId>
+
+    <name>tcmj-iso-api</name>
+    <description>
+        Contains the API of the tcmj iso project with all interfaces and model classes.
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
