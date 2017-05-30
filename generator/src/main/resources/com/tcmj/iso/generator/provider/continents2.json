@@ -1,0 +1,20 @@
+[
+  {
+    "name": "AF",
+    "nameUS": "Africa",
+    "nameDE": "Afrika",
+    "areaKM2": 30370000,
+    "areaPct": 20.4,
+    "elevationHighest": 5895,
+    "elevationLowest": -155
+  },
+  {
+    "name": "AN",
+    "nameUS": "Antarctica",
+    "nameDE": "Îles Anglo-Normandes",
+    "areaKM2": 13720000,
+    "areaPct": 9.2,
+    "elevationHighest": 4892,
+    "elevationLowest": -50
+  }
+]

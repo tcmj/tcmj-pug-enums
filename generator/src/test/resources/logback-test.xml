@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="windows-1252"?>
+
+<configuration debug="false" scan="false" scanPeriod="30 seconds">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>[%-5level:%-4line] %25logger{0}#%-32method| %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <logger name="java.security" level="trace" />
+    <root level="trace">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
