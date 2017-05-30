@@ -1,0 +1,71 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <parent>
+        <groupId>com.tcmj.iso</groupId>
+        <artifactId>tcmj-iso</artifactId>
+        <version>20.17.5.30</version>
+    </parent>
+    <groupId>com.tcmj.iso</groupId>
+    <artifactId>tcmj-iso-builder</artifactId>
+    <name>tcmj-iso-builder</name>
+    <description>
+        Here you can find the API of ClassBuilder and SourceFormatter objects including several implementations.
+        The ClassBuilders are focused to dynamically create the source code for java enum classes at runtime.
+        It also covers the formatting of them.
+        Please note that you can have optional library dependencies. It depends on the implementations you want to use.
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>com.tcmj.iso</groupId>
+            <artifactId>tcmj-iso-api</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.sun.codemodel/codemodel -->
+        <dependency>
+            <groupId>com.sun.codemodel</groupId>
+            <artifactId>codemodel</artifactId>
+            <version>2.6</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!-- https://github.com/square/javapoet -->
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+            <version>1.8.0</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <!-- Slf4j logging implementation : LOGBACK-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Slf4j logging implementation : LOGBACK-->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
