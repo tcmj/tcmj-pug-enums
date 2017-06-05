@@ -8,7 +8,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 
 /** tcmj iso generator maven plugin. */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public class TISO extends AbstractMojo {
+public class GenerateEnumMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     getLog().info("x x x x x x x x x x x x x x x x x x x x x x x x x x x x x");
