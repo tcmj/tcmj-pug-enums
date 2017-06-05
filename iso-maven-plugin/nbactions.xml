@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-simple</actionName>
+            <displayName>simple</displayName>
+            <goals>
+                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum</goal>
+            </goals>
+        </action>
+    </actions>

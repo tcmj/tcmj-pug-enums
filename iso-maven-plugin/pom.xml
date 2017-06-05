@@ -8,7 +8,7 @@
         <version>20.17.5.30</version>
     </parent>
 
-    <groupId>com.tcmj.iso</groupId>
+    <groupId>com.tcmj.plugins</groupId>
     <artifactId>tcmj-iso-maven-plugin</artifactId>
 
     <name>tcmj-iso-maven-plugin</name>
