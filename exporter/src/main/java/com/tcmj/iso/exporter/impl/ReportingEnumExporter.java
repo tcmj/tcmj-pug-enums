@@ -9,14 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * <p>Reports the exporter calls.</p>
- * <p>You can choose between various possibilities to log </p>
+ * Reports the exporter calls.
+ *
+ * <p>You can choose between various possibilities to log
+ *
  * <p>Have a look on {@link LogLevel} e.g.:
+ *
  * <ul>
- * <li>{@link LogLevel#INFO }</li>
- * <li>{@link LogLevel#SYSTEM_OUT}</li>
+ *   <li>{@link LogLevel#INFO }
+ *   <li>{@link LogLevel#SYSTEM_OUT}
  * </ul>
- * <p>Mainly for debugging purpose.</p>
+ *
+ * <p>Mainly for debugging purpose.
+ *
  * <pre>
  *     EnumExporter exporter = new ReportingExporter();
  *     Map<String, Object> options = exporter.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name());
@@ -24,74 +29,83 @@ import org.slf4j.LoggerFactory;
  * </pre>
  */
 public class ReportingEnumExporter implements EnumExporter {
-    private static final Logger LOG = LoggerFactory.getLogger(ReportingEnumExporter.class);
-    public static final String OPTION_LOG_LEVEL = "com.tcmj.iso.exporter.ReportingEnumExporter.loglevel";
+  private static final Logger LOG = LoggerFactory.getLogger(ReportingEnumExporter.class);
+  public static final String OPTION_LOG_LEVEL =
+      "com.tcmj.iso.exporter.ReportingEnumExporter.loglevel";
 
-    public enum LogLevel {
-        DEBUG(LOG::debug),
-        INFO(LOG::info),
-        WARN(LOG::warn),
-        ERROR(LOG::error),
-        SYSTEM_OUT((pattern, objects) -> System.out.println(String.format(pattern.replace("{}", "%s"), objects))),
-        SYSTEM_ERR((pattern, objects) -> System.err.println(String.format(pattern.replace("{}", "%s"), objects)));
+  public enum LogLevel {
+    DEBUG(LOG::debug),
+    INFO(LOG::info),
+    WARN(LOG::warn),
+    ERROR(LOG::error),
+    SYSTEM_OUT(
+        (pattern, objects) ->
+            System.out.println(String.format(pattern.replace("{}", "%s"), objects))),
+    SYSTEM_ERR(
+        (pattern, objects) ->
+            System.err.println(String.format(pattern.replace("{}", "%s"), objects)));
 
-        public BiConsumer<String, Object[]> getLogMethod() {
-            return logMethod;
-        }
-
-        private final BiConsumer<String, Object[]> logMethod;
-
-
-        LogLevel(BiConsumer<String, Object[]> logMethod) {
-            this.logMethod = logMethod;
-        }
+    public BiConsumer<String, Object[]> getLogMethod() {
+      return logMethod;
     }
 
+    private final BiConsumer<String, Object[]> logMethod;
 
-    private LogLevel currentLogLevel = LogLevel.INFO;
-
-    private String name;
-
-    public ReportingEnumExporter() {
+    LogLevel(BiConsumer<String, Object[]> logMethod) {
+      this.logMethod = logMethod;
     }
+  }
 
-    public ReportingEnumExporter(String name) {
-        this.name = name;
+  private LogLevel currentLogLevel = LogLevel.INFO;
+
+  private String name;
+
+  public ReportingEnumExporter() {}
+
+  public ReportingEnumExporter(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String toString() {
+    return getClass().getSimpleName()
+        + (this.name == null ? "()" : "(" + this.name + ")")
+        + "@"
+        + Integer.toHexString(hashCode());
+  }
+
+  @Override
+  public String export(String data, Map<String, Object> options) {
+    if (options != null && options.size() > 0) {
+      String level = (String) options.get(OPTION_LOG_LEVEL);
+      if (level != null && !"".equals(level)) {
+        currentLogLevel = LogLevel.valueOf(level.toUpperCase());
+      }
     }
+    //call to the chosen logging method:
+    currentLogLevel.getLogMethod().accept("{}", new Object[] {data});
 
-    @Override public String toString() {
-        return getClass().getSimpleName() + (this.name == null ? "()" : "(" + this.name + ")") + "@" + Integer.toHexString(hashCode());
-    }
+    return data; //if chaining is needed
+  }
 
-    @Override public String export(String data, Map<String, Object> options) {
-        if (options != null && options.size() > 0) {
-            String level = (String) options.get(OPTION_LOG_LEVEL);
-            if (level != null && !"".equals(level)) {
-                currentLogLevel = LogLevel.valueOf(level.toUpperCase());
-            }
-        }
-        //call to the chosen logging method:
-        currentLogLevel.getLogMethod().accept("{}", new Object[]{data});
+  @Override
+  public EnumExporter and(EnumExporter other, Map<String, Object> optz) {
+    Objects.requireNonNull(other);
+    return (source, options) -> {
+      LOG.info("Chaining: [{}] and [{}]", this, other);
+      return other.export(export(source, options), options);
+    };
+  }
 
-        return data; //if chaining is needed
-    }
+  @Override
+  public Map<String, Object> createOptions(String... logLvl) {
+    String level = logLvl[0].toUpperCase();
+    return createLogLevelOption(LogLevel.valueOf(level));
+  }
 
-    @Override public EnumExporter and(EnumExporter other, Map<String, Object> optz) {
-        Objects.requireNonNull(other);
-        return (source, options) -> {
-            LOG.info("Chaining: [{}] and [{}]", this, other);
-            return other.export(export(source, options), options);
-        };
-    }
-
-    @Override public Map<String, Object> createOptions(String... logLvl) {
-        String level = logLvl[0].toUpperCase();
-        return createLogLevelOption(LogLevel.valueOf(level));
-    }
-
-    public static Map<String, Object> createLogLevelOption(LogLevel logLevel) {
-        Map<String, Object> options = new HashMap<>();
-        options.put(OPTION_LOG_LEVEL, logLevel.name());
-        return options;
-    }
+  public static Map<String, Object> createLogLevelOption(LogLevel logLevel) {
+    Map<String, Object> options = new HashMap<>();
+    options.put(OPTION_LOG_LEVEL, logLevel.name());
+    return options;
+  }
 }
