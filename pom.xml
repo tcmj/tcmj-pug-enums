@@ -135,5 +135,6 @@
         <module>datasources</module>
         <module>exporter</module>
         <module>generator</module>
+        <module>iso-maven-plugin</module>
     </modules>
 </project>
