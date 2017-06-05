@@ -40,7 +40,6 @@ public class Fluent {
         @Override public StepExporterOption usingDefaultClassBuilder() {
             end.classBuilder = ClassBuilderFactory.getBestEnumBuilder();
             LOG.debug("...using default/best available ClassBuilder: {}", end.classBuilder);
-
             end.classBuilder.usingNamingStrategy(NamingStrategyFactory.harmonize());
             return step3;
         }
@@ -51,7 +50,6 @@ public class Fluent {
             end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "Null not allowed as NamingStrategy!"));
             return step4;
         }
-
         @Override public StepFormatterOption exportWith(EnumExporter exporter) {
             end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
             return step4;
@@ -66,27 +64,21 @@ public class Fluent {
             LOG.debug("...using SourceFormatter: {}", end.formatter);
             return end;
         }
-
-
         @Override public void end() {
             LOG.debug("...end reached (of step3)...");
             chain();
         }
     }
 
-
     public class MyStepFormatterOption implements StepFormatterOption {
-
         @Override public void end() {
             LOG.debug("...end reached (of step4)...");
             chain();
         }
-
         @Override public EGEnd usingNamingStrategy(NamingStrategy ns) {
             end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "Null not allowed as NamingStrategy!"));
             return end;
         }
-
         @Override public StepFormatterOption exportWith(EnumExporter exporter) {
             end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
             return step4;
@@ -103,7 +95,9 @@ public class Fluent {
         }
     }
 
-
+    /**
+     * Implementation of the final step.
+     */
     public class EGEndImpl implements EGEnd {
         private EnumData data;
         private DataProvider dataProvider;
