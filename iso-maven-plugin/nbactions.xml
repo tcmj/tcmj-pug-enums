@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-simple</actionName>
-            <displayName>simple</displayName>
+            <actionName>CUSTOM-run_generate_enum_defaults</actionName>
+            <displayName>run_generate_enum_defaults</displayName>
             <goals>
+                <goal>install</goal>
                 <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-run_generate_enum_simple</actionName>
+            <displayName>run_generate_enum_simple</displayName>
+            <goals>
+                <goal>install</goal>
+                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum</goal>
+            </goals>
+            <properties>
+                <tcmj.iso.generate.enum.classname>com.tcmj.myenum.ClassName</tcmj.iso.generate.enum.classname>
+            </properties>
+        </action>
+       
     </actions>
