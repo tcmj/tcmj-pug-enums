@@ -18,6 +18,9 @@
             <properties>
                 <tcmj.iso.generate.enum.classname>com.tcmj.html.ClassNameHtmlEnum</tcmj.iso.generate.enum.classname>
                 <tcmj.iso.generate.enum.url>https://en.wikipedia.org/wiki/ISO_3166-1</tcmj.iso.generate.enum.url>
+                <tcmj.iso.generate.enum.tablexpath>[title=Afghanistan]</tcmj.iso.generate.enum.tablexpath>
+                <tcmj.iso.generate.enum.constantcolumn>1</tcmj.iso.generate.enum.constantcolumn>
+                <tcmj.iso.generate.enum.subdatacolumns>2,3,4</tcmj.iso.generate.enum.subdatacolumns>
             </properties>
         </action>
         <action>
