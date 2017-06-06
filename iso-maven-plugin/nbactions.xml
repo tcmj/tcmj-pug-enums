@@ -9,15 +9,26 @@
             </goals>
         </action>
         <action>
-            <actionName>CUSTOM-run_generate_enum_simple</actionName>
-            <displayName>run_generate_enum_simple</displayName>
+            <actionName>CUSTOM-run_generate_enum_html</actionName>
+            <displayName>run_generate_enum_html</displayName>
             <goals>
                 <goal>install</goal>
-                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum</goal>
+                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum-html</goal>
             </goals>
             <properties>
-                <tcmj.iso.generate.enum.classname>com.tcmj.myenum.ClassName</tcmj.iso.generate.enum.classname>
+                <tcmj.iso.generate.enum.classname>com.tcmj.html.ClassNameHtmlEnum</tcmj.iso.generate.enum.classname>
+                <tcmj.iso.generate.enum.aaa>com.aaaaaaaaaaaaame</tcmj.iso.generate.enum.aaa>
             </properties>
         </action>
-       
+        <action>
+            <actionName>CUSTOM-run_generate_enum_json</actionName>
+            <displayName>run_generate_enum_json</displayName>
+            <goals>
+                <goal>install</goal>
+                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum-json</goal>
+            </goals>
+            <properties>
+                <tcmj.iso.generate.enum.classname>com.tcmj.json.ClassNameJsonEnum</tcmj.iso.generate.enum.classname>
+            </properties>
+        </action>
     </actions>

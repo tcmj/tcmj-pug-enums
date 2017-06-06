@@ -1,0 +1,34 @@
+package com.tcmj.iso.mvn;
+
+import static com.tcmj.iso.mvn.LittleHelper.arrange;
+import static com.tcmj.iso.mvn.LittleHelper.getLine;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+/** Goal which extracts data from a Json source (URL or file). */
+@Mojo(name = "generate-enum-json", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
+public class GenerateEnumJsonMojo extends GeneralEnumMojo {
+
+  @Parameter(
+    property = "tcmj.iso.generate.enum.dataprovider",
+    defaultValue = "com.tcmj.generated.MyEnum",
+    required = true
+  )
+  private String dataProvider;
+
+  @Override
+  protected void displayYoureWelcome() {
+    super.displayYoureWelcome();
+    log.info(arrange("Extracts EnumData from a JSON document!"));
+    log.info(arrange("DataProvider: todo"));
+    log.info(getLine());
+  }
+
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    displayYoureWelcome();
+  }
+}
