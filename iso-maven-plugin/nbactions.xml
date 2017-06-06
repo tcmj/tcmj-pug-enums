@@ -17,7 +17,7 @@
             </goals>
             <properties>
                 <tcmj.iso.generate.enum.classname>com.tcmj.html.ClassNameHtmlEnum</tcmj.iso.generate.enum.classname>
-                <tcmj.iso.generate.enum.aaa>com.aaaaaaaaaaaaame</tcmj.iso.generate.enum.aaa>
+                <tcmj.iso.generate.enum.url>https://en.wikipedia.org/wiki/ISO_3166-1</tcmj.iso.generate.enum.url>
             </properties>
         </action>
         <action>
@@ -29,6 +29,7 @@
             </goals>
             <properties>
                 <tcmj.iso.generate.enum.classname>com.tcmj.json.ClassNameJsonEnum</tcmj.iso.generate.enum.classname>
+                <tcmj.iso.generate.enum.url>todo</tcmj.iso.generate.enum.url>
             </properties>
         </action>
     </actions>

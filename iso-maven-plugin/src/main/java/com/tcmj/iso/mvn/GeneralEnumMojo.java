@@ -30,6 +30,9 @@ public class GeneralEnumMojo extends AbstractMojo {
   )
   protected File sourceDirectory;
 
+  @Parameter(property = "tcmj.iso.generate.enum.url", required = true)
+  protected String url;
+
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
     log.info("PluginContext: " + getPluginContext());
@@ -37,6 +40,8 @@ public class GeneralEnumMojo extends AbstractMojo {
     log.info(arrange("Welcome to the tcmj iso enum generator maven plugin!"));
     log.info(arrange("ClassName: " + this.className));
     log.info(arrange("SourceDirectory: " + this.sourceDirectory));
+    log.info(arrange("URL: " + this.url));
+
     log.info(arrange("PluginContext.size: " + getPluginContext().size()));
     Object project = getPluginContext().get("project");
     log.info(arrange("Project: " + project.getClass()));
