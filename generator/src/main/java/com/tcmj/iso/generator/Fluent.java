@@ -11,23 +11,31 @@ import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.model.NameTypeValue;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
+import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Fluent Enum Generator Builder. With this pattern all steps will be called in the correct order.
+ * There are several ordered steps used to link the allowed actions together.
  */
 public class Fluent {
   private static final Logger LOG = LoggerFactory.getLogger(Fluent.class);
-  private static Fluent instance = new Fluent();
-  private StepClassBuilder step2 = new MyStepClassBuilder();
-  private StepExporterOption step3 = new MyStepExporterOption();
-  private StepFormatterOption step4 = new MyStepFormatterOption();
-  private EGEndImpl end = new EGEndImpl();
+
+  private static final Fluent INSTANCE = new Fluent();
+
+  private final StepClassBuilder step2 = new MyStepClassBuilder();
+  private final StepExporterOption step3 = new MyStepExporterOption();
+  private final StepFormatterOption step4 = new MyStepFormatterOption();
+  private final EGEndImpl end = new EGEndImpl();
+
+  private Fluent() {
+    //Fluent is not allowed to be instantiated in public
+  }
 
   public static Fluent builder() {
     LOG.debug("Start building fluently...");
-    return instance;
+    return INSTANCE;
   }
 
   public class MyStepClassBuilder implements StepClassBuilder {
@@ -49,27 +57,26 @@ public class Fluent {
   public class MyStepExporterOption implements StepExporterOption {
     @Override
     public StepFormatterOption usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(
-          Objects.requireNonNull(ns, "Null not allowed as NamingStrategy!"));
+      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy!"));
       return step4;
     }
 
     @Override
     public StepFormatterOption exportWith(EnumExporter exporter) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
       return step4;
     }
 
     @Override
     public EGEnd exportWith(EnumExporter exporter, Map<String, Object> options) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
       end.enumExporterOptions = options;
       return step4;
     }
 
     @Override
     public EGEnd format(SourceFormatter formatter) {
-      end.formatter = Objects.requireNonNull(formatter, "Null not allowed as SourceFormatter!");
+      end.formatter = Objects.requireNonNull(formatter, "SourceFormatter!");
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
@@ -90,27 +97,26 @@ public class Fluent {
 
     @Override
     public EGEnd usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(
-          Objects.requireNonNull(ns, "Null not allowed as NamingStrategy!"));
+      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy!"));
       return end;
     }
 
     @Override
     public StepFormatterOption exportWith(EnumExporter exporter) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
       return step4;
     }
 
     @Override
     public EGEnd exportWith(EnumExporter exporter, Map<String, Object> options) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
       end.enumExporterOptions = options;
       return step4;
     }
 
     @Override
     public EGEnd format(SourceFormatter formatter) {
-      end.formatter = Objects.requireNonNull(formatter, "Null not allowed as SourceFormatter!");
+      end.formatter = Objects.requireNonNull(formatter, "SourceFormatter!");
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
@@ -129,7 +135,7 @@ public class Fluent {
       return dataProvider;
     }
 
-    public EnumData getData() {
+    public EnumData getEnumData() {
       return data;
     }
 
@@ -142,7 +148,7 @@ public class Fluent {
     }
 
     public SourceFormatter getFormatter() {
-      return formatter; //change
+      return formatter;
     }
 
     public ClassBuilder getClassBuilder() {
@@ -151,13 +157,13 @@ public class Fluent {
 
     @Override
     public StepFormatterOption exportWith(EnumExporter exporter) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter");
       return step4;
     }
 
     @Override
     public EGEnd exportWith(EnumExporter exporter, Map<String, Object> options) {
-      end.enumExporter = Objects.requireNonNull(exporter, "Null not allowed as EnumExporter!");
+      end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter");
       end.enumExporterOptions = options;
       return step4;
     }
@@ -170,27 +176,25 @@ public class Fluent {
 
     @Override
     public EGEnd usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(
-          Objects.requireNonNull(ns, "Null not allowed as NamingStrategy!"));
+      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy"));
       return end;
     }
 
     @Override
     public EGEnd format(SourceFormatter formatter) {
-      end.formatter = Objects.requireNonNull(formatter, "Null not allowed as SourceFormatter!");
+      end.formatter = Objects.requireNonNull(formatter, "SourceFormatter!");
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
   }
 
   public StepClassBuilder fromDataSource(DataProvider dataProvider) {
-    instance.end.dataProvider =
-        Objects.requireNonNull(dataProvider, "DataProvider cannot be null!");
+    INSTANCE.end.dataProvider = Objects.requireNonNull(dataProvider, "DataProvider");
     LOG.debug("...fromDataSource({})...", end.getDataProvider());
     return step2;
   }
 
-  // Terminating interface, might also contain methods like execute();
+  /** Terminating interface, might also contain methods like execute(); */
   public interface EGEnd {
     void end();
 
@@ -210,52 +214,59 @@ public class Fluent {
   }
 
   public interface StepExporterOption extends EGEnd {
+    @Override
     StepFormatterOption usingNamingStrategy(NamingStrategy ns);
 
+    @Override
     StepFormatterOption exportWith(EnumExporter exporter);
 
+    @Override
     EGEnd format(SourceFormatter formatter);
   }
 
   public interface StepFormatterOption extends EGEnd {}
 
-  public void chain() {
+  private void chain() {
     LOG.debug("...chaining all together and execute it...");
-    try {
-      end.data = end.getDataProvider().load();
-      LOG.trace(
-          "++PackageName: {} ClassName: {}",
-          end.getData().getPackageName(),
-          end.getData().getClassNameSimple());
-      LOG.trace("++DataProvider: {}", end.getDataProvider());
 
-      ClassBuilder enumBuilder = end.getClassBuilder();
-      LOG.trace("++ClassBuilder: {}", enumBuilder);
+    end.data = Objects.requireNonNull(end.getDataProvider(), "DataProvider").load();
+    final EnumData data = Objects.requireNonNull(end.getEnumData(), "EnumData");
+    LOG.trace("PackageName: {} ClassName: {}", data.getPackageName(), data.getClassNameSimple());
+    LOG.trace("DataProvider: {}", end.getDataProvider());
 
-      enumBuilder.withName(end.getData().getClassName());
+    ClassBuilder enumBuilder = Objects.requireNonNull(end.getClassBuilder(), "ClassBuilder");
+    LOG.trace("ClassBuilder: {}", enumBuilder);
 
-      enumBuilder.addClassJavadoc(end.getData().getJavaDoc(EnumData.JDocKeys.CLASS.name()));
-      enumBuilder.setFields(end.getData().getFieldNames(), end.getData().getFieldClasses());
-      for (Map.Entry<String, NameTypeValue> entry : end.getData().getData().entrySet()) {
-        enumBuilder.addField(entry.getKey(), entry.getValue().getValue());
-      }
+    enumBuilder.withName(data.getClassName());
 
-      String myEnum = enumBuilder.build();
+    enumBuilder.addClassJavadoc(data.getJavaDoc(EnumData.JDocKeys.CLASS.name()));
+    enumBuilder.setFields(data.getFieldNames(), data.getFieldClasses());
 
-      if (end.getFormatter() != null) {
-        LOG.trace("+SourceFormatter found: {}", end.getFormatter());
-        myEnum = end.getFormatter().format(myEnum);
-      }
+    final Map<String, NameTypeValue> mapData =
+        Objects.requireNonNull(data.getData(), "EnumData.Map is empty");
 
-      if (end.getEnumExporter() != null) {
-        end.getEnumExporter().export(myEnum, end.getEnumExporterOptions());
-      }
+    for (Map.Entry<String, NameTypeValue> entry : mapData.entrySet()) {
 
-      LOG.info("Enum created with {} bytes!", myEnum.getBytes("UTF-8").length);
-      LOG.info("...finished!");
+      final String key = Objects.requireNonNull(entry.getKey(), "EnumData.DataMap.Key");
 
-    } catch (Exception e) {
-      e.printStackTrace();
+      final NameTypeValue nameTypeValue =
+          Objects.requireNonNull(entry.getValue(), "EnumData.DataMap.NameTypeValue");
+
+      enumBuilder.addField(
+          key, Objects.requireNonNull(nameTypeValue.getValue(), "NameTypeValue.Value"));
     }
+
+    String myEnum = enumBuilder.build();
+
+    if (end.getFormatter() != null) {
+      LOG.trace("SourceFormatter: {}", end.getFormatter());
+      myEnum = end.getFormatter().format(myEnum);
+    }
+
+    if (end.getEnumExporter() != null) {
+      end.getEnumExporter().export(myEnum, end.getEnumExporterOptions());
+    }
+
+    LOG.info("Enum successfully created with {} characters!", myEnum.length());
   }
 }
