@@ -1,6 +1,7 @@
 package com.tcmj.iso.api.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,5 +47,17 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
     String left = "".concat(Stream.of(getName()).sorted().collect(Collectors.joining()));
     String right = "".concat(Stream.of(other.getName()).sorted().collect(Collectors.joining()));
     return left.compareTo(right);
+  }
+
+  @Override
+  public String toString() {
+    return "NameTypeValue{"
+        + "name="
+        + Arrays.toString(name)
+        + ", type="
+        + Arrays.toString(type)
+        + ", value="
+        + Arrays.toString(value)
+        + '}';
   }
 }
