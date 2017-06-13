@@ -2,10 +2,12 @@ package com.tcmj.iso.api.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.function.Function;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/** Holds all data of a sub field of a enum constant. */
+/** Holds all data of sub fields of a enum constant. */
 public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
 
   /** Serialization version */
@@ -32,32 +34,41 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
     return value;
   }
 
-  public NameTypeValue(final String[] name, final Class[] type, final Object[] value) {
-    this.name = name;
-    this.type = type;
-    this.value = value;
+  private NameTypeValue(final String[] name, final Class[] type, final Object[] value) {
+    this.name = Objects.requireNonNull(name, "String[] name");
+    this.type = Objects.requireNonNull(type, "Class[] type");
+    this.value = Objects.requireNonNull(value, "Object[] value");
   }
 
+  /** Create a immutable instance of NameTypeValue used to hold field values of enums. */
   public static NameTypeValue of(final String[] name, final Class[] type, final Object[] value) {
     return new NameTypeValue(name, type, value);
   }
 
   @Override
   public int compareTo(NameTypeValue other) {
-    String left = "".concat(Stream.of(getName()).sorted().collect(Collectors.joining()));
-    String right = "".concat(Stream.of(other.getName()).sorted().collect(Collectors.joining()));
+    String left = concat(getName());
+    String right = concat(other.getName());
     return left.compareTo(right);
   }
 
+  private static final String concat(final String[] value) {
+    return "".concat(Stream.of(value).sorted().collect(Collectors.joining()));
+  }
+
+  private static final Function<String, String> QUOTE_STRING = (s) -> "\"".concat(s).concat("\"");
+  private static final Function<Class, String> QUOTE_CLASS =
+      (c) -> "\"".concat(c.getName()).concat("\"");
+  private static final Function<Object, String> QUOTE_OBJECT =
+      (v) -> "\"".concat(String.valueOf(v)).concat("\"");
+
   @Override
   public String toString() {
-    return "NameTypeValue{"
-        + "name="
-        + Arrays.toString(name)
-        + ", type="
-        + Arrays.toString(type)
-        + ", value="
-        + Arrays.toString(value)
-        + '}';
+    final String[] names = (String[]) Stream.of(name).map(QUOTE_STRING).toArray(String[]::new);
+    final String[] types = Stream.of(type).map(QUOTE_CLASS).toArray(String[]::new);
+    final String[] values = Stream.of(value).map(QUOTE_OBJECT).toArray(String[]::new);
+    return String.format(
+        "{\"name\":%s,\"type\":%s,\"value\":%s}",
+        Arrays.toString(names), Arrays.toString(types), Arrays.toString(values));
   }
 }
