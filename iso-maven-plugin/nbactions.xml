@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-run_generate_enum_defaults</actionName>
-            <displayName>run_generate_enum_defaults</displayName>
-            <goals>
-                <goal>install</goal>
-                <goal>com.tcmj.plugins:tcmj-iso-maven-plugin:20.17.5.30:generate-enum</goal>
-            </goals>
-        </action>
-        <action>
             <actionName>CUSTOM-run_generate_enum_html</actionName>
             <displayName>run_generate_enum_html</displayName>
             <goals>
@@ -18,7 +10,7 @@
             <properties>
                 <tcmj.iso.generate.enum.classname>com.tcmj.html.ClassNameHtmlEnum</tcmj.iso.generate.enum.classname>
                 <tcmj.iso.generate.enum.url>https://en.wikipedia.org/wiki/ISO_3166-1</tcmj.iso.generate.enum.url>
-                <tcmj.iso.generate.enum.tablexpath>[title=Afghanistan]</tcmj.iso.generate.enum.tablexpath>
+                <tcmj.iso.generate.enum.cssselector>[title=Afghanistan]</tcmj.iso.generate.enum.cssselector>
                 <tcmj.iso.generate.enum.constantcolumn>1</tcmj.iso.generate.enum.constantcolumn>
                 <tcmj.iso.generate.enum.subdatacolumns>2,3,4</tcmj.iso.generate.enum.subdatacolumns>
             </properties>
