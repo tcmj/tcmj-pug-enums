@@ -22,9 +22,9 @@ public class GenerateEnumJsonMojo extends GeneralEnumMojo {
   @Override
   protected void displayYoureWelcome() {
     super.displayYoureWelcome();
-    log.info(arrange("Extracts EnumData from a JSON document!"));
-    log.info(arrange("DataProvider: todo"));
-    log.info(getLine());
+    getLog().info(arrange("Extracts EnumData from a JSON document!"));
+    getLog().info(arrange("DataProvider: todo"));
+    getLog().info(getLine());
   }
 
   @Override
