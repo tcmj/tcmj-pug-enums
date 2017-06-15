@@ -79,4 +79,25 @@ public class NameTypeValueTest {
         "{\"name\":[\"color\", \"count\"],\"type\":[\"java.lang.String\", \"java.lang.String\"],\"value\":[\"blue\", \"one\"]}";
     assertThat(result, equalTo(expResult));
   }
+
+  @Test(expected = NullPointerException.class)
+  public void shouldNotBeInstantiableWithInvalidValueNullName() {
+    NameTypeValue.of(null, new Class[] {String.class}, new Object[] {"blue"});
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void shouldNotBeInstantiableWithInvalidValueNullType() {
+    NameTypeValue.of(new String[] {"color"}, null, new Object[] {"blue"});
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void shouldNotBeInstantiableWithInvalidValueNullValue() {
+    NameTypeValue.of(new String[] {"color"}, new Class[] {String.class}, null);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldNotBeInstantiableWithDifferentSizes() {
+    NameTypeValue.of(
+        new String[] {"aaaa", "bbbb"}, new Class[] {String.class}, new Object[] {"blue"});
+  }
 }
