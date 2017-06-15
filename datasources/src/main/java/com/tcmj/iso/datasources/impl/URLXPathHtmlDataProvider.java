@@ -30,7 +30,7 @@ public class URLXPathHtmlDataProvider implements DataProvider {
   final String url;
   final int columnPosConstant;
   final int[] columnPos;
-  final String xPathTable;
+  final String cssSelector;
 
   public URLXPathHtmlDataProvider(
       String fullClassName,
@@ -41,7 +41,7 @@ public class URLXPathHtmlDataProvider implements DataProvider {
     model.setPackageName(EnumDataHelper.extractPackage(fullClassName));
     model.setClassName(EnumDataHelper.extractSimpleClassName(fullClassName));
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
-    this.xPathTable =
+    this.cssSelector =
         Objects.requireNonNull(tableSelector, "XPath selector for table cannot be null!");
     this.columnPosConstant =
         Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");
@@ -49,9 +49,13 @@ public class URLXPathHtmlDataProvider implements DataProvider {
   }
 
   private Element locateTable(Document doc) throws Exception {
-    Elements selectionOfAnyRecord = doc.select(this.xPathTable);
-    System.out.println(selectionOfAnyRecord);
-    Element table = selectionOfAnyRecord.get(0);
+    Elements selectionOfAnyRecord =
+        Objects.requireNonNull(
+            doc.select(this.cssSelector), "Bad CSS selector result for: " + this.cssSelector);
+    LOG.debug("CSS election result: {}", selectionOfAnyRecord);
+    Element table =
+        Objects.requireNonNull(
+            selectionOfAnyRecord.get(0), "Bad CSS selector result for: " + this.cssSelector);
     boolean stillNotFound = true;
     while (stillNotFound) {
       if ("table".equalsIgnoreCase(table.tagName())) {
