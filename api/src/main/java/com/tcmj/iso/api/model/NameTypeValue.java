@@ -38,6 +38,10 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
     this.name = Objects.requireNonNull(name, "String[] name");
     this.type = Objects.requireNonNull(type, "Class[] type");
     this.value = Objects.requireNonNull(value, "Object[] value");
+    if ((name.length != type.length) || (name.length != value.length)) {
+      throw new IllegalArgumentException(
+          "Array size is not the same: " + name.length + "/" + type.length + "/" + value.length);
+    }
   }
 
   /** Create a immutable instance of NameTypeValue used to hold field values of enums. */
