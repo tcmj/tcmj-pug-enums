@@ -148,12 +148,15 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
       final NameTypeValue triple = entry.getValue();
       if (hasSubfields(triple)) {
         Pair<String, Object[]> pair = format(triple.getType(), triple.getValue());
-        TypeSpec.Builder constants
-            = TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
+        TypeSpec.Builder constants =
+            TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
 
         String newConstantName = model.getNamingStrategy().convert(constantName);
         if (LOG.isTraceEnabled() && !StringUtils.equals(constantName, newConstantName)) {
-          LOG.trace("NamingStrategy changes constantName from='{}' to='{}'", constantName, newConstantName);
+          LOG.trace(
+              "NamingStrategy changes constantName from='{}' to='{}'",
+              constantName,
+              newConstantName);
         }
         builder.addEnumConstant(newConstantName, constants.build());
       } else {

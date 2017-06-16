@@ -13,6 +13,8 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
   /** Serialization version */
   private static final long serialVersionUID = 1L;
 
+  public static final NameTypeValue NULL = new NameTypeValue(null, null, null);
+
   public final String[] name;
 
   public final Class[] type;
@@ -35,17 +37,20 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
   }
 
   private NameTypeValue(final String[] name, final Class[] type, final Object[] value) {
-    this.name = Objects.requireNonNull(name, "String[] name");
-    this.type = Objects.requireNonNull(type, "Class[] type");
-    this.value = Objects.requireNonNull(value, "Object[] value");
-    if ((name.length != type.length) || (name.length != value.length)) {
-      throw new IllegalArgumentException(
-          "Array size is not the same: " + name.length + "/" + type.length + "/" + value.length);
-    }
+    this.name = name;
+    this.type = type;
+    this.value = value;
   }
 
   /** Create a immutable instance of NameTypeValue used to hold field values of enums. */
   public static NameTypeValue of(final String[] name, final Class[] type, final Object[] value) {
+    Objects.requireNonNull(name, "String[] name");
+    Objects.requireNonNull(type, "Class[] type");
+    Objects.requireNonNull(value, "Object[] value");
+    if ((name.length != type.length) || (name.length != value.length)) {
+      throw new IllegalArgumentException(
+          "Array size is not the same: " + name.length + "/" + type.length + "/" + value.length);
+    }
     return new NameTypeValue(name, type, value);
   }
 
@@ -68,7 +73,7 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
 
   @Override
   public String toString() {
-    final String[] names = (String[]) Stream.of(name).map(QUOTE_STRING).toArray(String[]::new);
+    final String[] names = Stream.of(name).map(QUOTE_STRING).toArray(String[]::new);
     final String[] types = Stream.of(type).map(QUOTE_CLASS).toArray(String[]::new);
     final String[] values = Stream.of(value).map(QUOTE_OBJECT).toArray(String[]::new);
     return String.format(

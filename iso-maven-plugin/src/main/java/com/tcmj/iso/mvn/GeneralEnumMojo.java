@@ -1,8 +1,12 @@
 package com.tcmj.iso.mvn;
 
+import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.iso.exporter.impl.JavaSourceFileExporter;
 import static com.tcmj.iso.mvn.LittleHelper.arrange;
 import static com.tcmj.iso.mvn.LittleHelper.getLine;
 import java.io.File;
+import java.nio.file.Path;
+import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -33,7 +37,6 @@ public class GeneralEnumMojo extends AbstractMojo {
 
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
-
     getLog().info("PluginContext: " + getPluginContext());
     getLog().info(getLine());
     getLog().info(arrange("Welcome to the tcmj iso enum generator maven plugin!"));
@@ -52,5 +55,15 @@ public class GeneralEnumMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     displayYoureWelcome();
+  }
+
+  /** Usually we want always the FileExporter used by the maven plugin. */
+  protected EnumExporter getEnumExporter() {
+    return new JavaSourceFileExporter();
+  }
+
+  protected Map<String, Object> getEnumExporterOptions() {
+    Path exportPath = this.sourceDirectory.toPath();
+    return JavaSourceFileExporter.createExportPathOptions(exportPath);
   }
 }

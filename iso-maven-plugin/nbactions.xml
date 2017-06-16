@@ -13,6 +13,7 @@
                 <tcmj.iso.generate.enum.cssselector>[title=Afghanistan]</tcmj.iso.generate.enum.cssselector>
                 <tcmj.iso.generate.enum.constantcolumn>1</tcmj.iso.generate.enum.constantcolumn>
                 <tcmj.iso.generate.enum.subdatacolumns>2,3,4</tcmj.iso.generate.enum.subdatacolumns>
+                <tcmj.iso.generate.enum.exporter>com.tcmj.iso.exporter.impl.InMemoryCompilingExporter</tcmj.iso.generate.enum.exporter>
             </properties>
         </action>
         <action>

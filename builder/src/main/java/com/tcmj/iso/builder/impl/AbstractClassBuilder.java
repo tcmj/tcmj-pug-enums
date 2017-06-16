@@ -88,8 +88,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
 
   @Override
   public ClassBuilder addField(String constantName) {
-    NameTypeValue record = NameTypeValue.of(null, null, null);
-    this.model.getData().put(constantName, record);
+    this.model.getData().put(constantName, NameTypeValue.NULL);
     return this;
   }
 

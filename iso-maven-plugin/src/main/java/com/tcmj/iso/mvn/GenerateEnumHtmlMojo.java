@@ -15,6 +15,7 @@ import com.tcmj.iso.generator.Fluent;
 import static com.tcmj.iso.mvn.LittleHelper.arrange;
 import static com.tcmj.iso.mvn.LittleHelper.getLine;
 import java.util.Arrays;
+import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -113,12 +114,15 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
           SourceFormatterFactory.getBestSourceCodeFormatter();
       getLog().info(arrange("SourceFormatter: " + bestSourceCodeFormatter));
 
+      final EnumExporter enumExporter = getEnumExporter();
+      final Map<String, Object> exporterOptions = getEnumExporterOptions();
       Fluent.builder()
           .fromDataSource(myDataProvider)
           .usingClassBuilder(bestEnumBuilder)
           .usingNamingStrategy(getMyNamingStrategy())
           .format(bestSourceCodeFormatter)
-          .exportWith(getMyEnumExporter())
+          .exportWith(enumExporter, exporterOptions)
+          //.exportWith(EnumExporterFactory.getReportingEnumExporter())
           .end();
 
     } catch (Exception e) {
