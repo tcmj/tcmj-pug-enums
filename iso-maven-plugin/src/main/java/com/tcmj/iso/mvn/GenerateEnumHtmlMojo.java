@@ -126,7 +126,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
           .end();
 
     } catch (Exception e) {
-      getLog().error("Cannot create your enum! " + e.toString());
+      getLog().error("Cannot create your enum! ", e);
       throw new MojoExecutionException("ExecutionFailure!", e);
     }
   }
