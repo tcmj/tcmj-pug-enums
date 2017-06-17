@@ -24,8 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class URLHtmlDataProvider implements DataProvider {
 
-  private static final transient Logger LOG =
-      LoggerFactory.getLogger(URLHtmlDataProvider.class);
+  private static final transient Logger LOG = LoggerFactory.getLogger(URLHtmlDataProvider.class);
   EnumData model = new EnumData();
   final String url;
   final int columnPosConstant;
@@ -104,14 +103,15 @@ public class URLHtmlDataProvider implements DataProvider {
       }
 
       Element tdConstant = tr.child(this.columnPosConstant - 1);
-      LOG.trace("Column for constants: {}", tdConstant);
       String constantName = getValue(tdConstant);
+      LOG.trace("Column for constants: '{}' using '{}'", tdConstant,constantName);
 
-      if (StringUtils.isBlank(constantName)) { //usecase: skip empty table rows used for formatting purpose
+      if (StringUtils.isBlank(constantName)) { 
+        //usecase: skip empty table rows used for formatting purpose
         LOG.debug("Skipping blank record {}", curPos);
         continue;
       }
-      
+
       if (this.model.isEnumWithSubfields()) {
         Object[] values = new Object[columnPos.length];
         for (int i = 0; i < columnPos.length; i++) {
@@ -120,7 +120,8 @@ public class URLHtmlDataProvider implements DataProvider {
           String value = getValue(td);
           values[i] = value;
         }
-        LOG.debug("EnumData.addConstantValueAndSubfields({},{})", constantName, Arrays.toString(values));
+        LOG.debug(
+            "EnumData.addConstantValueAndSubfields({},{})", constantName, Arrays.toString(values));
         EnumDataHelper.addConstantValue(model, constantName, values);
       } else {
         LOG.debug("EnumData.addConstantWithoutSubfield({})", constantName);
@@ -151,6 +152,11 @@ public class URLHtmlDataProvider implements DataProvider {
     if (value == null) {
       value = element.text();
     }
+    //replace special whitespaces eg. &nbsp
+    value = value.replace('\u00A0', ' ');
+    value = value.replace('\u2007', ' ');
+    value = value.replace('\u202F', ' ');
+        
     return value;
   }
 
