@@ -6,7 +6,7 @@ import com.tcmj.iso.api.NamingStrategy;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
 import com.tcmj.iso.builder.SourceFormatterFactory;
-import com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider;
+import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
 import com.tcmj.iso.generator.Fluent;
@@ -45,7 +45,7 @@ public class WikipediaExample2 {
   }
 
   private static DataProvider getMyDataProvider() {
-    return new URLXPathHtmlDataProvider(
+    return new URLHtmlDataProvider(
         "com.tcmj.test.MTI", //enum name and path
         "https://de.wikipedia.org/wiki/ISO_8583", //url to load
         "table:nth-of-type(3)", //xpath to a record to further (also to a table possible)

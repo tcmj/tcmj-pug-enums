@@ -8,7 +8,7 @@ import com.tcmj.iso.api.SourceFormatter;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
 import com.tcmj.iso.builder.SourceFormatterFactory;
-import com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider;
+import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
 import com.tcmj.iso.generator.Fluent;
@@ -75,7 +75,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
       }
     }
 
-    return new URLXPathHtmlDataProvider(
+    return new URLHtmlDataProvider(
         this.className,
         this.url,
         this.tableCssSelector, //xpath to a record to further (also to a table possible)

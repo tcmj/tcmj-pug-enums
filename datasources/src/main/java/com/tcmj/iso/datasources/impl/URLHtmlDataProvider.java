@@ -22,17 +22,17 @@ import org.slf4j.LoggerFactory;
  * HTML.TABLE via XPath Input.3 = HTML.TABLE -> TR.TD (specifying one for the constants)
  * https://en.wikipedia.org/wiki/ISO_3166-1
  */
-public class URLXPathHtmlDataProvider implements DataProvider {
+public class URLHtmlDataProvider implements DataProvider {
 
   private static final transient Logger LOG =
-      LoggerFactory.getLogger(URLXPathHtmlDataProvider.class);
+      LoggerFactory.getLogger(URLHtmlDataProvider.class);
   EnumData model = new EnumData();
   final String url;
   final int columnPosConstant;
   final int[] columnPos;
   final String cssSelector;
 
-  public URLXPathHtmlDataProvider(
+  public URLHtmlDataProvider(
       String fullClassName,
       String url,
       String tableSelector,

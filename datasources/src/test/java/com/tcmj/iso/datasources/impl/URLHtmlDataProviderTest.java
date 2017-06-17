@@ -9,13 +9,13 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /** pugproductions - 2017-05-16 - tcmj. */
-public class URLXPathHtmlDataProviderTest {
+public class URLHtmlDataProviderTest {
 
   @Test
   public void overallTestWithoutSubfields() throws Exception {
 
-    URLXPathHtmlDataProvider dataProvider =
-        new URLXPathHtmlDataProvider(
+    URLHtmlDataProvider dataProvider =
+        new URLHtmlDataProvider(
             "com.tcmj.test.MyWikipediaEnum",
             "https://en.wikipedia.org/wiki/ISO_3166-1",
             "[title=Afghanistan]",
@@ -43,8 +43,8 @@ public class URLXPathHtmlDataProviderTest {
 
   @Test
   public void overallTestWithSubfields() throws Exception {
-    URLXPathHtmlDataProvider dataProvider =
-        new URLXPathHtmlDataProvider(
+    URLHtmlDataProvider dataProvider =
+        new URLHtmlDataProvider(
             "com.tcmj.test.MyWikipediaEnum",
             "https://en.wikipedia.org/wiki/ISO_3166-1",
             "[title=Afghanistan]",

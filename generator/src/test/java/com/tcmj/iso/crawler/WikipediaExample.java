@@ -6,7 +6,7 @@ import com.tcmj.iso.api.NamingStrategy;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
 import com.tcmj.iso.builder.SourceFormatterFactory;
-import com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider;
+import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
 import com.tcmj.iso.generator.Fluent;
@@ -45,7 +45,7 @@ public class WikipediaExample {
   }
 
   private static DataProvider getMyDataProvider() {
-    return new URLXPathHtmlDataProvider(
+    return new URLHtmlDataProvider(
         "com.tcmj.test.MyWikipediaEnum", //enum name and path
         "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
         "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
