@@ -7,6 +7,11 @@ import java.util.Objects;
 public interface NamingStrategy {
   String convert(String value);
 
+  /** No conversion - does nothing. */
+  static NamingStrategy getDefault() {
+    return value -> value;
+  };
+
   default NamingStrategy and(NamingStrategy other) {
     Objects.requireNonNull(other);
     return (String source) -> other.convert(convert(source));

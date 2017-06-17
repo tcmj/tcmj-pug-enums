@@ -15,7 +15,8 @@ public class EnumData {
 
   private String packageName;
   private String className;
-  private NamingStrategy namingStrategyConstants = value -> value;
+  private NamingStrategy namingStrategyConstants = NamingStrategy.getDefault();
+  private NamingStrategy namingStrategyFields = NamingStrategy.getDefault();
   private List<String> imports = new LinkedList<>();
   private String[] fieldNames;
   private Class[] fieldClasses;
@@ -27,6 +28,7 @@ public class EnumData {
   /** holds all possible javadoc content. */
   Map<String, List<String>> mapJavaDoc;
 
+  /** NamingStrategy used to convert the constant values of the enum. */
   public NamingStrategy getNamingStrategyConstants() {
     return namingStrategyConstants;
   }
@@ -34,7 +36,15 @@ public class EnumData {
   public void setNamingStrategyConstants(NamingStrategy namingStrategy) {
     this.namingStrategyConstants = namingStrategy;
   }
+  
+  /** NamingStrategy used to convert the field variables of the enum. */
+  public NamingStrategy getNamingStrategyFields() {
+    return namingStrategyFields;
+  }
 
+  public void setNamingStrategyFields(NamingStrategy namingStrategy) {
+    this.namingStrategyFields = namingStrategy;
+  }
   //    public static final String CLASSJAVADOC = "CLSJD";
   public enum JDocKeys {
     CLASS
