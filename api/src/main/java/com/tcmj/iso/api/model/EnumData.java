@@ -31,7 +31,7 @@ public class EnumData {
     return namingStrategy;
   }
 
-  public void setNamingStrategy(NamingStrategy namingStrategy) {
+  public void setNamingStrategyConstants(NamingStrategy namingStrategy) {
     this.namingStrategy = namingStrategy;
   }
 

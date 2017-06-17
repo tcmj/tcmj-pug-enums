@@ -38,7 +38,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
   @Override
   public ClassBuilder usingNamingStrategy(NamingStrategy instance) {
     LOG.debug("...using NamingStrategy: {}", instance);
-    this.model.setNamingStrategy(instance);
+    this.model.setNamingStrategyConstants(instance);
     return this;
   }
 
