@@ -5,11 +5,11 @@
 
     <groupId>com.tcmj.iso</groupId>
     <artifactId>tcmj-iso</artifactId>
-    <version>20.17.5.30</version>
+    <version>20.17.6.15</version>
 
     <name>tcmj-iso</name>
     <description>
-        Provides high quality ISO data in form of java enum classes.
+        Toolkit to load data from different sources in order to create java enum classes.
         Contains all elements to create them on the fly.
         All modules were separated by an official API.
         There are already several implementations ready to use.
@@ -19,6 +19,7 @@
         a SourceCodeFormatter and NamingStrategy to adjust the final look
         a EnumExporter to write your enum to a file or compile it directly onto a classloader
         To further simplify this process you can use a Fluent builder pattern which directs you step by step
+        And do not hesitate to make use of our maven plugin
     </description>
 
     <inceptionYear>2017</inceptionYear>
@@ -28,8 +29,6 @@
             <id>tcmj</id>
             <name>Thomas Deutsch</name>
             <email>tomdeu@gmail.com</email>
-            <organization>tcmj</organization>
-            <organizationUrl>http://www.tcmj.de</organizationUrl>
             <roles>
                 <role>owner</role>
                 <role>developer</role>
@@ -37,10 +36,6 @@
             <timezone>Europe/Berlin</timezone>
         </developer>
     </developers>
-    <organization>
-        <name>tcmj</name>
-        <url>https://github.com/tcmj</url>
-    </organization>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
