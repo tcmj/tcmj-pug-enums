@@ -33,6 +33,7 @@ public class EnumData {
     return namingStrategyConstants;
   }
 
+  /** NamingStrategy used to convert the constant values of the enum. */
   public void setNamingStrategyConstants(NamingStrategy namingStrategy) {
     this.namingStrategyConstants = namingStrategy;
   }
@@ -42,6 +43,7 @@ public class EnumData {
     return namingStrategyFields;
   }
 
+  /** NamingStrategy used to convert the field variables of the enum. */
   public void setNamingStrategyFields(NamingStrategy namingStrategy) {
     this.namingStrategyFields = namingStrategy;
   }
