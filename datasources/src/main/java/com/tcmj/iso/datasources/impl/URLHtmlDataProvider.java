@@ -104,9 +104,9 @@ public class URLHtmlDataProvider implements DataProvider {
 
       Element tdConstant = tr.child(this.columnPosConstant - 1);
       String constantName = getValue(tdConstant);
-      LOG.trace("Column for constants: '{}' using '{}'", tdConstant,constantName);
+      LOG.trace("Record {} constant-column: '{}' using '{}'", curPos, tdConstant, constantName);
 
-      if (StringUtils.isBlank(constantName)) { 
+      if (StringUtils.isBlank(constantName)) {
         //usecase: skip empty table rows used for formatting purpose
         LOG.debug("Skipping blank record {}", curPos);
         continue;
@@ -120,11 +120,10 @@ public class URLHtmlDataProvider implements DataProvider {
           String value = getValue(td);
           values[i] = value;
         }
-        LOG.debug(
-            "EnumData.addConstantValueAndSubfields({},{})", constantName, Arrays.toString(values));
+        LOG.debug("EnumData.add({},{})", constantName, Arrays.toString(values));
         EnumDataHelper.addConstantValue(model, constantName, values);
       } else {
-        LOG.debug("EnumData.addConstantWithoutSubfield({})", constantName);
+        LOG.debug("EnumData.add({})", constantName);
         EnumDataHelper.addConstantWithoutSubfield(model, constantName);
       }
     }
@@ -156,7 +155,7 @@ public class URLHtmlDataProvider implements DataProvider {
     value = value.replace('\u00A0', ' ');
     value = value.replace('\u2007', ' ');
     value = value.replace('\u202F', ' ');
-        
+
     return value;
   }
 
