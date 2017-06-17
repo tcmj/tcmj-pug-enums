@@ -15,7 +15,7 @@ public class EnumData {
 
   private String packageName;
   private String className;
-  private NamingStrategy namingStrategy = value -> value;
+  private NamingStrategy namingStrategyConstants = value -> value;
   private List<String> imports = new LinkedList<>();
   private String[] fieldNames;
   private Class[] fieldClasses;
@@ -27,12 +27,12 @@ public class EnumData {
   /** holds all possible javadoc content. */
   Map<String, List<String>> mapJavaDoc;
 
-  public NamingStrategy getNamingStrategy() {
-    return namingStrategy;
+  public NamingStrategy getNamingStrategyConstants() {
+    return namingStrategyConstants;
   }
 
   public void setNamingStrategyConstants(NamingStrategy namingStrategy) {
-    this.namingStrategy = namingStrategy;
+    this.namingStrategyConstants = namingStrategy;
   }
 
   //    public static final String CLASSJAVADOC = "CLSJD";

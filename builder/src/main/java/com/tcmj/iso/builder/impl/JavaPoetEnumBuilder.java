@@ -151,7 +151,7 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
         TypeSpec.Builder constants =
             TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
 
-        String newConstantName = model.getNamingStrategy().convert(constantName);
+        String newConstantName = model.getNamingStrategyConstants().convert(constantName);
         if (LOG.isTraceEnabled() && !StringUtils.equals(constantName, newConstantName)) {
           LOG.trace(
               "NamingStrategy changes constantName from='{}' to='{}'",
