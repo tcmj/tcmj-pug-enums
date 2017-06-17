@@ -99,7 +99,7 @@ public class URLXPathHtmlDataProvider implements DataProvider {
     for (Element tr : trs) {
       curPos++;
       if (curPos == 1) {
-        LOG.trace("Skipping header record...");
+        LOG.debug("Skipping header record...");
         continue;
       }
 
@@ -107,6 +107,11 @@ public class URLXPathHtmlDataProvider implements DataProvider {
       LOG.trace("Column for constants: {}", tdConstant);
       String constantName = getValue(tdConstant);
 
+      if (StringUtils.isBlank(constantName)) { //usecase: skip empty table rows used for formatting purpose
+        LOG.debug("Skipping blank record {}", curPos);
+        continue;
+      }
+      
       if (this.model.isEnumWithSubfields()) {
         Object[] values = new Object[columnPos.length];
         for (int i = 0; i < columnPos.length; i++) {
