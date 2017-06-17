@@ -115,10 +115,10 @@ public class URLXPathHtmlDataProvider implements DataProvider {
           String value = getValue(td);
           values[i] = value;
         }
-        LOG.debug("addConstantValue(EnumData,{},{})", constantName, Arrays.toString(values));
+        LOG.debug("EnumData.addConstantValueAndSubfields({},{})", constantName, Arrays.toString(values));
         EnumDataHelper.addConstantValue(model, constantName, values);
       } else {
-        LOG.debug("addConstantWithoutSubfield(EnumData,{})", constantName);
+        LOG.debug("EnumData.addConstantWithoutSubfield({})", constantName);
         EnumDataHelper.addConstantWithoutSubfield(model, constantName);
       }
     }
