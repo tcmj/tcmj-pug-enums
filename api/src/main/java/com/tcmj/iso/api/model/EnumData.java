@@ -1,7 +1,6 @@
 package com.tcmj.iso.api.model;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class EnumData {
   private List<String> imports = new LinkedList<>();
   private String[] fieldNames;
   private Class[] fieldClasses;
-  private Map<String, NameTypeValue> data = new LinkedHashMap<>();
+  private List<NameTypeValue> data = new LinkedList<>();
 
   /** holds custom code used to place custom code on the standard getter methods. */
   Map<String, String> mapCustomCode;
@@ -83,12 +82,8 @@ public class EnumData {
     return imports;
   }
 
-  public Map<String, NameTypeValue> getData() {
+  public List<NameTypeValue> getData() {
     return data;
-  }
-
-  public void setData(Map<String, NameTypeValue> data) {
-    this.data = data;
   }
 
   public int getEnumConstantsAmount() {
@@ -96,15 +91,11 @@ public class EnumData {
   }
 
   public int getSubFieldsAmount() {
-    try {
-      return getData().values().iterator().next().getName().length;
-    } catch (Exception e) {
-      return 0;
-    }
+    return getData().iterator().next().getSubFieldsAmount();
   }
 
   public boolean isEmpty() {
-    return getData() != null && getData().size() == 0;
+    return getData() != null && getData().isEmpty();
   }
 
   public boolean isEnumWithSubfields() {
@@ -118,36 +109,26 @@ public class EnumData {
   }
 
   public String[] getFieldNames() {
-    if (this.fieldNames == null) {
-      updateFieldNamesAndClasses();
-    }
     return fieldNames;
   }
+ 
 
-  private void updateFieldNamesAndClasses() {
-    for (NameTypeValue NameTypeValue : getData().values()) {
-      if (NameTypeValue.getName() != null) {
-        this.fieldNames = NameTypeValue.getName();
-      }
-      if (NameTypeValue.getType() != null) {
-        this.fieldClasses = NameTypeValue.getType();
-      }
+  public void setFieldNames(String... values) {
+    if (this.fieldClasses != null && values != null && values.length != this.fieldClasses.length) {
+      throw new IllegalArgumentException("Array size of classes/names is not the same: " + this.fieldClasses + "/" + values.length);
     }
-  }
-
-  public void setFieldNames(String... fieldNames) {
-    this.fieldNames = fieldNames;
+    this.fieldNames = values;
   }
 
   public Class[] getFieldClasses() {
-    if (this.fieldClasses == null) {
-      updateFieldNamesAndClasses();
-    }
-    return fieldClasses;
+     return fieldClasses;
   }
 
-  public void setFieldClasses(Class... fieldClasses) {
-    this.fieldClasses = fieldClasses;
+  public void setFieldClasses(Class... values) {
+    if (this.fieldNames != null && values != null && values.length != this.fieldNames.length) {
+      throw new IllegalArgumentException("Array size of names/classes is not the same: " + this.fieldNames + "/" + values.length);
+    }
+    this.fieldClasses = values;
   }
 
   public void addCustomCode(String fieldName, String code) {

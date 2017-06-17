@@ -3,6 +3,8 @@ package com.tcmj.iso.api;
 import java.util.Set;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.tools.EnumDataHelper;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.anything;
@@ -18,7 +20,7 @@ public class DataProviderTest {
   @Test
   public void testLoadEmptyProvider() throws Exception {
     DataProvider provider = EnumData::new;
-    assertThat(provider.load().getData().keySet(), not(hasItem(anything())));
+    assertThat(provider.load().getData(), not(hasItem(anything())));
   }
 
   @Test
@@ -28,10 +30,10 @@ public class DataProviderTest {
           EnumData enumData = new EnumData();
           EnumDataHelper.addConstantWithoutSubfield(enumData, "EINS");
           EnumDataHelper.addConstantWithoutSubfield(enumData, "ZWEI");
-          enumData.getData().put("DREI", null);
+          EnumDataHelper.addConstantWithoutSubfield(enumData, "DREI");
           return enumData;
         };
-    Set<String> data = provider.load().getData().keySet();
+    List<String> data = provider.load().getData().stream().map((t) ->  t.getConstantName()).collect(Collectors.toList());
     assertThat(data, hasItem(anything()));
     assertThat("provider", data, hasItems("ZWEI", "EINS", "DREI"));
     assertThat("provider.size", data.size(), is(3));
@@ -61,15 +63,15 @@ public class DataProviderTest {
         };
 
     DataProvider provider = provider1.and(provider2);
-    Set<String> data = provider.load().getData().keySet();
+    List<String> data = provider.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
     assertThat(data, hasItem("A"));
 
-    Set<String> data1 = provider1.load().getData().keySet();
+    List<String> data1 = provider1.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
     assertThat("provider1 == A,B,C", data1, hasItems("A", "B", "C"));
     assertThat("provider1 <> D,E,F", data1, not(hasItems("D", "E", "F")));
     assertThat("provider1.size", data1.size(), is(3));
 
-    Set<String> data2 = provider2.load().getData().keySet();
+    List<String> data2 = provider2.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
     assertThat("provider2 == A,B,C", data2, hasItems("D", "E", "F"));
     assertThat("provider2 <> A,B,C", data2, not(hasItems("A", "B", "C")));
     assertThat("provider2.size", data2.size(), is(3));

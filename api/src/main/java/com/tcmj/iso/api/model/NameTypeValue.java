@@ -4,80 +4,59 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.Function;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/** Holds all data of sub fields of a enum constant. */
+/** Holds all data of a single enum constant values. The enum must consist of a constant name and may have sub fields. */
 public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
 
-  /** Serialization version */
   private static final long serialVersionUID = 1L;
 
-  public static final NameTypeValue NULL = new NameTypeValue(null, null, null);
+  public final String constantName;
+  public final Object[] values;
 
-  public final String[] name;
-
-  public final Class[] type;
-
-  public final Object[] value;
-
-  /** Name of sub element (field of enum constant). */
-  public String[] getName() {
-    return name;
+  /** Constant name. */
+  public String getConstantName() {
+    return constantName;
   }
-
-  /** Class type of sub element. */
-  public Class[] getType() {
-    return type;
-  }
-
+ 
   /** Value of sub element. */
   public Object[] getValue() {
-    return value;
+    return values;
   }
 
-  private NameTypeValue(final String[] name, final Class[] type, final Object[] value) {
-    this.name = name;
-    this.type = type;
-    this.value = value;
+  private NameTypeValue(final String constantName, final Object[] value) {
+    this.constantName = constantName;
+    this.values = value;
   }
 
   /** Create a immutable instance of NameTypeValue used to hold field values of enums. */
-  public static NameTypeValue of(final String[] name, final Class[] type, final Object[] value) {
-    Objects.requireNonNull(name, "String[] name");
-    Objects.requireNonNull(type, "Class[] type");
-    Objects.requireNonNull(value, "Object[] value");
-    if ((name.length != type.length) || (name.length != value.length)) {
-      throw new IllegalArgumentException(
-          "Array size is not the same: " + name.length + "/" + type.length + "/" + value.length);
-    }
-    return new NameTypeValue(name, type, value);
+  public static NameTypeValue of(final String constantName, final Object[] value) {
+    Objects.requireNonNull(constantName, "Constant name may not be null!");
+    Objects.requireNonNull(value, "Object[] value may not be null!");
+      return new NameTypeValue(constantName, value);
+  }
+
+  /** Create a immutable instance of NameTypeValue used to hold a enum constant values without having subfields. */
+  public static NameTypeValue of(final String constantName) {
+    Objects.requireNonNull(constantName, "Constant name may not be null!");
+    return new NameTypeValue(constantName, null);
+  }
+
+  public int getSubFieldsAmount() {
+    return values == null ? 0 : values.length;
   }
 
   @Override
   public int compareTo(NameTypeValue other) {
-    String left = concat(getName());
-    String right = concat(other.getName());
-    return left.compareTo(right);
+    return other==null?-1:this.constantName.compareTo(other.constantName);
   }
+ 
 
-  private static final String concat(final String[] value) {
-    return "".concat(Stream.of(value).sorted().collect(Collectors.joining()));
-  }
-
-  private static final Function<String, String> QUOTE_STRING = (s) -> "\"".concat(s).concat("\"");
-  private static final Function<Class, String> QUOTE_CLASS =
-      (c) -> "\"".concat(c.getName()).concat("\"");
-  private static final Function<Object, String> QUOTE_OBJECT =
-      (v) -> "\"".concat(String.valueOf(v)).concat("\"");
+   private static final Function<Object, String> QUOTE_OBJECT = (v) -> "\"".concat(String.valueOf(v)).concat("\"");
 
   @Override
   public String toString() {
-    final String[] names = Stream.of(name).map(QUOTE_STRING).toArray(String[]::new);
-    final String[] types = Stream.of(type).map(QUOTE_CLASS).toArray(String[]::new);
-    final String[] values = Stream.of(value).map(QUOTE_OBJECT).toArray(String[]::new);
-    return String.format(
-        "{\"name\":%s,\"type\":%s,\"value\":%s}",
-        Arrays.toString(names), Arrays.toString(types), Arrays.toString(values));
+    final String[] value = Stream.of(this.values).map(QUOTE_OBJECT).toArray(String[]::new);
+    return String.format( "{\"name\":%s,\"values\":%s}", this.constantName, Arrays.toString(value));
   }
 }

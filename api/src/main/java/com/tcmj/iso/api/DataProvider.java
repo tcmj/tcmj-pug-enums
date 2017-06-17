@@ -12,7 +12,7 @@ public interface DataProvider {
     return () -> {
       EnumData loaded1 = load();
       EnumData loaded2 = other.load();
-      loaded1.getData().putAll(loaded2.getData());
+      loaded1.getData().addAll(loaded2.getData());
       return loaded1;
     };
   }
