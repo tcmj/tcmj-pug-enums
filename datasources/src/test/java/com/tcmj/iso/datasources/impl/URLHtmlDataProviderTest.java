@@ -29,13 +29,8 @@ public class URLHtmlDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(249));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
-    assertThat(
-        "getKey",
-        Arrays.toString(
-            data.getData()
-                .entrySet()
-                .stream()
-                .map(e -> e.getKey())
+    assertThat("getKey",Arrays.toString(data.getData().stream()
+                .map(e -> e.getConstantName())
                 .filter(s -> s.startsWith("F"))
                 .toArray()),
         equalTo("[FLK, FRO, FJI, FIN, FRA, FSM]"));
@@ -58,17 +53,8 @@ public class URLHtmlDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(249));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
-    assertThat(
-        "getName",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getName()),
-        equalTo("[alpha_2_code, alpha_3_code, numeric_code]"));
-    assertThat(
-        "getType",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getType()),
-        equalTo("[class java.lang.String, class java.lang.String, class java.lang.String]"));
-    assertThat(
-        "getValue",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getValue()),
-        equalTo("[AF, AFG, 004]"));
+    assertThat("getName", Arrays.toString(data.getFieldNames()), equalTo("[alpha_2_code, alpha_3_code, numeric_code]"));
+    assertThat("getType", Arrays.toString(data.getFieldClasses()), equalTo("[class java.lang.String, class java.lang.String, class java.lang.String]"));
+    assertThat("getValue", Arrays.toString(data.getData().stream().findFirst().get().getValue()), equalTo("[AF, AFG, 004]"));
   }
 }

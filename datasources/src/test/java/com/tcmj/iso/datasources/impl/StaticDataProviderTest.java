@@ -28,10 +28,7 @@ public class StaticDataProviderTest {
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
-    assertThat(
-        "getKey",
-        Arrays.toString(data.getData().entrySet().stream().map(e -> e.getKey()).toArray()),
-        equalTo("[Africa, Antarctica]"));
+    assertThat("getKey", Arrays.toString(data.getData().stream().map(e -> e.getConstantName()).toArray()), equalTo("[Africa, Antarctica]"));
   }
 
   @Test
@@ -40,8 +37,7 @@ public class StaticDataProviderTest {
     String[] fieldNames = new String[] {"areaKM2", "areaPct", "name"};
     Class[] fieldClasses = new Class[] {Integer.class, Float.class, String.class};
 
-    StaticDataProvider dataProvider =
-        new StaticDataProvider(fullClassName, fieldNames, fieldClasses);
+    StaticDataProvider dataProvider = new StaticDataProvider(fullClassName, fieldNames, fieldClasses);
     dataProvider.addConstantValue("Africa", 30370000, 20.4F, "AF");
     dataProvider.addConstantValue("Antarctica", 123123123, 55.22F, "AN");
     EnumData data = dataProvider.load();
@@ -52,23 +48,10 @@ public class StaticDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
-    assertThat(
-        "getName",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getName()),
-        equalTo("[areaKM2, areaPct, name]"));
-    assertThat(
-        "getType",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getType()),
-        equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
-    assertThat(
-        "getValue1",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getValue()),
-        equalTo("[30370000, 20.4, AF]"));
-    assertThat(
-        "getValue1+2",
-        Arrays.toString(
-            data.getData().values().stream().map(e -> Arrays.toString(e.getValue())).toArray()),
-        equalTo("[[30370000, 20.4, AF], [123123123, 55.22, AN]]"));
+    assertThat("getName", Arrays.toString(data.getFieldNames()), equalTo("[areaKM2, areaPct, name]"));
+    assertThat("getType", Arrays.toString(data.getFieldClasses()), equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
+    assertThat("getValue1", Arrays.toString(data.getData().stream().findFirst().get().getValue()), equalTo("[30370000, 20.4, AF]"));
+    assertThat("getValue1+2", Arrays.toString(data.getData().stream().map(e -> Arrays.toString(e.getValue())).toArray()), equalTo("[[30370000, 20.4, AF], [123123123, 55.22, AN]]"));
   }
 
   @Test

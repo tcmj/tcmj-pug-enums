@@ -20,9 +20,7 @@ public class CSVDataProviderTest {
     String[] fieldNames = null;
     Class[] fieldClasses = null;
 
-    CSVDataProvider dataProvider =
-        new CSVDataProvider(
-            "com.tcmj.test.MySimpleCsvEnum", reader, fieldNameConstant, fieldNames, fieldClasses);
+    CSVDataProvider dataProvider = new CSVDataProvider("com.tcmj.test.MySimpleCsvEnum", reader, fieldNameConstant, fieldNames, fieldClasses);
     EnumData data = dataProvider.load();
 
     assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("MySimpleCsvEnum"));
@@ -31,10 +29,7 @@ public class CSVDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
-    assertThat(
-        "getKey",
-        Arrays.toString(data.getData().entrySet().stream().map(e -> e.getKey()).toArray()),
-        equalTo("[Africa, Antarctica]"));
+    assertThat("getKey", Arrays.toString(data.getData().stream().map(e -> e.getConstantName()).toArray()), equalTo("[Africa, Antarctica]"));
   }
 
   @Test
@@ -42,11 +37,10 @@ public class CSVDataProviderTest {
     String fullClassName = "a.b.c.JsonEnum";
     Reader reader = ReaderHelper.getResource(JsonDataProviderTest.class, "continents.csv");
     String fieldNameConstant = "nameUS";
-    String[] fieldNames = new String[] {"areaKM2", "areaPct", "name"};
-    Class[] fieldClasses = new Class[] {Integer.class, Float.class, String.class};
+    String[] fieldNames = new String[]{"areaKM2", "areaPct", "name"};
+    Class[] fieldClasses = new Class[]{Integer.class, Float.class, String.class};
 
-    CSVDataProvider dataProvider =
-        new CSVDataProvider(fullClassName, reader, fieldNameConstant, fieldNames, fieldClasses);
+    CSVDataProvider dataProvider = new CSVDataProvider(fullClassName, reader, fieldNameConstant, fieldNames, fieldClasses);
     EnumData data = dataProvider.load();
 
     assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("JsonEnum"));
@@ -55,17 +49,8 @@ public class CSVDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
-    assertThat(
-        "getName",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getName()),
-        equalTo("[areaKM2, areaPct, name]"));
-    assertThat(
-        "getType",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getType()),
-        equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
-    assertThat(
-        "getValue",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getValue()),
-        equalTo("[30370000, 20.4, AF]"));
+    assertThat("getName", Arrays.toString(data.getFieldNames()), equalTo("[areaKM2, areaPct, name]"));
+    assertThat("getType", Arrays.toString(data.getFieldClasses()), equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
+    assertThat("getValue", Arrays.toString(data.getData().stream().findFirst().get().getValue()), equalTo("[30370000, 20.4, AF]"));
   }
 }

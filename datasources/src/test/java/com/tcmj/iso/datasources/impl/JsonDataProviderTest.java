@@ -34,10 +34,7 @@ public class JsonDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
-    assertThat(
-        "getKey",
-        Arrays.toString(data.getData().entrySet().stream().map(e -> e.getKey()).toArray()),
-        equalTo("[Africa, Antarctica]"));
+    assertThat("getKey", Arrays.toString(data.getData().stream().map(e -> e.getConstantName()).toArray()), equalTo("[Africa, Antarctica]"));
   }
 
   @Test
@@ -58,18 +55,9 @@ public class JsonDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
-    assertThat(
-        "getName",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getName()),
-        equalTo("[areaKM2, areaPct, name]"));
-    assertThat(
-        "getType",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getType()),
-        equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
-    assertThat(
-        "getValue",
-        Arrays.toString(data.getData().entrySet().iterator().next().getValue().getValue()),
-        equalTo("[30370000, 20.4, AF]"));
+    assertThat("getName", Arrays.toString(data.getFieldNames()), equalTo("[areaKM2, areaPct, name]"));
+    assertThat("getType", Arrays.toString(data.getFieldClasses()), equalTo("[class java.lang.Integer, class java.lang.Float, class java.lang.String]"));
+    assertThat("getValue", Arrays.toString(data.getData().iterator().next().getValue()),equalTo("[30370000, 20.4, AF]"));
   }
 
   @Test
