@@ -107,13 +107,10 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       temp.append(this.model.getClassNameSimple());
       temp.append(OPENC);
 
-      NameTypeValue triple = this.model.getData().values().iterator().next();
-
       int size = this.model.getSubFieldsAmount();
-
       for (int i = 0; i < size; i++) {
-        Class type = triple.getType()[i];
-        String field = triple.getName()[i];
+        String field = this.model.getFieldNames()[i];
+        Class type = this.model.getFieldClasses()[i];
         temp.append(type.getSimpleName());
         temp.append(SPACE);
         temp.append(field);
@@ -128,7 +125,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       temp.append(LINE);
 
       for (int i = 0; i < size; i++) {
-        String field = triple.getName()[i];
+        String field = this.model.getFieldNames()[i];
         temp.append(TAB4);
         temp.append(TAB4);
         temp.append("this.");
@@ -191,13 +188,13 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
   private void writeGetters() {
     buffer.append(LINE);
-    NameTypeValue triple = this.model.getData().values().iterator().next();
 
     int size = this.model.getSubFieldsAmount();
 
     for (int i = 0; i < size; i++) {
-      String nme = triple.getName()[i];
-      Class cls = triple.getType()[i];
+      String nme = this.model.getFieldNames()[i];
+      Class cls = this.model.getFieldClasses()[i];
+      
       String jdoc = mapJavadocs.get(nme);
       if (StringUtils.isNotBlank(jdoc)) {
         writeJavadoc(buffer, jdoc);
@@ -329,8 +326,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
   }
 
   private void writeSTARTCLASS() {
-    String content =
-        PUBLIC_ENUM
+    String content = PUBLIC_ENUM
             + Objects.requireNonNull(
                 this.model.getClassNameSimple(), "No class name set! Use .withName(String)!")
             + " {"
@@ -347,18 +343,15 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
       //start enum constants
 
-      for (Map.Entry<String, NameTypeValue> entry : this.model.getData().entrySet()) {
-        String constantName = entry.getKey();
+      for (NameTypeValue entry : this.model.getData()) {
+        String constantName = entry.getConstantName();
         startValueRecord(temp, constantName);
-
-        NameTypeValue triple = entry.getValue();
-
+  
         int size = this.model.getSubFieldsAmount();
 
         for (int i = 0; i < size; i++) {
-
-          Class type = triple.getType()[i];
-          Object value = triple.getValue()[i];
+          Class type =  this.model.getFieldClasses()[i];
+          Object value = entry.getValue()[i];
           temp.append(format(value, type));
           temp.append(COMMA);
           temp.append(SPACE);
@@ -370,13 +363,13 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       temp.append(";");
 
       //start field variables
-      NameTypeValue triple = this.model.getData().values().iterator().next();
+
 
       int size = this.model.getSubFieldsAmount();
 
       for (int i = 0; i < size; i++) {
-        String name = triple.getName()[i];
-        Class type = triple.getType()[i];
+        String name = this.model.getFieldNames()[i];
+        Class type = this.model.getFieldClasses()[i];
 
         temp.append(LINE);
         temp.append(TAB4);
@@ -389,8 +382,8 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
     } else { //without subfields
 
-      for (Map.Entry<String, NameTypeValue> entry : this.model.getData().entrySet()) {
-        String constantName = entry.getKey();
+      for (NameTypeValue entry : this.model.getData()) {
+        String constantName = entry.getConstantName();
         temp.append(TAB4);
         temp.append(constantName);
         temp.append(",");
@@ -437,4 +430,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
     }
     return -1;
   }
+
+  
+ 
 }

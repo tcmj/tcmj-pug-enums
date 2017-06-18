@@ -142,12 +142,12 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
   }
 
   private void writeEnumConstants() {
+    boolean hasSubfields = this.model.isEnumWithSubfields();
     //..loop through all data entries (Key=constant_name Value=NULL|Subfields
-    for (Map.Entry<String, NameTypeValue> entry : this.model.getData().entrySet()) {
-      final String constantName = entry.getKey();
-      final NameTypeValue triple = entry.getValue();
-      if (hasSubfields(triple)) {
-        Pair<String, Object[]> pair = format(triple.getType(), triple.getValue());
+    for (NameTypeValue entry : this.model.getData()) {
+      String constantName = entry.getConstantName();
+      if (hasSubfields ) {
+        Pair<String, Object[]> pair = format(this.model.getFieldClasses(), entry.getValue());
         TypeSpec.Builder constants =
             TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
 
@@ -179,11 +179,7 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     //            this.mapCustomCodeJavaDoc.put(fieldName, buffer.toString());
     //        }
   }
-
-  protected static boolean hasSubfields(NameTypeValue triple) {
-    return triple.getName() != null;
-  }
-
+ 
   private static Pair<String, Object[]> format(Class[] type, Object[] obj) {
 
     StringBuilder buffer = new StringBuilder();
@@ -208,4 +204,5 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     buffer.deleteCharAt(buffer.length() - 1);
     return new ImmutablePair<>(buffer.toString(), obj);
   }
+ 
 }

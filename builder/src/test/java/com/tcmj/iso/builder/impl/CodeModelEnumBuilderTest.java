@@ -42,13 +42,10 @@ public class CodeModelEnumBuilderTest extends ParentClassBuilderTest {
    */
   @Test
   public void shouldCreateEnumWithSingleValueWithTwoNumericSubfields() {
-    result =
-        classBuilder
+    result = classBuilder
             .withName("org.TimeUnit")
-            .addField(
-                "SECONDS", new String[] {"factor"}, new Class[] {Long.class}, new Object[] {1000L})
-            .addField(
-                "MILLIES", new String[] {"factor"}, new Class[] {Long.class}, new Object[] {1L})
+            .addField( "SECONDS", new String[] {"factor"}, new Class[] {Long.class}, new Object[] {1000L})
+            .addField( "MILLIES", new String[] {"factor"}, new Class[] {Long.class}, new Object[] {1L})
             .build();
     assertThat("class", result, containsString("public enum TimeUnit {"));
     assertThat("constants", result, containsString("SECONDS(1000L), MILLIES(1L);"));

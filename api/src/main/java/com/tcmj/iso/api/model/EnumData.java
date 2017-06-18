@@ -1,5 +1,6 @@
 package com.tcmj.iso.api.model;
 
+import com.tcmj.iso.api.ClassBuilder;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -86,6 +87,15 @@ public class EnumData {
     return data;
   }
 
+  public EnumData addConstant(String constantName, Object... values) {
+    if(values==null){
+      getData().add(NameTypeValue.of(constantName));
+    }else{
+      getData().add(NameTypeValue.of(constantName, values));
+    }
+    return this;
+  }
+  
   public int getEnumConstantsAmount() {
     return getData().size();
   }

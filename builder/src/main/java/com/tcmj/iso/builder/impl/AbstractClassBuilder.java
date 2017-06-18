@@ -6,7 +6,6 @@ import com.tcmj.iso.api.NamingStrategy;
 import com.tcmj.iso.api.SourceFormatter;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
-import com.tcmj.iso.api.model.NameTypeValue;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,27 +70,26 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
   }
 
   @Override
-  public ClassBuilder addField(String constantName, Object... values) {
-    NameTypeValue record =
-        NameTypeValue.of(this.model.getFieldNames(), this.model.getFieldClasses(), values);
-    this.model.getData().put(constantName, record);
+  public ClassBuilder addField(String constantName, Object[] values) {
+    this.model.addConstant(constantName, values);
     return this;
   }
-
+  
   @Override
-  public ClassBuilder addField(
-      String constantName, String[] fieldNames, Class[] classes, Object[] values) {
-    NameTypeValue record = NameTypeValue.of(fieldNames, classes, values);
-    this.model.getData().put(constantName, record);
-    return this;
+  public ClassBuilder addField(String constantName, String[] fieldNames, Class[] classes, Object[] values) {
+    this.model.setFieldNames(fieldNames);
+    this.model.setFieldClasses(classes);
+    this.model.addConstant(constantName, values);
+    return this; 
   }
 
   @Override
   public ClassBuilder addField(String constantName) {
-    this.model.getData().put(constantName, NameTypeValue.NULL);
-    return this;
+    this.model.addConstant(constantName);
+    return this;  
   }
-
+  
+  
   @Override
   public ClassBuilder addCustomStaticGetterMethod(
       String methodName, String paramType, String paramName, String code, String javaDoc) {

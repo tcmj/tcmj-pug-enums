@@ -38,8 +38,8 @@ public abstract class ParentClassBuilderTest {
     return classBuilder
         .withName("com.tcmj.any.AnyName")
         .setFields(new String[] {"version"}, new Class[] {String.class})
-        .addField("AAA", "700")
-        .addField("BBB", "500");
+        .addField("AAA", new Object[]{"700"})
+        .addField("BBB", new Object[]{"500"});
   }
 
   @Test(expected = ClassCreationException.class)
@@ -80,8 +80,8 @@ public abstract class ParentClassBuilderTest {
         classBuilder
             .withName("org.Country")
             .setFields(new String[] {"name", "size"}, new Class[] {String.class, Integer.class})
-            .addField("GERMANY", "Deutschland", 200)
-            .addField("FRANCE", "Frankreich", 300)
+            .addField("GERMANY", new Object[]{"Deutschland", 200})
+            .addField("FRANCE", new Object[]{"Frankreich", 300})
             .build();
     assertThat("class", result, containsString("public enum Country {"));
     assertThat("constants", result, containsString("GERMANY(\"Deutschland\", 200), FRANCE"));
@@ -139,8 +139,8 @@ public abstract class ParentClassBuilderTest {
             .setFields(
                 new String[] {"one", "two", "three"},
                 new Class[] {int.class, String.class, Date.class})
-            .addField("MUNICH", 8000, "Fleischpflanzerl", new Date())
-            .addField("BERLIN", 2000, "Frikadelle", new Date())
+            .addField("MUNICH", new Object[]{8000, "Fleischpflanzerl", new Date()})
+            .addField("BERLIN", new Object[]{2000, "Frikadelle", new Date()})
             .overrideGetter("two", "return String.valueOf(one);")
             .overrideGetter("one", "return this.one + 50;")
             .build();

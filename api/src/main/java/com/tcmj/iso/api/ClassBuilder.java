@@ -26,7 +26,7 @@ public interface ClassBuilder {
   ClassBuilder setFields(String[] fieldNames, Class[] classes);
 
   /** [Conditional] Add a field to the enum. */
-  ClassBuilder addField(String constantName, Object... values);
+  ClassBuilder addField(String constantName, Object[] values);
 
   /** [Conditional] Add a field to the enum. */
   ClassBuilder addField(String constantName, String[] fieldNames, Class[] classes, Object[] values);

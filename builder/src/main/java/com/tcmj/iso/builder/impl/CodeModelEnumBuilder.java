@@ -254,20 +254,19 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
   private void writeFields() {
     int loopCount = 0;
-    for (Map.Entry<String, NameTypeValue> entry : this.model.getData().entrySet()) {
+    for (NameTypeValue entry : this.model.getData()) {
+      String constantName = entry.getConstantName();
       loopCount++;
-      String constantName = entry.getKey();
 
       //New enum value
       JEnumConstant enumField = this.jclass.enumConstant(constantName);
 
-      NameTypeValue triple = entry.getValue();
-      if (triple.getName() != null) {
-        int size = triple.getName().length;
+      if (this.model.getFieldNames() != null) {
+        int size = this.model.getFieldNames().length;
         for (int i = 0; i < size; i++) {
-          String name = triple.getName()[i];
-          Class type = triple.getType()[i];
-          Object value = triple.getValue()[i];
+          String name = this.model.getFieldNames()[i];
+          Class type = this.model.getFieldClasses()[i];
+          Object value = entry.getValue()[i];
 
           //new enum constructor value
           addEnumFieldValue(enumField, type, value);
@@ -331,4 +330,5 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
     return this;
   }
+ 
 }
