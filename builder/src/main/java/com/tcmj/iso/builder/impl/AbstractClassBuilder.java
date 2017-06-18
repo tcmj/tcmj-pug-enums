@@ -35,12 +35,19 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
   }
 
   @Override
-  public ClassBuilder usingNamingStrategy(NamingStrategy instance) {
-    LOG.debug("...using NamingStrategy: {}", instance);
+  public ClassBuilder convertConstantNames(NamingStrategy instance) {
+    LOG.debug("...using NamingStrategy for constant names: {}", instance);
     this.model.setNamingStrategyConstants(instance);
     return this;
   }
-
+  
+  @Override
+  public ClassBuilder convertFieldNames(NamingStrategy instance) {
+    LOG.debug("...using NamingStrategy for field variable names: {}", instance);
+    this.model.setNamingStrategyFields(instance);
+    return this;
+  }
+  
   @Override
   public ClassBuilder usingCustomFormatter(SourceFormatter object) {
     this.sourceFormatter = Objects.requireNonNull(object, "Null not allowed for SourceFormatter!");

@@ -119,7 +119,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
       Fluent.builder()
           .fromDataSource(myDataProvider)
           .usingClassBuilder(bestEnumBuilder)
-          .usingNamingStrategy(getMyNamingStrategy())
+          .convertConstantNames(getMyNamingStrategy())
           .format(bestSourceCodeFormatter)
           .exportWith(enumExporter, exporterOptions)
           //.exportWith(EnumExporterFactory.getReportingEnumExporter())

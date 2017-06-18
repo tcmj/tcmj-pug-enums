@@ -11,7 +11,11 @@ public interface ClassBuilder {
   /** [Mandatory] Define a full qualified java class path and name. */
   ClassBuilder withName(String name);
 
-  ClassBuilder usingNamingStrategy(NamingStrategy instance);
+  /** [Optional] Change constant names in the enum. */
+  ClassBuilder convertConstantNames(NamingStrategy instance);
+  
+  /** [Optional] Change variable/field names in the enum. */
+  ClassBuilder convertFieldNames(NamingStrategy instance);
 
   /** [Optional] Add additional imports to the enum. */
   ClassBuilder addImport(String importTag);

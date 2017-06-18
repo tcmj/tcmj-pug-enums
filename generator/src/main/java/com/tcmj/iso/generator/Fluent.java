@@ -49,18 +49,22 @@ public class Fluent {
     public StepExporterOption usingDefaultClassBuilder() {
       end.classBuilder = ClassBuilderFactory.getBestEnumBuilder();
       LOG.debug("...using default/best available ClassBuilder: {}", end.classBuilder);
-      end.classBuilder.usingNamingStrategy(NamingStrategyFactory.harmonize());
+      end.classBuilder.convertConstantNames(NamingStrategyFactory.harmonize());
       return step3;
     }
   }
 
   public class MyStepExporterOption implements StepExporterOption {
     @Override
-    public StepFormatterOption usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy!"));
+    public StepFormatterOption convertConstantNames(NamingStrategy ns) {
+      end.classBuilder.convertConstantNames(Objects.requireNonNull(ns, "NamingStrategy!"));
       return step4;
     }
-
+    @Override
+    public StepFormatterOption convertFieldNames(NamingStrategy ns) {
+      end.classBuilder.convertFieldNames(Objects.requireNonNull(ns, "NamingStrategy!"));
+      return step4;
+    }
     @Override
     public StepFormatterOption exportWith(EnumExporter exporter) {
       end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
@@ -96,11 +100,17 @@ public class Fluent {
     }
 
     @Override
-    public EGEnd usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy!"));
+    public EGEnd convertConstantNames(NamingStrategy ns) {
+      end.classBuilder.convertConstantNames(Objects.requireNonNull(ns, "NamingStrategy!"));
       return end;
     }
 
+    @Override
+    public EGEnd convertFieldNames(NamingStrategy ns) {
+      end.classBuilder.convertFieldNames(Objects.requireNonNull(ns, "NamingStrategy!"));
+      return end;
+    }
+    
     @Override
     public StepFormatterOption exportWith(EnumExporter exporter) {
       end.enumExporter = Objects.requireNonNull(exporter, "EnumExporter!");
@@ -175,8 +185,14 @@ public class Fluent {
     }
 
     @Override
-    public EGEnd usingNamingStrategy(NamingStrategy ns) {
-      end.classBuilder.usingNamingStrategy(Objects.requireNonNull(ns, "NamingStrategy"));
+    public EGEnd convertConstantNames(NamingStrategy ns) {
+      end.classBuilder.convertConstantNames(Objects.requireNonNull(ns, "NamingStrategy"));
+      return end;
+    }
+    
+    @Override
+    public EGEnd convertFieldNames(NamingStrategy ns) {
+      end.classBuilder.convertFieldNames(Objects.requireNonNull(ns, "NamingStrategy"));
       return end;
     }
 
@@ -197,29 +213,25 @@ public class Fluent {
   /** Terminating interface, might also contain methods like execute(); */
   public interface EGEnd {
     void end();
-
-    EGEnd usingNamingStrategy(NamingStrategy ns);
-
+    EGEnd convertConstantNames(NamingStrategy ns);
+    EGEnd convertFieldNames(NamingStrategy ns);
     EGEnd format(SourceFormatter formatter);
-
     EGEnd exportWith(EnumExporter exporter);
-
     EGEnd exportWith(EnumExporter exporter, Map<String, Object> options);
   }
 
   public interface StepClassBuilder {
     EGEnd usingClassBuilder(ClassBuilder builder);
-
     StepExporterOption usingDefaultClassBuilder();
   }
 
   public interface StepExporterOption extends EGEnd {
     @Override
-    StepFormatterOption usingNamingStrategy(NamingStrategy ns);
-
+    StepFormatterOption convertConstantNames(NamingStrategy ns);
+    @Override
+    StepFormatterOption convertFieldNames(NamingStrategy ns);
     @Override
     StepFormatterOption exportWith(EnumExporter exporter);
-
     @Override
     EGEnd format(SourceFormatter formatter);
   }

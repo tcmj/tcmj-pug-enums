@@ -19,7 +19,7 @@ public class WikipediaExample2 {
       Fluent.builder()
           .fromDataSource(getMyDataProvider())
           .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
-          .usingNamingStrategy(getMyNamingStrategy())
+          .convertConstantNames(getMyNamingStrategy())
           .format(SourceFormatterFactory.getBestSourceCodeFormatter())
           .exportWith(getMyEnumExporter())
           .end();
