@@ -11,7 +11,7 @@ import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.model.NameTypeValue;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
-import java.io.UnsupportedEncodingException;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,18 +242,14 @@ public class Fluent {
     enumBuilder.addClassJavadoc(data.getJavaDoc(EnumData.JDocKeys.CLASS.name()));
     enumBuilder.setFields(data.getFieldNames(), data.getFieldClasses());
 
-    final Map<String, NameTypeValue> mapData =
+    final List<NameTypeValue> mapData =
         Objects.requireNonNull(data.getData(), "EnumData.Map is empty");
 
-    for (Map.Entry<String, NameTypeValue> entry : mapData.entrySet()) {
+    for (NameTypeValue nameTypeValue : mapData) {
 
-      final String key = Objects.requireNonNull(entry.getKey(), "EnumData.DataMap.Key");
+      final String key = Objects.requireNonNull(nameTypeValue.getConstantName(), "EnumData.DataMap.Key");
 
-      final NameTypeValue nameTypeValue =
-          Objects.requireNonNull(entry.getValue(), "EnumData.DataMap.NameTypeValue");
-
-      enumBuilder.addField(
-          key, Objects.requireNonNull(nameTypeValue.getValue(), "NameTypeValue.Value"));
+      enumBuilder.addField(key, Objects.requireNonNull(nameTypeValue.getValue(), "NameTypeValue.Value"));
     }
 
     String myEnum = enumBuilder.build();
