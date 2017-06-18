@@ -109,7 +109,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
       int size = this.model.getSubFieldsAmount();
       for (int i = 0; i < size; i++) {
-        String field = this.model.getFieldNames()[i];
+        String field = this.model.getFieldName(i);
         Class type = this.model.getFieldClasses()[i];
         temp.append(type.getSimpleName());
         temp.append(SPACE);
@@ -125,7 +125,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       temp.append(LINE);
 
       for (int i = 0; i < size; i++) {
-        String field = this.model.getFieldNames()[i];
+        String field = this.model.getFieldName(i);
         temp.append(TAB4);
         temp.append(TAB4);
         temp.append("this.");
@@ -192,7 +192,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
     int size = this.model.getSubFieldsAmount();
 
     for (int i = 0; i < size; i++) {
-      String nme = this.model.getFieldNames()[i];
+      String nme = this.model.getFieldName(i);
       Class cls = this.model.getFieldClasses()[i];
       
       String jdoc = mapJavadocs.get(nme);
@@ -368,7 +368,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       int size = this.model.getSubFieldsAmount();
 
       for (int i = 0; i < size; i++) {
-        String name = this.model.getFieldNames()[i];
+        String name = this.model.getFieldName(i);
         Class type = this.model.getFieldClasses()[i];
 
         temp.append(LINE);

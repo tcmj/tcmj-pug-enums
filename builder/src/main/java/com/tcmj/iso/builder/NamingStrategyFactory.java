@@ -10,14 +10,15 @@ import org.slf4j.LoggerFactory;
  * Provides several NamingStrategy objects which can be chained together.
  *
  * @todo NamingStrategyConversion of constantName from='Bolivia (Plurinational State of)'
- *     to='Boliviaplurinationalstateof'
+ * to='Boliviaplurinationalstateof'
  * @todo NamingStrategyConversion of constantName from='Bonaire, Sint Eustatius and Saba'
- *     to='Bonairesinteustatiusandsaba'
+ * to='Bonairesinteustatiusandsaba'
  * @todo NamingStrategyConversion of constantName from='Bosnia and Herzegovina'
- *     to='Bosniaandherzegovina'
+ * to='Bosniaandherzegovina'
  * @todo bei .harmonize darf das Space nicht weggenommen werden! Nur so kann ein weiterer NS
- *     eingereiht werden!
- *     <p>pugproductions - 2017-05-22 - tcmj.
+ * eingereiht werden!
+ * <p>
+ * pugproductions - 2017-05-22 - tcmj.
  */
 public class NamingStrategyFactory {
 
@@ -44,6 +45,10 @@ public class NamingStrategyFactory {
     return value -> value == null ? null : value.replace(' ', '_');
   }
 
+  public static NamingStrategy minus2underline() {
+    return value -> value == null ? null : value.replace('-', '_');
+  }
+
   public static NamingStrategy removeSpaces() {
     return value -> value == null ? null : value.replace(" ", "");
   }
@@ -58,7 +63,7 @@ public class NamingStrategyFactory {
         return null;
       }
       StringBuilder buffer = new StringBuilder();
-      for (int i = 0; i < value.length(); ) {
+      for (int i = 0; i < value.length();) {
         char current = value.charAt(i);
         if (i == 0) {
           buffer.append(Character.toUpperCase(current));
@@ -86,7 +91,7 @@ public class NamingStrategyFactory {
       }
       StringBuilder buffer = new StringBuilder();
       value = value.trim();
-      for (int i = 0; i < value.length(); ) {
+      for (int i = 0; i < value.length();) {
         char current = value.charAt(i);
         if (i == 0) {
           buffer.append(Character.toUpperCase(current));
@@ -119,48 +124,24 @@ public class NamingStrategyFactory {
         char current = value.charAt(i);
         int codePoint = value.codePointAt(i);
         if (current < 32) {
-          LOG.debug(
-              "Removing control character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing control character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current >= 32 && current <= 47) {
-          LOG.debug(
-              "Removing special character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current >= 48 && current <= 57) {
           LOG.trace("Leaving digit '{}'({}): {}", current, codePoint, Character.getName(codePoint));
           buffer.append(current);
         } else if (current >= 58 && current <= 64) {
-          LOG.debug(
-              "Removing special character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current >= 65 && current <= 90) { //A-Z
           buffer.append(current);
         } else if (current >= 91 && current <= 96) { //[\]^_`
-          LOG.debug(
-              "Removing special character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current >= 97 && current <= 122) { //a-z
           buffer.append(current);
         } else if (current >= 123 && current <= 191) {
-          LOG.debug(
-              "Removing special character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current == 215 || current == 247 || current == 451 || current == 760) {
-          LOG.debug(
-              "Removing very special character '{}'({}): {}",
-              current,
-              codePoint,
-              Character.getName(codePoint));
+          LOG.debug("Removing very special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else {
           String name = Character.getName(value.codePointAt(i));
           Matcher m = pattern.matcher(name);
@@ -174,15 +155,9 @@ public class NamingStrategyFactory {
               ourChar = letter.toLowerCase();
             }
             buffer.append(ourChar);
-            LOG.debug(
-                "Conversion of '{}'({}): {} to '{}'",
-                current,
-                codePoint,
-                Character.getName(codePoint),
-                ourChar);
+            LOG.debug("Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), ourChar);
           } else {
-            LOG.debug(
-                "Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+            LOG.debug("Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
             buffer.append(current);
           }
         }
@@ -219,15 +194,9 @@ public class NamingStrategyFactory {
               replacementChar = letter.toLowerCase();
             }
             buffer.append(replacementChar);
-            LOG.debug(
-                "Conversion of '{}'({}): {} to '{}'",
-                current,
-                codePoint,
-                Character.getName(codePoint),
-                replacementChar);
+            LOG.debug("Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), replacementChar);
           } else {
-            LOG.debug(
-                "Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+            LOG.debug("Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
             buffer.append(current);
           }
         } else {
@@ -250,8 +219,7 @@ public class NamingStrategyFactory {
         char current = value.charAt(i);
         int codePoint = value.codePointAt(i);
         if (current == 32 || current == 45 || current == 46 || current == 95) {
-          LOG.debug(
-              "Leave character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          LOG.debug("Leave character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
           buffer.append(current);
         } else if ((current >= 48 && current <= 57)
             || (current >= 65 && current <= 90)

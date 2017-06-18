@@ -264,7 +264,7 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
       if (this.model.getFieldNames() != null) {
         int size = this.model.getFieldNames().length;
         for (int i = 0; i < size; i++) {
-          String name = this.model.getFieldNames()[i];
+          String name = this.model.getFieldName(i);
           Class type = this.model.getFieldClasses()[i];
           Object value = entry.getValue()[i];
 

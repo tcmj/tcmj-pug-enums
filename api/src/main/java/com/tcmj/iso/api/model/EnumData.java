@@ -17,10 +17,10 @@ public class EnumData {
   private String className;
   private NamingStrategy namingStrategyConstants = NamingStrategy.getDefault();
   private NamingStrategy namingStrategyFields = NamingStrategy.getDefault();
-  private List<String> imports = new LinkedList<>();
+  private final List<String> imports = new LinkedList<>();
   private String[] fieldNames;
   private Class[] fieldClasses;
-  private List<NameTypeValue> data = new LinkedList<>();
+  private final List<NameTypeValue> data = new LinkedList<>();
 
   /** holds custom code used to place custom code on the standard getter methods. */
   Map<String, String> mapCustomCode;
@@ -121,11 +121,18 @@ public class EnumData {
   public String[] getFieldNames() {
     return fieldNames;
   }
+  /** Get sub field name at given position with allready applied naming strategy. */
+  public String getFieldName(int num) {
+    if(this.fieldNames == null || this.fieldNames.length==0){
+      throw new IllegalStateException("No sub field names available!");
+    }
+    return getNamingStrategyFields().convert(fieldNames[num]);
+  }
  
 
   public void setFieldNames(String... values) {
     if (this.fieldClasses != null && values != null && values.length != this.fieldClasses.length) {
-      throw new IllegalArgumentException("Array size of classes/names is not the same: " + this.fieldClasses + "/" + values.length);
+      throw new IllegalArgumentException("Array size of classes/names is not the same: " + this.fieldClasses.length + "/" + values.length);
     }
     this.fieldNames = values;
   }
@@ -136,7 +143,7 @@ public class EnumData {
 
   public void setFieldClasses(Class... values) {
     if (this.fieldNames != null && values != null && values.length != this.fieldNames.length) {
-      throw new IllegalArgumentException("Array size of names/classes is not the same: " + this.fieldNames + "/" + values.length);
+      throw new IllegalArgumentException("Array size of names/classes is not the same: " + this.fieldNames.length + "/" + values.length);
     }
     this.fieldClasses = values;
   }
