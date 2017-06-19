@@ -226,7 +226,7 @@ public class Fluent {
     LOG.debug("...chaining all together and execute it...");
 
     end.data = Objects.requireNonNull(end.getDataProvider(), "DataProvider").load();
-    final EnumData data = Objects.requireNonNull(end.getEnumData(), "EnumData");
+    final EnumData data = Objects.requireNonNull(end.getEnumData(), "EnumData object is null!");
     LOG.trace("PackageName: {} ClassName: {}", data.getPackageName(), data.getClassNameSimple());
     LOG.trace("DataProvider: {}", end.getDataProvider());
 
