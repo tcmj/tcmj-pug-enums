@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.tcmj.iso.api.DataProvider;
+import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.tools.EnumDataHelper;

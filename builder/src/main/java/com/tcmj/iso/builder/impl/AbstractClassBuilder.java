@@ -1,9 +1,9 @@
 package com.tcmj.iso.builder.impl;
 
 import java.util.Objects;
-import com.tcmj.iso.api.ClassBuilder;
-import com.tcmj.iso.api.NamingStrategy;
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.ClassBuilder;
+import com.tcmj.pug.enums.api.NamingStrategy;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import org.apache.commons.lang3.StringUtils;

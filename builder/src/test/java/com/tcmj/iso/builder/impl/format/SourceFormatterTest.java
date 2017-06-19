@@ -1,8 +1,8 @@
 package com.tcmj.iso.builder.impl.format;
 
 import com.tcmj.iso.builder.ClassBuilderFactory;
-import com.tcmj.iso.api.ClassBuilder;
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.ClassBuilder;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.containsString;

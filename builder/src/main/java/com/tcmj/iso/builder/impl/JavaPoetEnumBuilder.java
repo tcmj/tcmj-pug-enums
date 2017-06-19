@@ -7,7 +7,7 @@ import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.tcmj.iso.api.ClassBuilder;
+import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.model.NameTypeValue;

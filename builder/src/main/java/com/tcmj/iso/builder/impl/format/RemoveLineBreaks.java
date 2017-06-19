@@ -1,6 +1,6 @@
 package com.tcmj.iso.builder.impl.format;
 
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.SourceFormatter;
 
 /**
  * Normalizing Formatter which removes line breaks and reduces all doubled spaces to one. Also used

@@ -1,6 +1,6 @@
 package com.tcmj.pug.enums.example.provider;
 
-import com.tcmj.iso.api.DataProvider;
+import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.iso.api.model.EnumData;
 
 import static com.tcmj.iso.api.tools.EnumDataHelper.addConstantValue;

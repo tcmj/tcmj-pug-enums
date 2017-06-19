@@ -1,6 +1,6 @@
 package com.tcmj.iso.builder;
 
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.iso.builder.impl.format.CompressSpaces;
 import com.tcmj.iso.builder.impl.format.ConvertTabsToSpaces;
 import com.tcmj.iso.builder.impl.format.GoogleFormatter;

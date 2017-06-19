@@ -1,7 +1,7 @@
 package com.tcmj.iso.builder;
 
-import com.tcmj.iso.api.ClassBuilder;
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.ClassBuilder;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.iso.builder.impl.CodeModelEnumBuilder;
 import com.tcmj.iso.builder.impl.JavaPoetEnumBuilder;
 import com.tcmj.iso.builder.impl.StringBufferEnumBuilder;

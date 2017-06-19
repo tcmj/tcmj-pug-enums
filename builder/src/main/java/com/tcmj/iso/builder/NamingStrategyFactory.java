@@ -2,7 +2,7 @@ package com.tcmj.iso.builder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.tcmj.iso.api.NamingStrategy;
+import com.tcmj.pug.enums.api.NamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

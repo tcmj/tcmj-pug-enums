@@ -1,6 +1,6 @@
 package com.tcmj.iso.builder.impl.format;
 
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.SourceFormatter;
 
 /** Replace a tabulator character (\t) to a single space. */
 public class ConvertTabsToSpaces implements SourceFormatter {

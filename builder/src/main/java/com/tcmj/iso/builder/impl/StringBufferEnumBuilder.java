@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.tcmj.iso.api.ClassBuilder;
+import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.model.NameTypeValue;

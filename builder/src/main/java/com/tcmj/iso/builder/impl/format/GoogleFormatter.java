@@ -1,7 +1,7 @@
 package com.tcmj.iso.builder.impl.format;
 
 import com.google.googlejavaformat.java.Formatter;
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,8 +2,8 @@ package com.tcmj.iso.builder.impl;
 
 import java.util.Date;
 import java.util.regex.Pattern;
-import com.tcmj.iso.api.ClassBuilder;
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.ClassBuilder;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.builder.ClassBuilderFactory;

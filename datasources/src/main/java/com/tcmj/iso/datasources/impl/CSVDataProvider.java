@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import com.tcmj.iso.api.DataProvider;
+import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.tools.EnumDataHelper;

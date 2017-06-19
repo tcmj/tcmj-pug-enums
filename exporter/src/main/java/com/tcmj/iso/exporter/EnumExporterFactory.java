@@ -1,6 +1,6 @@
 package com.tcmj.iso.exporter;
 
-import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.iso.exporter.impl.InMemoryCompilingExporter;
 import com.tcmj.iso.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;

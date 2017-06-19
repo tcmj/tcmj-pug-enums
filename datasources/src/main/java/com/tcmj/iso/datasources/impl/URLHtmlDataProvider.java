@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import com.tcmj.iso.api.DataProvider;
+import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.iso.api.model.ClassCreationException;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.api.tools.EnumDataHelper;

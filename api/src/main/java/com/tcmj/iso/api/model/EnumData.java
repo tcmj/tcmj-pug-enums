@@ -1,13 +1,13 @@
 package com.tcmj.iso.api.model;
 
-import com.tcmj.iso.api.ClassBuilder;
+import com.tcmj.pug.enums.api.ClassBuilder;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-import com.tcmj.iso.api.NamingStrategy;
+import com.tcmj.pug.enums.api.NamingStrategy;
 
 /** Model class which holds all data used to produce a java enum class. */
 public class EnumData {

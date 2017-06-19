@@ -1,9 +1,9 @@
 package com.tcmj.pug.enums.example.fluent;
 
-import com.tcmj.iso.api.DataProvider;
-import com.tcmj.iso.api.EnumExporter;
-import com.tcmj.iso.api.Fluent;
-import com.tcmj.iso.api.NamingStrategy;
+import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.Fluent;
+import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
 import com.tcmj.iso.builder.SourceFormatterFactory;

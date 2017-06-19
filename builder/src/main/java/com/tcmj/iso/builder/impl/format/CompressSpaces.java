@@ -1,6 +1,6 @@
 package com.tcmj.iso.builder.impl.format;
 
-import com.tcmj.iso.api.SourceFormatter;
+import com.tcmj.pug.enums.api.SourceFormatter;
 
 /** Every couple of joined spaces will be set to a single space. */
 public class CompressSpaces implements SourceFormatter {

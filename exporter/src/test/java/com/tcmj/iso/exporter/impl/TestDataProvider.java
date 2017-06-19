@@ -1,6 +1,6 @@
 package com.tcmj.iso.exporter.impl;
 
-import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumExporter;
 
 /**
  * Creates java source enum test data in form of String objects. Used to test the {@link
