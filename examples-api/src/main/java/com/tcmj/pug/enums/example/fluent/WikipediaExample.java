@@ -1,7 +1,8 @@
-package com.tcmj.iso.crawler;
+package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.iso.api.DataProvider;
 import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.iso.api.Fluent;
 import com.tcmj.iso.api.NamingStrategy;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
@@ -9,10 +10,12 @@ import com.tcmj.iso.builder.SourceFormatterFactory;
 import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
-import com.tcmj.iso.generator.Fluent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Usage Example : Fluently load a Wikipedia table and transform it to a Java enum class. */
-public class WikipediaExample2 {
+public class WikipediaExample {
+  private static final transient Logger LOG = LoggerFactory.getLogger(WikipediaExample.class);
 
   public static void main(String[] args) {
     try {
@@ -25,8 +28,7 @@ public class WikipediaExample2 {
           .end();
 
     } catch (Exception e) {
-      e.printStackTrace();
-    }
+      LOG.error("Exception!", e);    }
   }
 
   private static EnumExporter getMyEnumExporter() {
@@ -46,11 +48,11 @@ public class WikipediaExample2 {
 
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.test.MTI", //enum name and path
-        "https://de.wikipedia.org/wiki/ISO_8583", //url to load
-        "table:nth-of-type(3)", //xpath to a record to further (also to a table possible)
+        "com.tcmj.test.MyWikipediaEnum", //enum name and path
+        "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
+        "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
         1, //enum constant column
-        new int[] {2, 3} //sub columns
+        new int[] {2, 3, 4} //sub columns
         );
   }
 }

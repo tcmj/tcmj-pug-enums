@@ -1,7 +1,8 @@
-package com.tcmj.iso.crawler;
+package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.iso.api.DataProvider;
 import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.iso.api.Fluent;
 import com.tcmj.iso.api.NamingStrategy;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.builder.NamingStrategyFactory;
@@ -9,24 +10,26 @@ import com.tcmj.iso.builder.SourceFormatterFactory;
 import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
-import com.tcmj.iso.generator.Fluent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Usage Example : Fluently load a Wikipedia table and transform it to a Java enum class. */
-public class WikipediaExample {
+public class FluentURLHtmlDataProviderIso3166Example {
+  private static final transient Logger LOG = LoggerFactory.getLogger(FluentURLHtmlDataProviderIso3166Example.class);
 
   public static void main(String[] args) {
     try {
       Fluent.builder()
           .fromDataSource(getMyDataProvider())
           .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
-          .convertConstantNames(getMyNamingStrategy())
+          .convertConstantNames(getConstantsNamingStrategy())
+          .convertFieldNames(getFieldsNamingStrategy())
           .format(SourceFormatterFactory.getBestSourceCodeFormatter())
           .exportWith(getMyEnumExporter())
           .end();
 
     } catch (Exception e) {
-      e.printStackTrace();
-    }
+      LOG.error("Exception!", e);    }
   }
 
   private static EnumExporter getMyEnumExporter() {
@@ -36,21 +39,25 @@ public class WikipediaExample {
         exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
   }
 
-  private static NamingStrategy getMyNamingStrategy() {
-    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
-    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
-    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
-    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-    return ns1.and(ns2).and(ns3).and(ns4);
+  private static NamingStrategy getConstantsNamingStrategy() {
+    return NamingStrategyFactory.upperCase()
+        .and(NamingStrategyFactory.space2underline())
+        .and(NamingStrategyFactory.replaceAtoZ())
+        .and(NamingStrategyFactory.removeProhibitedSpecials())
+        .and(NamingStrategyFactory.minus2underline());
   }
-
+  private static NamingStrategy getFieldsNamingStrategy() {
+    return 
+        NamingStrategyFactory.removeProhibitedSpecials()
+        .and(NamingStrategyFactory.minus2underline());
+  }
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
         "com.tcmj.test.MyWikipediaEnum", //enum name and path
-        "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
-        "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
-        1, //enum constant column
-        new int[] {2, 3, 4} //sub columns
+        "http://www.nationsonline.org/oneworld/country_code_list.htm", //url to load
+        "table#codelist", //css to a record to further (also to a table possible)
+        2, //enum constant column
+        new int[] { 3, 4, 5} //sub columns
         );
   }
 }

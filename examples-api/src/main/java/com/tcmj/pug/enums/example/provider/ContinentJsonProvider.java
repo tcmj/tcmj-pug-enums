@@ -1,4 +1,4 @@
-package com.tcmj.iso.generator.provider;
+package com.tcmj.pug.enums.example.provider;
 
 import java.io.BufferedReader;
 import java.net.URL;
@@ -12,27 +12,34 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcmj.iso.api.DataProvider;
 import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.iso.api.Fluent;
 import com.tcmj.iso.api.model.EnumData;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.exporter.EnumExporterFactory;
-import com.tcmj.iso.exporter.impl.InMemoryCompilingExporter;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
-import com.tcmj.iso.generator.Fluent;
 
-/** pugproductions - 2017-05-09 - tcmj. */
+/** Json data provider loadad from an url. 
+ * TODO: not ready!
+ */
 public class ContinentJsonProvider implements DataProvider {
 
   @Override
   public EnumData load() {
-
+    EnumData model = new EnumData();
     try {
+      model.setPackageName("com.tcmj.pug.enums.example.provider");
+      model.setClassName("Continents");
+      
+      
       URL continentsURL = ContinentJsonProvider.class.getResource("continents.json");
       Path path = Paths.get(continentsURL.toURI());
+      if (!Files.isRegularFile(path) || !Files.exists(path)) {
+        throw new IllegalArgumentException("json file not found!");
+      }
       JsonParser parser = new JsonParser();
 
       try (BufferedReader reader = Files.newBufferedReader(path)) {
         JsonArray outerArray = (JsonArray) parser.parse(reader);
-        //                LOG.trace("Outter array structure successfully found and parsed!");
 
         for (JsonElement record : outerArray) {
           System.out.println("JsonRecord: " + record);
@@ -45,40 +52,25 @@ public class ContinentJsonProvider implements DataProvider {
           for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             System.out.println("key=" + entry.getKey() + "   value=" + entry.getValue());
           }
-          //                        .getAsJsonArray().get(0).getAsJsonObject()
-          //                        .get("values").getAsJsonArray().get(0).getAsJsonObject()
-          //                        .get("value").getAsString();
 
         }
-      } catch (Exception e) {
-        e.printStackTrace();
       }
     } catch (Exception e) {
-      e.printStackTrace();
+      throw new IllegalArgumentException("json datasource errror!", e);
     }
-    return null;
+    return model;
   }
 
   public static void main(String[] args) {
-    DataProvider dataProvider = new ContinentJsonProvider();
     try {
-      dataProvider.load();
 
-      //            if (true) System.exit(0);
-
-      EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter();
-      EnumExporter exporterA = EnumExporterFactory.getInMemoryCompilingExporter();
-      EnumExporter exporter =
-          exporterA.and(
-              exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
+      EnumExporter exporter = EnumExporterFactory.getReportingEnumExporter();
 
       Fluent.builder()
-          .fromDataSource(dataProvider)
+          .fromDataSource(new ContinentJsonProvider())
           .usingClassBuilder(ClassBuilderFactory.getJavaPoetEnumBuilder())
-          .exportWith(exporter)
+          .exportWith(exporter, exporter.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()))
           .end();
-
-      System.out.println(((InMemoryCompilingExporter) exporterA).getEnumConstants());
 
     } catch (Exception ex) {
       ex.printStackTrace();

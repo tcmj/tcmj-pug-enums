@@ -1,11 +1,11 @@
-package com.tcmj.iso.generator.provider;
+package com.tcmj.pug.enums.example.provider;
 
 import com.tcmj.iso.api.DataProvider;
 import com.tcmj.iso.api.model.EnumData;
 
 import static com.tcmj.iso.api.tools.EnumDataHelper.addConstantValue;
 
-/** Planet earths continents. pugproductions - 2017-05-03 - tcmj. */
+/** Planet earths continents.  */
 public class ContinentDataProvider implements DataProvider {
 
   @Override
