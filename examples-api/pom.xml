@@ -9,12 +9,11 @@
     </parent>
     
     <groupId>com.tcmj.pug</groupId>
-    <artifactId>pug-enum-generator</artifactId>
+    <artifactId>pug-enum-examples-api</artifactId>
 
-    <name>tcmj-iso-generator</name>
+    <name>tcmj-pug-enum-examples-api</name>
     <description>
-        ISO Data Enum Generator.
-        This project chains all tcmj iso apis together. Here you can check out various usage examples.
+        Usage examples of the whole tcmj pug enum api.
     </description>
     <dependencies>
         <dependency>
@@ -33,44 +32,33 @@
             <groupId>com.tcmj.pug</groupId>
             <artifactId>pug-enum-datasources</artifactId>
         </dependency>
-
+        
         <dependency>
+            <!-- Optional dependency if you want javapoet as enum builder. -->
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+         </dependency>
+        <dependency>
+            <!-- Optional dependency if you want to use url datasources -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Optional dependency if you want to use json datasources -->
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.0</version>
+        </dependency>
+        <dependency>
+            <!-- logging abstraction framework -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
+            <!-- logging implementation -->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.sun.codemodel/codemodel -->
-        <dependency>
-            <!-- https://github.com/square/javapoet -->
-            <groupId>com.squareup</groupId>
-            <artifactId>javapoet</artifactId>
-            <version>1.8.0</version>
-         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
-            <!-- Html parsing library -->
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.10.2</version>
-        </dependency>
-        
-        <dependency>
-            <!-- Json library -->
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

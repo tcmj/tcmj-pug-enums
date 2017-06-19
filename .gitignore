@@ -5,3 +5,6 @@
 /generator/target/
 /iso-maven-plugin/target/
 /api/nbproject/
+/api-examples/target/
+/examples-api/target/
+/maven-plugin/target/

@@ -2,6 +2,7 @@ package com.tcmj.iso.generator;
 
 import com.tcmj.iso.api.DataProvider;
 import com.tcmj.iso.api.EnumExporter;
+import com.tcmj.iso.api.Fluent;
 import com.tcmj.iso.api.SourceFormatter;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.exporter.EnumExporterFactory;

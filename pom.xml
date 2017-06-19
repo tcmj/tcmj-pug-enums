@@ -83,6 +83,18 @@
                 <version>3.5</version>
             </dependency>
             <dependency>
+                <!-- Optional dependency if you want javapoet as enum builder. -->
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>1.8.0</version>
+            </dependency>
+            <dependency>
+                <!-- Optional dependency if you want to use url datasources -->
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.10.2</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>${ch.qos.logback.version}</version>
@@ -109,7 +121,6 @@
         <module>builder</module>
         <module>datasources</module>
         <module>exporter</module>
-        <module>generator</module>
-        <module>iso-maven-plugin</module>
+        <module>maven-plugin</module>
     </modules>
 </project>
