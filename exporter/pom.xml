@@ -4,21 +4,25 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.tcmj.iso</groupId>
-        <artifactId>tcmj-iso</artifactId>
-        <version>20.17.6.15</version>
+        <groupId>com.tcmj.pug</groupId>
+        <artifactId>tcmj-pug-enums</artifactId>
+        <version>1.2.6.15</version>
     </parent>
-    <groupId>com.tcmj.iso</groupId>
-    <artifactId>tcmj-iso-exporter</artifactId>
+    
+    <groupId>com.tcmj.pug</groupId>
+    <artifactId>pug-enum-exporter</artifactId>
 
-    <name>tcmj-iso-exporter</name>
+    <name>tcmj-pug-enum-exporter</name>
     <description>
         Exporter to do something with your source code enum Strings.
+        Usually you want to use the JavaSourceFileExporter but we also have 
+        a InMemoryCompilingExporter using standard JDK compiling classes and therefore
+        no additional dependencies.
     </description>
     <dependencies>
         <dependency>
-            <groupId>com.tcmj.iso</groupId>
-            <artifactId>tcmj-iso-api</artifactId>
+            <groupId>com.tcmj.pug</groupId>
+            <artifactId>pug-enum-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

@@ -3,23 +3,27 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <parent>
-        <groupId>com.tcmj.iso</groupId>
-        <artifactId>tcmj-iso</artifactId>
-        <version>20.17.6.15</version>
+        <groupId>com.tcmj.pug</groupId>
+        <artifactId>tcmj-pug-enums</artifactId>
+        <version>1.2.6.15</version>
     </parent>
-    <groupId>com.tcmj.iso</groupId>
-    <artifactId>tcmj-iso-builder</artifactId>
-    <name>tcmj-iso-builder</name>
+    
+    <groupId>com.tcmj.pug</groupId>
+    <artifactId>pug-enum-builder</artifactId>
+    
+    <name>tcmj-pug-enum-builder</name>
     <description>
-        Here you can find the API of ClassBuilder and SourceFormatter objects including several implementations.
+        ClassBuilder and SourceFormatter reference implementations.
         The ClassBuilders are focused to dynamically create the source code for java enum classes at runtime.
         It also covers the formatting of them.
-        Please note that you can have optional library dependencies. It depends on the implementations you want to use.
+        Please note that there are two optional dependencies:
+        - https://mvnrepository.com/artifact/com.sun.codemodel/codemodel
+        - https://github.com/square/javapoet
     </description>
     <dependencies>
         <dependency>
-            <groupId>com.tcmj.iso</groupId>
-            <artifactId>tcmj-iso-api</artifactId>
+            <groupId>com.tcmj.pug</groupId>
+            <artifactId>pug-enum-api</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.sun.codemodel/codemodel -->
         <dependency>
@@ -57,14 +61,12 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <!-- Slf4j logging implementation : LOGBACK-->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>${ch.qos.logback.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

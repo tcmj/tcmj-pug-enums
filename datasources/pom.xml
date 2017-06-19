@@ -4,31 +4,28 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>com.tcmj.iso</groupId>
-        <artifactId>tcmj-iso</artifactId>
-        <version>20.17.6.15</version>
+        <groupId>com.tcmj.pug</groupId>
+        <artifactId>tcmj-pug-enums</artifactId>
+        <version>1.2.6.15</version>
     </parent>
     
-    <groupId>com.tcmj.iso</groupId>
-    <artifactId>tcmj-iso-datasources</artifactId>
-    <name>tcmj-iso-datasources</name>
+    <groupId>com.tcmj.pug</groupId>
+    <artifactId>pug-enum-datasources</artifactId>
+    
+    <name>tcmj-pug-enum-datasources</name>
     <description>
         Provides several datasources where you can load raw enum data from.
-        *Static data provider
-        *JSon data provider
+        There are providers for static-, csv-, json- and url-datasources
+        Maybe you can exclude some dependencies if you not use them.
     </description>
     <dependencies>
         <dependency>
-            <groupId>com.tcmj.iso</groupId>
-            <artifactId>tcmj-iso-api</artifactId>
+            <groupId>com.tcmj.pug</groupId>
+            <artifactId>pug-enum-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -38,24 +35,26 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.10.2</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.8.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
             <version>1.4</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope> 
         </dependency>
     </dependencies>
 </project>
