@@ -1,4 +1,4 @@
-package com.tcmj.iso.tools;
+package com.tcmj.pug.enums.tools;
 
 /**
  * Converts strings to camel case conform strings and also java properties to setter or getter

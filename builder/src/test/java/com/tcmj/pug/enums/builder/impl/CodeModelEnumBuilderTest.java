@@ -1,6 +1,6 @@
-package com.tcmj.iso.builder.impl;
+package com.tcmj.pug.enums.builder.impl;
 
-import com.tcmj.iso.builder.ClassBuilderFactory;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import org.junit.Before;
 import org.junit.Test;
 

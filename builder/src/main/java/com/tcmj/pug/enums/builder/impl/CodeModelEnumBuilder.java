@@ -1,4 +1,4 @@
-package com.tcmj.iso.builder.impl;
+package com.tcmj.pug.enums.builder.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -28,7 +28,7 @@ import com.tcmj.pug.enums.model.NameTypeValue;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.sun.codemodel.JExpr._this;
-import static com.tcmj.iso.tools.CamelCase.toGetter;
+import static com.tcmj.pug.enums.tools.CamelCase.toGetter;
 
 /**
  * EnumBuilder. Generator used to create the enum: com.sun.codemodel Sun codemodel, part of the

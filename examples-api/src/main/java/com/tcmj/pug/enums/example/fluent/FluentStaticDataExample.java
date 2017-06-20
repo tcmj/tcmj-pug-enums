@@ -4,7 +4,7 @@ import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.SourceFormatter;
-import com.tcmj.iso.builder.ClassBuilderFactory;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
 import com.tcmj.pug.enums.example.provider.ContinentDataProvider;

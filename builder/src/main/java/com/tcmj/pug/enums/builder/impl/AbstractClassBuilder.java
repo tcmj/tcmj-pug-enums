@@ -1,4 +1,4 @@
-package com.tcmj.iso.builder.impl;
+package com.tcmj.pug.enums.builder.impl;
 
 import java.util.Objects;
 import com.tcmj.pug.enums.api.ClassBuilder;

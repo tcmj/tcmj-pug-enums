@@ -1,4 +1,4 @@
-package com.tcmj.iso.builder.impl;
+package com.tcmj.pug.enums.builder.impl;
 
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -6,7 +6,7 @@ import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.iso.builder.ClassBuilderFactory;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import org.junit.After;
 import org.junit.Test;
 

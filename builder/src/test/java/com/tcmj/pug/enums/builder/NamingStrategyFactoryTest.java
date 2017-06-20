@@ -1,18 +1,18 @@
-package com.tcmj.iso.builder;
+package com.tcmj.pug.enums.builder;
 
 import org.junit.Test;
 
-import static com.tcmj.iso.builder.NamingStrategyFactory.camel;
-import static com.tcmj.iso.builder.NamingStrategyFactory.camelStrict;
-import static com.tcmj.iso.builder.NamingStrategyFactory.extractParenthesis;
-import static com.tcmj.iso.builder.NamingStrategyFactory.harmonize;
-import static com.tcmj.iso.builder.NamingStrategyFactory.lowerCase;
-import static com.tcmj.iso.builder.NamingStrategyFactory.removeProhibitedSpecials;
-import static com.tcmj.iso.builder.NamingStrategyFactory.removeSpaces;
-import static com.tcmj.iso.builder.NamingStrategyFactory.replaceAtoZ;
-import static com.tcmj.iso.builder.NamingStrategyFactory.space2underline;
-import static com.tcmj.iso.builder.NamingStrategyFactory.trim;
-import static com.tcmj.iso.builder.NamingStrategyFactory.upperCase;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.camel;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.camelStrict;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.extractParenthesis;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.harmonize;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.lowerCase;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.removeProhibitedSpecials;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.removeSpaces;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.replaceAtoZ;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.space2underline;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.trim;
+import static com.tcmj.pug.enums.builder.NamingStrategyFactory.upperCase;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
