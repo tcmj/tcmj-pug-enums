@@ -1,4 +1,4 @@
-package com.tcmj.iso.api;
+package com.tcmj.pug.enums.api;
 
 import com.tcmj.pug.enums.api.NamingStrategy;
 import org.junit.Test;
