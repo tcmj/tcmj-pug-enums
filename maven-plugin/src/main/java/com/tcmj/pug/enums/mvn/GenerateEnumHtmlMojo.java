@@ -1,4 +1,4 @@
-package com.tcmj.iso.mvn;
+package com.tcmj.pug.enums.mvn;
 
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.DataProvider;
@@ -12,8 +12,8 @@ import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
-import static com.tcmj.iso.mvn.LittleHelper.arrange;
-import static com.tcmj.iso.mvn.LittleHelper.getLine;
+import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
+import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import java.util.Arrays;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;

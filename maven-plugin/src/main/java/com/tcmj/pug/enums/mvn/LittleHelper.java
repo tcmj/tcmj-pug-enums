@@ -1,4 +1,4 @@
-package com.tcmj.iso.mvn;
+package com.tcmj.pug.enums.mvn;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,7 +1,7 @@
-package com.tcmj.iso.mvn;
+package com.tcmj.pug.enums.mvn;
 
-import static com.tcmj.iso.mvn.LittleHelper.arrange;
-import static com.tcmj.iso.mvn.LittleHelper.getLine;
+import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
+import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
