@@ -1,6 +1,7 @@
-package com.tcmj.iso.exporter.tools;
+package com.tcmj.pug.enums.exporter.tools;
 
-import com.tcmj.iso.exporter.impl.TestDataProvider;
+import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
+import com.tcmj.pug.enums.exporter.impl.TestDataProvider;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

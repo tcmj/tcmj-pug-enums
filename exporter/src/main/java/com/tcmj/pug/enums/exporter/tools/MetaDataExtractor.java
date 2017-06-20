@@ -1,4 +1,4 @@
-package com.tcmj.iso.exporter.tools;
+package com.tcmj.pug.enums.exporter.tools;
 
 /** Extracts some data from the enum source needed by some exporter. */
 public class MetaDataExtractor {
