@@ -7,7 +7,7 @@ import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
-import com.tcmj.iso.datasources.impl.URLHtmlDataProvider;
+import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;
 import org.slf4j.Logger;
