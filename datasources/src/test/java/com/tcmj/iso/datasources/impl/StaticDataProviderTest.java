@@ -2,7 +2,7 @@ package com.tcmj.iso.datasources.impl;
 
 import java.io.Reader;
 import java.util.Arrays;
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.iso.datasources.tools.ReaderHelper;
 import org.junit.Test;
 

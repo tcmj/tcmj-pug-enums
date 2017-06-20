@@ -23,8 +23,8 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
 import com.tcmj.pug.enums.api.ClassBuilder;
-import com.tcmj.iso.api.model.ClassCreationException;
-import com.tcmj.iso.api.model.NameTypeValue;
+import com.tcmj.pug.enums.model.ClassCreationException;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.sun.codemodel.JExpr._this;

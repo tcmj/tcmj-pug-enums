@@ -2,8 +2,8 @@ package com.tcmj.iso.api;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import java.util.Set;
-import com.tcmj.iso.api.model.EnumData;
-import com.tcmj.iso.api.tools.EnumDataHelper;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.Test;

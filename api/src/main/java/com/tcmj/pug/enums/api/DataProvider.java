@@ -1,7 +1,7 @@
 package com.tcmj.pug.enums.api;
 
 import java.util.Objects;
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 
 /** API to implement a data loader which can provide enum data from any source. */
 public interface DataProvider {

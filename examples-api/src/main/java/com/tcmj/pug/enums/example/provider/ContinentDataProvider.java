@@ -1,9 +1,9 @@
 package com.tcmj.pug.enums.example.provider;
 
 import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 
-import static com.tcmj.iso.api.tools.EnumDataHelper.addConstantValue;
+import static com.tcmj.pug.enums.api.tools.EnumDataHelper.addConstantValue;
 
 /** Planet earths continents.  */
 public class ContinentDataProvider implements DataProvider {

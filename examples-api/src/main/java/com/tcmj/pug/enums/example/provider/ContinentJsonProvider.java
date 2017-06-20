@@ -13,7 +13,7 @@ import com.google.gson.JsonParser;
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.Fluent;
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.iso.builder.ClassBuilderFactory;
 import com.tcmj.iso.exporter.EnumExporterFactory;
 import com.tcmj.iso.exporter.impl.ReportingEnumExporter;

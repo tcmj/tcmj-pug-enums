@@ -1,4 +1,4 @@
-package com.tcmj.iso.api.model;
+package com.tcmj.pug.enums.model;
 
 import com.tcmj.pug.enums.api.ClassBuilder;
 import java.util.HashMap;

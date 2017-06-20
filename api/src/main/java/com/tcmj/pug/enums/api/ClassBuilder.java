@@ -1,6 +1,6 @@
 package com.tcmj.pug.enums.api;
 
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 
 /**
  * API Interface which allows implementation of different java source code builders. The

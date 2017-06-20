@@ -2,8 +2,8 @@ package com.tcmj.iso.datasources.impl;
 
 import java.util.Objects;
 import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.iso.api.model.EnumData;
-import com.tcmj.iso.api.tools.EnumDataHelper;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

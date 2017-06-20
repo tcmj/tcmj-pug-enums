@@ -1,7 +1,7 @@
 package com.tcmj.iso.datasources.impl;
 
 import java.util.Arrays;
-import com.tcmj.iso.api.model.EnumData;
+import com.tcmj.pug.enums.model.EnumData;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

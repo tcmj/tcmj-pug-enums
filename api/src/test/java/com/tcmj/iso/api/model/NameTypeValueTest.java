@@ -1,5 +1,6 @@
 package com.tcmj.iso.api.model;
 
+import com.tcmj.pug.enums.model.NameTypeValue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.equalTo;

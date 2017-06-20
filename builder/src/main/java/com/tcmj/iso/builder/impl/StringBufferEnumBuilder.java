@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import com.tcmj.pug.enums.api.ClassBuilder;
-import com.tcmj.iso.api.model.ClassCreationException;
-import com.tcmj.iso.api.model.EnumData;
-import com.tcmj.iso.api.model.NameTypeValue;
+import com.tcmj.pug.enums.model.ClassCreationException;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import com.tcmj.iso.tools.CamelCase;
 import org.apache.commons.lang3.StringUtils;
 

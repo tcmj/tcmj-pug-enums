@@ -1,9 +1,9 @@
-package com.tcmj.iso.api.tools;
+package com.tcmj.pug.enums.api.tools;
 
 import java.util.Objects;
-import com.tcmj.iso.api.model.ClassCreationException;
-import com.tcmj.iso.api.model.EnumData;
-import com.tcmj.iso.api.model.NameTypeValue;
+import com.tcmj.pug.enums.model.ClassCreationException;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 
 /** Provides code snippets to simplify working with {@link EnumData}. */
 public class EnumDataHelper {
