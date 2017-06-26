@@ -5,7 +5,7 @@
 
     <groupId>com.tcmj.pug</groupId>
     <artifactId>tcmj-pug-enums</artifactId>
-    <version>1.2.6.15</version>
+    <version>1.2.7.1-SNAPSHOT</version>
 
     <name>tcmj-pug-enums</name>
     <description>
@@ -23,7 +23,7 @@
     </description>
 
     <inceptionYear>2017</inceptionYear>
-    <url>https://github.com/tcmj/tcmj-iso.git</url>
+    <url>https://github.com/tcmj/tcmj-pug-enums</url>
     <developers>
         <developer>
             <id>tcmj</id>
@@ -42,9 +42,39 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <java.source.level.version>${java.version}</java.source.level.version>
+        
+        <bintray.repo>tcmj-pug-enums</bintray.repo>
+        <bintray.package>tcmj-pug-enums</bintray.package>
+        
         <org.slf4j.version>1.7.25</org.slf4j.version>
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
+        
     </properties>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+    <distributionManagement>
+        <repository>
+            <id>bintray-tcmj-tcmj-pug-enums</id>
+            <name>tcmj-tcmj-pug-enums</name>
+            <url>https://api.bintray.com/maven/tcmj/${bintray.repo}/${bintray.package}/;publish=1</url>
+        </repository>
+    </distributionManagement>
+        
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -122,5 +152,7 @@
         <module>datasources</module>
         <module>exporter</module>
         <module>maven-plugin</module>
+        
+        <module>examples-api</module>
     </modules>
 </project>

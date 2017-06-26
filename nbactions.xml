@@ -17,4 +17,25 @@
                 <goal>install</goal>
             </goals>
         </action>
+        <action>
+            <actionName>CUSTOM-deploy_to_bintray</actionName>
+            <displayName>deploy_to_bintray</displayName>
+            <goals>
+                <goal>deploy</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>bintray</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-versions_update_child_modules</actionName>
+            <displayName>versions_update_child_modules</displayName>
+            <recursive>false</recursive>
+            <goals>
+                <goal>versions:update-child-modules</goal>
+            </goals>
+            <properties>
+                <generateBackupPoms>false</generateBackupPoms>
+            </properties>
+        </action>
     </actions>

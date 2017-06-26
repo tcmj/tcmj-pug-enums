@@ -24,3 +24,13 @@ Amazing maven plugin which can be used to configure all things in a maven like s
 
 
 
+
+
+## Changelog
+### Version 1.2.6.15
+First Release Version with a working version of all modules.
+
+### Next Version 1.2.7.1
+* Feature: Override Subfield Names
+add ability to change default behavour of automatic extraction of sub field variable names
+
