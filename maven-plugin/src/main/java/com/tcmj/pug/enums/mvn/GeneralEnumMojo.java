@@ -6,6 +6,7 @@ import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -34,7 +35,10 @@ public class GeneralEnumMojo extends AbstractMojo {
 
   @Parameter(property = "tcmj.iso.generate.enum.url", required = true)
   protected String url;
-
+  
+  @Parameter(property = "tcmj.iso.generate.enum.subfieldnames", required = false)
+  private String[] subFieldNames;
+  
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
     getLog().info("PluginContext: " + getPluginContext());
@@ -44,6 +48,12 @@ public class GeneralEnumMojo extends AbstractMojo {
     getLog().info(arrange("SourceDirectory: " + this.sourceDirectory));
     getLog().info(arrange("URL: " + this.url));
 
+    if(this.subFieldNames!=null && this.subFieldNames.length > 0){
+      getLog().info(arrange("SubFieldNames: " + Arrays.toString(this.subFieldNames)));
+    }else{
+      getLog().info(arrange("SubFieldNames: <will be computed>"));
+    }
+    
     getLog().info(arrange("PluginContext.size: " + getPluginContext().size()));
     Object project = getPluginContext().get("project");
     getLog().info(arrange("Project: " + project.getClass()));
