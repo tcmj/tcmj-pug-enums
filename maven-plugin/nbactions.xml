@@ -8,13 +8,13 @@
                 <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.7.1-SNAPSHOT:generate-enum-html</goal>
             </goals>
             <properties>
-                <tcmj.iso.generate.enum.classname>com.tcmj.html.ClassNameHtmlEnum</tcmj.iso.generate.enum.classname>
-                <tcmj.iso.generate.enum.url>https://en.wikipedia.org/wiki/ISO_3166-1</tcmj.iso.generate.enum.url>
-                <tcmj.iso.generate.enum.cssselector>[title=Afghanistan]</tcmj.iso.generate.enum.cssselector>
-                <tcmj.iso.generate.enum.constantcolumn>1</tcmj.iso.generate.enum.constantcolumn>
-                <tcmj.iso.generate.enum.subdatacolumns>2,3,4</tcmj.iso.generate.enum.subdatacolumns>
-                <tcmj.iso.generate.enum.exporter>com.tcmj.iso.exporter.impl.InMemoryCompilingExporter</tcmj.iso.generate.enum.exporter>
-                <tcmj.iso.generate.enum.subfieldnames>alpha2Code,alpha3Code,numericCode</tcmj.iso.generate.enum.subfieldnames>
+                <com.tcmj.pug.enums.classname>com.tcmj.html.ClassNameHtmlEnum</com.tcmj.pug.enums.classname>
+                <com.tcmj.pug.enums.url>https://en.wikipedia.org/wiki/ISO_3166-1</com.tcmj.pug.enums.url>
+                <com.tcmj.pug.enums.cssselector>[title=Afghanistan]</com.tcmj.pug.enums.cssselector>
+                <com.tcmj.pug.enums.constantcolumn>1</com.tcmj.pug.enums.constantcolumn>
+                <com.tcmj.pug.enums.subdatacolumns>2,3,4</com.tcmj.pug.enums.subdatacolumns>
+                <com.tcmj.pug.enums.exporter>com.tcmj.iso.exporter.impl.InMemoryCompilingExporter</com.tcmj.pug.enums.exporter>
+                <com.tcmj.pug.enums.subfieldnames>alpha2Code,alpha3Code,numericCode</com.tcmj.pug.enums.subfieldnames>
             </properties>
         </action>
         <action>
@@ -25,8 +25,8 @@
                 <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.7.1-SNAPSHOT:generate-enum-json</goal>
             </goals>
             <properties>
-                <tcmj.iso.generate.enum.classname>com.tcmj.json.ClassNameJsonEnum</tcmj.iso.generate.enum.classname>
-                <tcmj.iso.generate.enum.url>todo</tcmj.iso.generate.enum.url>
+                <com.tcmj.pug.enums.classname>com.tcmj.json.ClassNameJsonEnum</com.tcmj.pug.enums.classname>
+                <com.tcmj.pug.enums.url>todo</com.tcmj.pug.enums.url>
             </properties>
         </action>
     </actions>
