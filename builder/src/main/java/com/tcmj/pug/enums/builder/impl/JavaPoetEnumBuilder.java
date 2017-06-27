@@ -146,22 +146,19 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     //..loop through all data entries (Key=constant_name Value=NULL|Subfields
     for (NameTypeValue entry : this.model.getData()) {
       String constantName = entry.getConstantName();
-      if (hasSubfields ) {
-        Pair<String, Object[]> pair = format(this.model.getFieldClasses(), entry.getValue());
-        TypeSpec.Builder constants =
-            TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
+      String newConstantName = model.getNamingStrategyConstants().convert(constantName);
+      if (LOG.isTraceEnabled() && !StringUtils.equals(constantName, newConstantName)) {
+        LOG.trace("NamingStrategy changes constantName from='{}' to='{}'", constantName, newConstantName);
+      }
 
-        String newConstantName = model.getNamingStrategyConstants().convert(constantName);
-        if (LOG.isTraceEnabled() && !StringUtils.equals(constantName, newConstantName)) {
-          LOG.trace(
-              "NamingStrategy changes constantName from='{}' to='{}'",
-              constantName,
-              newConstantName);
-        }
+      if (hasSubfields) {
+        Pair<String, Object[]> pair = format(this.model.getFieldClasses(), entry.getValue());
+        TypeSpec.Builder constants = TypeSpec.anonymousClassBuilder(pair.getLeft(), pair.getRight());
+
         builder.addEnumConstant(newConstantName, constants.build());
       } else {
         //the main (uppercase) enum constant value
-        builder.addEnumConstant(constantName);
+        builder.addEnumConstant(newConstantName);
       }
     }
   }

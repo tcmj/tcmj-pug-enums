@@ -272,7 +272,11 @@ public class Fluent {
 
     mapData.forEach((nameTypeValue) -> {
       final String key = Objects.requireNonNull(nameTypeValue.getConstantName(), "EnumData.DataMap.Key");
-      enumBuilder.addField(key, Objects.requireNonNull(nameTypeValue.getValue(), "NameTypeValue.Value"));
+      if(nameTypeValue.getValue() == null){
+        enumBuilder.addField(key);
+      }else{
+        enumBuilder.addField(key, nameTypeValue.getValue());
+      }
     });
 
     String myEnum = enumBuilder.build();
