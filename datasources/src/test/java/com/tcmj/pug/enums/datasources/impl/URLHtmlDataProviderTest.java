@@ -19,17 +19,16 @@ public class URLHtmlDataProviderTest {
 
   @Test
   public void testIsColumnInArray() throws Exception {
-    final int[] columnPos = new int[]{3,4,7};
+    final int[] columnPos = new int[]{3, 4, 7};
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < 10; i++) {
       if (URLHtmlDataProvider.isColumnInArray(columnPos, i)) {
         result.append(i);
       }
     }
-    assertThat( result.toString(), equalTo("347"));
+    assertThat(result.toString(), equalTo("347"));
   }
-  
-  
+
   @Test
   public void overallTestWithoutSubfields() throws Exception {
 
@@ -103,28 +102,37 @@ public class URLHtmlDataProviderTest {
     }
   }
 
-  //@todo fix  @Test
-  public void testGetxxxxxValueSpecialCase() throws Exception {
+  @Test
+  public void testGetValueSpecialCase2() throws Exception {
     int columnPosConstant = 1;
     String url = "https://en.wikipedia.org/wiki/States_of_Germany";
-    String cssselector = "29,477"; //"[title=Hanover]"
+    String cssselector =  "table.sortable";  
 
     //class="sortable wikitable jquery-tablesorter"
     Document doc = Jsoup.connect(url).get();
-
-    Elements tables = doc.select(cssselector);
-    System.out.println("tables.size()..." + tables.size());
-    for (Element tbl : tables) {
-      System.out.println("table:  " + tbl.cssSelector());
-    }
-
     Element table = locateTable(doc, cssselector);
-    System.out.println("table ..." + table);
+ 
+ 
+    System.out.println("table ..." + table );
+ 
+//    Elements tables = doc.select(cssselector);
+//    System.out.println("tables.size()..." + tables.size());
+//    for (Element tbl : tables) {
+//      System.out.println("table:  " + tbl.cssSelector());
+//    }
+//
+//   
+//    System.out.println("table ..." + table);
 
   }
 
   static Element locateTable(Document doc, String cssSelector) throws Exception {
     Elements selectionOfAnyRecord = Objects.requireNonNull(doc.select(cssSelector), "Bad CSS selector result for: " + cssSelector);
+    if (selectionOfAnyRecord.size() == 0) {
+      throw new IllegalStateException("Table not found!");
+    }else{
+      System.out.println("tables.size()..." + selectionOfAnyRecord.size());
+    }
     Element table = Objects.requireNonNull(selectionOfAnyRecord.get(0), "Bad CSS selector result for: " + cssSelector);
     boolean stillNotFound = true;
     while (stillNotFound) {
