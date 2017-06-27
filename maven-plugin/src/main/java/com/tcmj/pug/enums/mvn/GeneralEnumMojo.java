@@ -15,7 +15,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** tcmj iso generator maven plugin base. */
+/** tcmj pug enums maven plugin base. */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class GeneralEnumMojo extends AbstractMojo {
 
@@ -41,24 +41,22 @@ public class GeneralEnumMojo extends AbstractMojo {
   
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
-    getLog().info("PluginContext: " + getPluginContext());
     getLog().info(getLine());
-    getLog().info(arrange("Welcome to the tcmj iso enum generator maven plugin!"));
-    getLog().info(arrange("ClassName: " + this.className));
-    getLog().info(arrange("SourceDirectory: " + this.sourceDirectory));
-    getLog().info(arrange("URL: " + this.url));
+    getLog().info(arrange("Welcome to the tcmj pug enums maven plugin!"));
+    getLog().info(arrange("EnumClassName: " + this.className));
+    getLog().info(arrange("SourceOutputDirectory: " + this.sourceDirectory));
+    getLog().info(arrange("FetchURL: " + this.url));
 
     if(this.subFieldNames!=null && this.subFieldNames.length > 0){
-      getLog().info(arrange("SubFieldNames: " + Arrays.toString(this.subFieldNames)));
+      getLog().info(arrange("SubFieldNames (static): " + Arrays.toString(this.subFieldNames)));
     }else{
       getLog().info(arrange("SubFieldNames: <will be computed>"));
     }
-    
-    getLog().info(arrange("PluginContext.size: " + getPluginContext().size()));
+        
     Object project = getPluginContext().get("project");
-    getLog().info(arrange("Project: " + project.getClass()));
+    getLog().info(arrange("org.apache.maven.project.MavenProject: " + project.getClass()));
     Object pluginDescriptor = getPluginContext().get("pluginDescriptor");
-    getLog().info(arrange("PluginDescriptor: " + pluginDescriptor.getClass()));
+    getLog().info(arrange("org.apache.maven.plugin.descriptor.PluginDescriptor: " + pluginDescriptor.getClass()));
     getLog().info(getLine());
   }
 
