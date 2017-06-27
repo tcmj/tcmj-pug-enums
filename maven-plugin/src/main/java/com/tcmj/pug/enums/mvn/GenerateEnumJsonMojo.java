@@ -13,7 +13,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class GenerateEnumJsonMojo extends GeneralEnumMojo {
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.dataprovider",
+    property = "com.tcmj.pug.enums.dataprovider",
     defaultValue = "com.tcmj.generated.MyEnum",
     required = true
   )

@@ -27,27 +27,27 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
 
   @Parameter(
-      property = "tcmj.iso.generate.enum.dataprovider",
+      property = "com.tcmj.pug.enums.dataprovider",
       defaultValue = "com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider",
       required = true
   )
   private String dataProvider;
 
   @Parameter(
-      property = "tcmj.iso.generate.enum.cssselector",
+      property = "com.tcmj.pug.enums.cssselector",
       defaultValue = "table", //css selector to a record (also to a table possible),
       required = true
   )
   private String tableCssSelector;
 
   @Parameter(
-      property = "tcmj.iso.generate.enum.constantcolumn",
+      property = "com.tcmj.pug.enums.constantcolumn",
       defaultValue = "1",
       required = true
   )
   private Integer constantColumn;
 
-  @Parameter(property = "tcmj.iso.generate.enum.subdatacolumns")
+  @Parameter(property = "com.tcmj.pug.enums.subdatacolumns")
   private Integer[] subDataColumns;
 
   /** Print actual configuration settings and version info of the plugin. */

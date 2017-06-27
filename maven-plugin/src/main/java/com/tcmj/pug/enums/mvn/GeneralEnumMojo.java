@@ -20,23 +20,23 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class GeneralEnumMojo extends AbstractMojo {
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.classname",
+    property = "com.tcmj.pug.enums.classname",
     defaultValue = "com.tcmj.generated.MyEnum",
     required = true
   )
   protected String className;
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.sourcedirectory",
+    property = "com.tcmj.pug.enums.sourcedirectory",
     defaultValue = "${project.build.sourceDirectory}",
     required = true
   )
   protected File sourceDirectory;
 
-  @Parameter(property = "tcmj.iso.generate.enum.url", required = true)
+  @Parameter(property = "com.tcmj.pug.enums.url", required = true)
   protected String url;
   
-  @Parameter(property = "tcmj.iso.generate.enum.subfieldnames", required = false)
+  @Parameter(property = "com.tcmj.pug.enums.subfieldnames", required = false)
   protected String[] subFieldNames;
   
   /** Print actual configuration settings and version info of the plugin. */
