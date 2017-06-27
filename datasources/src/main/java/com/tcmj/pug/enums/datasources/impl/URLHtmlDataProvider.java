@@ -8,6 +8,7 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -154,32 +155,38 @@ public class URLHtmlDataProvider implements DataProvider {
   }
 
   private String[] getColumnNames(Element table) throws Exception {
+    if(isNoSubFieldsDefined()){
+      return null;
+    }
+    
     List<String> temp = new LinkedList<>();
     Elements th = table.select("th");
     int curPos = 0;
     for (Element element : th) {
       curPos++;
-      String name;
-      if (element.hasText()) {
-        name = element.text();
-      } else {
-        Elements link = element.select("a[href]");
-        name = link.text();
-      }
-      if (this.columnPos != null && this.columnPos.length > 0) {
-        if (Arrays.binarySearch(this.columnPos, curPos) >= 0) {
+      String name = getValue(element);
+        if (isColumnInArray(this.columnPos, curPos)) {
           String normalized = StringUtils.lowerCase(name);
           normalized = StringUtils.replace(normalized, "-", "_");
           normalized = StringUtils.replace(normalized, " ", "_");
           LOG.debug("Column Header found: '{}'='{}'", name, normalized);
           temp.add(normalized);
         }
-      }
     }
     return temp.toArray(new String[0]);
   }
 
+  private boolean isNoSubFieldsDefined() {
+    return !(this.columnPos != null && this.columnPos.length > 0);
+  }
+  static boolean isColumnInArray(int[] array, int value) {
+    return (Arrays.binarySearch(array, value) >= 0);
+  }
+
   private Class[] getColumnClasses(String[] fields) throws Exception {
+    if (isNoSubFieldsDefined()) {
+      return null;
+    }
     List<Class> temp = new LinkedList<>();
     for (String field : fields) {
       temp.add(String.class);

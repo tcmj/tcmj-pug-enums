@@ -18,6 +18,19 @@ import org.jsoup.select.Elements;
 public class URLHtmlDataProviderTest {
 
   @Test
+  public void shouldWorkIsColumnInArray() throws Exception {
+    final int[] columnPos = new int[]{3,4,7};
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < 10; i++) {
+      if (URLHtmlDataProvider.isColumnInArray(columnPos, i)) {
+        result.append(i);
+      }
+    }
+    assertThat( result.toString(), equalTo("347"));
+  }
+  
+  
+  @Test
   public void overallTestWithoutSubfields() throws Exception {
 
     URLHtmlDataProvider dataProvider = new URLHtmlDataProvider(
