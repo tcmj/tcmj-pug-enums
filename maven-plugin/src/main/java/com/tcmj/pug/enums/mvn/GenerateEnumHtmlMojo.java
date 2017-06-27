@@ -132,8 +132,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
       } else {
         end.convertFieldNames(getDefaultNamingStrategyFieldNames());
       }
-      
-      
+
       end
           .convertConstantNames(getDefaultNamingStrategyConstantNames())
           .format(bestSourceCodeFormatter)
@@ -142,7 +141,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
           .end();
 
     } catch (Exception e) {
-      getLog().error("Cannot create your enum! ", e);
+      getLog().error("Cannot create your enum: " + className + "!", e);
       throw new MojoExecutionException("ExecutionFailure!", e);
     }
   }
