@@ -37,7 +37,7 @@ public class GeneralEnumMojo extends AbstractMojo {
   protected String url;
   
   @Parameter(property = "tcmj.iso.generate.enum.subfieldnames", required = false)
-  private String[] subFieldNames;
+  protected String[] subFieldNames;
   
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {

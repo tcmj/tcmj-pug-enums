@@ -14,6 +14,7 @@
                 <tcmj.iso.generate.enum.constantcolumn>1</tcmj.iso.generate.enum.constantcolumn>
                 <tcmj.iso.generate.enum.subdatacolumns>2,3,4</tcmj.iso.generate.enum.subdatacolumns>
                 <tcmj.iso.generate.enum.exporter>com.tcmj.iso.exporter.impl.InMemoryCompilingExporter</tcmj.iso.generate.enum.exporter>
+                <tcmj.iso.generate.enum.subfieldnames>alpha2Code,alpha3Code,numericCode</tcmj.iso.generate.enum.subfieldnames>
             </properties>
         </action>
         <action>

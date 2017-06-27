@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,12 @@ public class Fluent {
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
+    
+    @Override
+    public EGEnd useFixedFieldNames(String[] fieldNames) {
+      end.fieldNames = fieldNames;
+      return end;
+    }
 
     @Override
     public void end() {
@@ -115,6 +122,12 @@ public class Fluent {
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
+
+    @Override
+    public EGEnd useFixedFieldNames(String[] fieldNames) {
+      end.fieldNames = fieldNames;
+      return end;
+    }
   }
 
   /** Implementation of the final step. */
@@ -125,7 +138,9 @@ public class Fluent {
     private SourceFormatter formatter;
     private EnumExporter enumExporter;
     private Map<String, Object> enumExporterOptions;
+    private String[] fieldNames;
 
+    
     public DataProvider getDataProvider() {
       return dataProvider;
     }
@@ -187,6 +202,12 @@ public class Fluent {
       LOG.debug("...using SourceFormatter: {}", end.formatter);
       return end;
     }
+
+    @Override
+    public EGEnd useFixedFieldNames(String[] fieldNames) {
+      this.fieldNames = fieldNames;
+      return end;
+    }
   }
 
   public StepClassBuilder fromDataSource(DataProvider dataProvider) {
@@ -200,6 +221,7 @@ public class Fluent {
     void end();
     EGEnd convertConstantNames(NamingStrategy ns);
     EGEnd convertFieldNames(NamingStrategy ns);
+    EGEnd useFixedFieldNames(String[] fieldNames);
     EGEnd format(SourceFormatter formatter);
     EGEnd exportWith(EnumExporter exporter);
     EGEnd exportWith(EnumExporter exporter, Map<String, Object> options);
@@ -229,6 +251,13 @@ public class Fluent {
     final EnumData data = Objects.requireNonNull(end.getEnumData(), "EnumData object is null!");
     LOG.trace("PackageName: {} ClassName: {}", data.getPackageName(), data.getClassNameSimple());
     LOG.trace("DataProvider: {}", end.getDataProvider());
+    
+    if(end.fieldNames!=null){
+      //Overriding the field names usually fetched by the data provider implementation!
+      data.setFieldNames(end.fieldNames);
+      LOG.trace("UsingFixedFieldNames: {}", Arrays.toString(data.getFieldNames()));
+    }
+      
 
     final ClassBuilder enumBuilder = Objects.requireNonNull(end.getClassBuilder(), "ClassBuilder");
     LOG.trace("ClassBuilder: {}", enumBuilder);

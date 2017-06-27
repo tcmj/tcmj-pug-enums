@@ -40,26 +40,20 @@ public class URLHtmlDataProvider implements DataProvider {
     model.setPackageName(EnumDataHelper.extractPackage(fullClassName));
     model.setClassName(EnumDataHelper.extractSimpleClassName(fullClassName));
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
-    this.cssSelector =
-        Objects.requireNonNull(tableSelector, "XPath selector for table cannot be null!");
-    this.columnPosConstant =
-        Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");
+    this.cssSelector = Objects.requireNonNull(tableSelector, "XPath selector for table cannot be null!");
+    this.columnPosConstant = Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");
     this.columnPos = columnPos; //column indexes to take
   }
 
-  private Element locateTable(Document doc) throws Exception {
-    Elements selectionOfAnyRecord =
-        Objects.requireNonNull(
-            doc.select(this.cssSelector), "Bad CSS selector result for: " + this.cssSelector);
+  Element locateTable(Document doc) throws Exception {
+    Elements selectionOfAnyRecord = Objects.requireNonNull(doc.select(this.cssSelector), "Bad CSS selector result for: " + this.cssSelector);
     LOG.debug("CSS election result: {}", selectionOfAnyRecord);
-    Element table =
-        Objects.requireNonNull(
-            selectionOfAnyRecord.get(0), "Bad CSS selector result for: " + this.cssSelector);
+    Element table = Objects.requireNonNull(selectionOfAnyRecord.get(0), "Bad CSS selector result for: " + this.cssSelector);
     boolean stillNotFound = true;
     while (stillNotFound) {
       if ("table".equalsIgnoreCase(table.tagName())) {
         stillNotFound = false;
-        LOG.debug("Tag successfully found: <{}>", table.tag());
+        LOG.debug("Tag successfully found: <{}> ({})", table.tag(), table.cssSelector());
       } else {
         try {
           table = table.parent();
@@ -129,7 +123,7 @@ public class URLHtmlDataProvider implements DataProvider {
     }
   }
 
-  private String getValue(Element element) throws Exception {
+  String getValue(Element element) throws Exception {
     String value = null;
     if (element.hasText()) {
       if (element.children().size() == 1) {

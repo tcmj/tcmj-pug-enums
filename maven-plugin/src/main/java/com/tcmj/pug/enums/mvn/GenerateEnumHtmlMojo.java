@@ -27,23 +27,23 @@ import org.apache.maven.plugins.annotations.Parameter;
 public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.dataprovider",
-    defaultValue = "com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider",
-    required = true
+      property = "tcmj.iso.generate.enum.dataprovider",
+      defaultValue = "com.tcmj.iso.datasources.impl.URLXPathHtmlDataProvider",
+      required = true
   )
   private String dataProvider;
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.cssselector",
-    defaultValue = "table", //css selector to a record (also to a table possible),
-    required = true
+      property = "tcmj.iso.generate.enum.cssselector",
+      defaultValue = "table", //css selector to a record (also to a table possible),
+      required = true
   )
   private String tableCssSelector;
 
   @Parameter(
-    property = "tcmj.iso.generate.enum.constantcolumn",
-    defaultValue = "1",
-    required = true
+      property = "tcmj.iso.generate.enum.constantcolumn",
+      defaultValue = "1",
+      required = true
   )
   private Integer constantColumn;
 
@@ -54,10 +54,7 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
   @Override
   protected void displayYoureWelcome() {
     super.displayYoureWelcome();
-    getLog()
-        .info(
-            arrange(
-                "Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
+    getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
     getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
     getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
     getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
@@ -81,10 +78,19 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
         this.tableCssSelector, //xpath to a record to further (also to a table possible)
         this.constantColumn, //enum constant column
         subs //sub columns
-        );
+    );
   }
 
-  private static NamingStrategy getMyNamingStrategy() {
+  private static NamingStrategy getDefaultNamingStrategyConstantNames() {
+    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
+    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
+    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
+    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
+    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
+  }
+
+  private static NamingStrategy getDefaultNamingStrategyFieldNames() {
     NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
     NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
     NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
@@ -110,16 +116,26 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
       final ClassBuilder bestEnumBuilder = ClassBuilderFactory.getBestEnumBuilder();
       getLog().info(arrange("ClassBuilder: " + bestEnumBuilder));
 
-      final SourceFormatter bestSourceCodeFormatter =
-          SourceFormatterFactory.getBestSourceCodeFormatter();
+      final SourceFormatter bestSourceCodeFormatter
+          = SourceFormatterFactory.getBestSourceCodeFormatter();
       getLog().info(arrange("SourceFormatter: " + bestSourceCodeFormatter));
 
       final EnumExporter enumExporter = getEnumExporter();
       final Map<String, Object> exporterOptions = getEnumExporterOptions();
-      Fluent.builder()
+      Fluent builder = Fluent.builder();
+      Fluent.EGEnd end = builder
           .fromDataSource(myDataProvider)
-          .usingClassBuilder(bestEnumBuilder)
-          .convertConstantNames(getMyNamingStrategy())
+          .usingClassBuilder(bestEnumBuilder);
+
+      if (this.subFieldNames != null && this.subFieldNames.length > 0) {
+        end.useFixedFieldNames(subFieldNames);
+      } else {
+        end.convertFieldNames(getDefaultNamingStrategyFieldNames());
+      }
+      
+      
+      end
+          .convertConstantNames(getDefaultNamingStrategyConstantNames())
           .format(bestSourceCodeFormatter)
           .exportWith(enumExporter, exporterOptions)
           //.exportWith(EnumExporterFactory.getReportingEnumExporter())
