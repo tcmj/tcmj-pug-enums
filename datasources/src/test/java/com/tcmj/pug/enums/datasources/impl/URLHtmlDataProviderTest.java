@@ -18,7 +18,7 @@ import org.jsoup.select.Elements;
 public class URLHtmlDataProviderTest {
 
   @Test
-  public void shouldWorkIsColumnInArray() throws Exception {
+  public void testIsColumnInArray() throws Exception {
     final int[] columnPos = new int[]{3,4,7};
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < 10; i++) {
