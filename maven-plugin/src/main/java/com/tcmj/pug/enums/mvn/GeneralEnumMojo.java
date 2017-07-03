@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -51,13 +52,13 @@ public class GeneralEnumMojo extends AbstractMojo {
     getLog().info(arrange("FetchURL: " + this.url));
 
     if(isParameterSet(this.subFieldNames)){
-      getLog().info(arrange("SubFieldNames (static): " + Arrays.toString(this.subFieldNames)));
+      getLog().info(arrange("SubFieldNames: " + Arrays.toString(this.subFieldNames)));
     }else{
       getLog().info(arrange("SubFieldNames: <will be computed>"));
     }
     
     if (isParameterSet(this.javadocClassLevel)) {
-      getLog().info(arrange("JavaDocClassLevel (static): " + Arrays.toString(this.javadocClassLevel)));
+      Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
     } else {
       getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
     }
