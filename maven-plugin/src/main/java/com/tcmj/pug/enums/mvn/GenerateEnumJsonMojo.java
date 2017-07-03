@@ -1,23 +1,15 @@
 package com.tcmj.pug.enums.mvn;
 
+import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.NamingStrategy;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 /** Goal which extracts data from a Json source (URL or file). */
 @Mojo(name = "generate-enum-json", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class GenerateEnumJsonMojo extends GeneralEnumMojo {
-
-  @Parameter(
-    property = "com.tcmj.pug.enums.dataprovider",
-    defaultValue = "com.tcmj.generated.MyEnum",
-    required = true
-  )
-  private String dataProvider;
 
   @Override
   protected void displayYoureWelcome() {
@@ -28,7 +20,17 @@ public class GenerateEnumJsonMojo extends GeneralEnumMojo {
   }
 
   @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
-    displayYoureWelcome();
+  protected DataProvider getDataProvider() {
+    throw new UnsupportedOperationException("Not supported yet."); 
+  }
+
+  @Override
+  protected NamingStrategy getDefaultNamingStrategyConstantNames() {
+    throw new UnsupportedOperationException("Not supported yet."); 
+  }
+
+  @Override
+  protected NamingStrategy getDefaultNamingStrategyFieldNames() {
+    throw new UnsupportedOperationException("Not supported yet."); 
   }
 }
