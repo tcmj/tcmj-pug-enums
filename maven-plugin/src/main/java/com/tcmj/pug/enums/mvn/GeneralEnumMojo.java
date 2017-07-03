@@ -39,6 +39,9 @@ public class GeneralEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.subfieldnames", required = false)
   protected String[] subFieldNames;
   
+  @Parameter(property = "com.tcmj.pug.enums.classjavadoc", required = false)
+  protected String[] javadocClassLevel;
+  
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
     getLog().info(getLine());
@@ -47,12 +50,18 @@ public class GeneralEnumMojo extends AbstractMojo {
     getLog().info(arrange("SourceOutputDirectory: " + this.sourceDirectory));
     getLog().info(arrange("FetchURL: " + this.url));
 
-    if(this.subFieldNames!=null && this.subFieldNames.length > 0){
+    if(isParameterSet(this.subFieldNames)){
       getLog().info(arrange("SubFieldNames (static): " + Arrays.toString(this.subFieldNames)));
     }else{
       getLog().info(arrange("SubFieldNames: <will be computed>"));
     }
-        
+    
+    if (isParameterSet(this.javadocClassLevel)) {
+      getLog().info(arrange("JavaDocClassLevel (static): " + Arrays.toString(this.javadocClassLevel)));
+    } else {
+      getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
+    }
+    
     Object project = getPluginContext().get("project");
     getLog().info(arrange("org.apache.maven.project.MavenProject: " + project.getClass()));
     Object pluginDescriptor = getPluginContext().get("pluginDescriptor");
@@ -60,6 +69,11 @@ public class GeneralEnumMojo extends AbstractMojo {
     getLog().info(getLine());
   }
 
+  protected static boolean isParameterSet(String[] param){
+    return param != null && param.length > 0;
+  }
+  
+  
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     displayYoureWelcome();

@@ -127,7 +127,8 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
           .fromDataSource(myDataProvider)
           .usingClassBuilder(bestEnumBuilder);
 
-      if (this.subFieldNames != null && this.subFieldNames.length > 0) {
+
+      if (isParameterSet(this.subFieldNames)) {
         end.useFixedFieldNames(subFieldNames);
       } else {
         end.convertFieldNames(getDefaultNamingStrategyFieldNames());
