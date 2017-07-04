@@ -27,7 +27,10 @@ public class JavaSourceFileExporter implements EnumExporter {
     String exportPathPrefix = (String) options.get(OPTION_EXPORT_PATH_PREFIX);
 
     String directories = MetaDataExtractor.getPackageDirectories(data); //eg.: com/tcmj/iso
+    System.out.println("directories - "+directories);
+    
     String fileName = MetaDataExtractor.getFileNameSingle(data); //eg.: MyEnum.java
+    System.out.println("fileName - "+fileName);
 
     Path exportDir = Paths.get(exportPathPrefix, directories);
     try {

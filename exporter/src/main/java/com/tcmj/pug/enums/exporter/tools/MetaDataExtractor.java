@@ -24,12 +24,30 @@ public class MetaDataExtractor {
 
   /** Simple java class name. eg.: MyEnum */
   public static String getClassNameSimple(String source) {
+    //@todo fix this mess !!!
+    String a = getClassNameSimple0(source);
+    if (a != null && a.indexOf(" ") != -1) {
+      a = getClassNameSimple1(source);
+    }
+    return a.trim();
+  }
+
+  private static String getClassNameSimple0(String source) {
     int idxPkg = source.indexOf("enum ");
     if (idxPkg == -1) {
       throw new IllegalStateException("Cannot extract ClassName!");
     } else {
       int idxSemi = source.indexOf("{");
       return source.substring((idxPkg + 5), idxSemi).trim();
+    }
+  }
+  private static String getClassNameSimple1(String source) {
+    int idxPkg = source.indexOf("public enum ");
+    if (idxPkg == -1) {
+      throw new IllegalStateException("Cannot extract ClassName!");
+    } else {
+      int idxSemi = source.indexOf("{");
+      return source.substring((idxPkg + 7 + 5), idxSemi).trim();
     }
   }
 

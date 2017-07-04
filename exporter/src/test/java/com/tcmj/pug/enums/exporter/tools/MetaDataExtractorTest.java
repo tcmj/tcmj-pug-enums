@@ -55,6 +55,26 @@ public class MetaDataExtractorTest {
         MetaDataExtractor.getClassNameSimple(data.getEnumNamed("a.b.c.d.e", "Food")),
         equalTo("Food"));
   }
+  
+  @Test
+  public void testGetClassNameSimpleFromEnumWithJavadoc() throws Exception {
+    //given
+    String tstenum = "package com.tcmj.html;\n"
+        + "/**\n"
+        + "  *\n"
+        + "  * This is my dynamically generated java enum class.\n"
+        + "  * <p>Data has been fetched from https://en.wikipedia.org/wiki/ISO_3166-1\n"
+        + "  *\n"
+        + "  */\n"
+        + "public enum ClassNameHtmlEnum {\n"
+        + "  AFGHANISTAN(\"AF\", \"AFG\", \"004\"),\n"
+        + "...";
+    System.out.println(tstenum);
+    assertThat(
+        MetaDataExtractor.getClassNameSimple(tstenum),
+        equalTo("ClassNameHtmlEnum"));
+    
+  }
 
   @Test
   public void testGetClassNameUnformated() throws Exception {

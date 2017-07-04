@@ -96,8 +96,7 @@ public class JavaSourceFileExporterTest {
   @Test
   public void shouldExportToFileAsOneLiner() throws Exception {
     new JavaSourceFileExporter()
-        .export(
-            data.getUnformatedEnum(), JavaSourceFileExporter.createExportPathOptions(testFiles));
+        .export( data.getUnformatedEnum(), JavaSourceFileExporter.createExportPathOptions(testFiles) );
 
     //validate com.tcmj.iso
     Path exportPath = Paths.get(testFiles.toString(), "com/tcmj/iso/UnFormat.java");
