@@ -3,9 +3,13 @@ The tcmj pug enums project is a toolkit to create high quality java enum classes
 A highlight of the project is our maven plugin which allows you to create a java enum class simply by configuration.
 Our killer-use-case is to have a actual version of all iso-3166 countries ready in the form of a java enum.
 
+## Where to go
+* Wiki: https://github.com/tcmj/tcmj-pug-enums/wiki
+
+
 
 ## Example Input Data
-Input data can be visited at https://en.wikipedia.org/wiki/ISO_3166-1
+Input data can be visited at https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements
 
 ## Example Output Result 
 automagically creates an enum containing 249 countries
