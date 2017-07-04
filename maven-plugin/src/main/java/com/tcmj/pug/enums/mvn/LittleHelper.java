@@ -10,6 +10,12 @@ public class LittleHelper {
     String posedText = StringUtils.rightPad("  " + text, 143);
     return StringUtils.join("* *".intern(), posedText, "* *".intern());
   }
+  
+  public static String encloseJavaDoc(String text) {
+    String prefixed = StringUtils.prependIfMissing(text, "<div>");
+    String suffixed = StringUtils.appendIfMissing(prefixed, "</div>");
+    return suffixed;
+  }
 
   public static String getLine() {
     return STARS;

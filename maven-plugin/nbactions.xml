@@ -15,7 +15,7 @@
                 <com.tcmj.pug.enums.subdatacolumns>2,3,4</com.tcmj.pug.enums.subdatacolumns>
                 <com.tcmj.pug.enums.exporter>com.tcmj.iso.exporter.impl.InMemoryCompilingExporter</com.tcmj.pug.enums.exporter>
                 <com.tcmj.pug.enums.subfieldnames>alpha2Code,alpha3Code,numericCode</com.tcmj.pug.enums.subfieldnames>
-                <com.tcmj.pug.enums.classjavadoc>This is my dynamically generated java enum class.,Data has been fetched from ${com.tcmj.pug.enums.url}</com.tcmj.pug.enums.classjavadoc>
+                <com.tcmj.pug.enums.classjavadoc>This is a dynamically generated java enum class.,Data has been fetched from ${com.tcmj.pug.enums.url}</com.tcmj.pug.enums.classjavadoc>
             </properties>
         </action>
         <action>

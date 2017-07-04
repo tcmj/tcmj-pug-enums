@@ -11,6 +11,7 @@ import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
+import static com.tcmj.pug.enums.mvn.LittleHelper.encloseJavaDoc;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import java.io.File;
 import java.nio.file.Path;
@@ -144,6 +145,12 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
       //add each data record to the classbuilder
       mapData.forEach((nameTypeValue) -> myClassBuilder.addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
 
+      if (isParameterSet(this.javadocClassLevel)) {
+        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> myClassBuilder.addClassJavadoc(text) );
+      } else {
+        myClassBuilder.addClassJavadoc(encloseJavaDoc("Data has been fetched from '"+this.url+"'."));
+      }
+      
       String myEnum = myClassBuilder.build();
 
       myEnum = mySourceFormatter.format(myEnum);
