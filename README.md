@@ -4,10 +4,10 @@ A highlight of the project is our maven plugin which allows you to create a java
 Our killer-use-case is to have a actual version of all iso-3166 countries ready in the form of a java enum.
 
 
-##Example Input Data
+## Example Input Data
 Input data can be visited at https://en.wikipedia.org/wiki/ISO_3166-1
 
-##Example Output Result 
+## Example Output Result 
 automagically creates an enum containing 249 countries
 
 ```java
@@ -49,7 +49,7 @@ public enum Countries {
 }
 ```
 
-#Following a list of all modules of the **tcmj-pug-enums** project
+# Following a list of all modules of the **tcmj-pug-enums** project
 
 
 ## tcmj-pug-enums-api
