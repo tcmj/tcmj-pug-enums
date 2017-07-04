@@ -3,18 +3,21 @@ package com.tcmj.pug.enums.mvn;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -56,20 +59,31 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
 
   /** Subclasses have to provide the naming conversion strategy used to change constant names. */
   protected abstract NamingStrategy getDefaultNamingStrategyConstantNames();
-  
+
   /** Subclasses have to provide the naming conversion strategy used to change field names. */
   protected abstract NamingStrategy getDefaultNamingStrategyFieldNames();
+
+  /** Define which ClassBuilder implementation we want to use. */
+  protected ClassBuilder getClassBuilder() {
+    return ClassBuilderFactory.getBestEnumBuilder(); //..the best we can get
+  }
+
+  /** Define which Source Formatter implementation we want to use. */
+  protected SourceFormatter getSourceFormatter() {
+    return SourceFormatterFactory.getBestSourceCodeFormatter(); //..the best we can get
+  }
 
   /** Print actual configuration settings and version info of the plugin. */
   protected void displayYoureWelcome() {
     getLog().info(getLine());
     getLog().info(arrange("Welcome to the tcmj pug enums maven plugin!"));
+    getLog().info(getLine());
     getLog().info(arrange("EnumClassName: " + this.className));
     getLog().info(arrange("SourceOutputDirectory: " + this.sourceDirectory));
     getLog().info(arrange("FetchURL: " + this.url));
 
     if (isParameterSet(this.subFieldNames)) {
-      getLog().info(arrange("SubFieldNames: " + Arrays.toString(this.subFieldNames)));
+      getLog().info(arrange("SubFieldNames fixed to: " + Arrays.toString(this.subFieldNames)));
     } else {
       getLog().info(arrange("SubFieldNames: <will be computed>"));
     }
@@ -96,35 +110,47 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
     try {
       displayYoureWelcome();
 
-      final DataProvider myDataProvider = getDataProvider();
+      final DataProvider myDataProvider = Objects.requireNonNull(getDataProvider(), "getDataProvider() delivers a NULL DataProvider object!");
       getLog().info(arrange("DataProvider: " + myDataProvider));
 
-      final ClassBuilder bestEnumBuilder = ClassBuilderFactory.getBestEnumBuilder();
-      getLog().info(arrange("ClassBuilder: " + bestEnumBuilder));
+      final ClassBuilder myClassBuilder = Objects.requireNonNull(getClassBuilder(), "getClassBuilder() delivers a NULL ClassBuilder object!");
+      getLog().info(arrange("ClassBuilder: " + myClassBuilder));
 
-      final SourceFormatter bestSourceCodeFormatter
-          = SourceFormatterFactory.getBestSourceCodeFormatter();
-      getLog().info(arrange("SourceFormatter: " + bestSourceCodeFormatter));
+      final SourceFormatter mySourceFormatter = Objects.requireNonNull(getSourceFormatter(), "getSourceFormatter() delivers a NULL SourceFormatter object!");
+      getLog().info(arrange("SourceFormatter: " + mySourceFormatter));
 
-      final EnumExporter enumExporter = getEnumExporter();
-      final Map<String, Object> exporterOptions = getEnumExporterOptions();
-      Fluent builder = Fluent.builder();
-      Fluent.EGEnd end = builder
-          .fromDataSource(myDataProvider)
-          .usingClassBuilder(bestEnumBuilder);
+      final EnumExporter myEnumExporter = Objects.requireNonNull(getEnumExporter(), "getEnumExporter() delivers a NULL EnumExporter object!");
+      final Map<String, Object> myExporterOptions = getEnumExporterOptions();
+
+      final EnumData data = Objects.requireNonNull(myDataProvider.load(), "DataProvider.load() returns a NULL EnumData object!");
+
+      myClassBuilder.withName(data.getClassName());
+      myClassBuilder.addClassJavadoc(data.getJavaDoc(EnumData.JDocKeys.CLASS.name()));
 
       if (isParameterSet(this.subFieldNames)) {
-        end.useFixedFieldNames(subFieldNames);
+        //Overriding the field names usually fetched by the data provider implementation!
+        data.setFieldNames(this.subFieldNames);
       } else {
-        end.convertFieldNames(getDefaultNamingStrategyFieldNames());
+        myClassBuilder.convertFieldNames(Objects.requireNonNull(getDefaultNamingStrategyFieldNames(), "NamingStrategy for FieldNames is NULL!"));
       }
 
-      end
-          .convertConstantNames(getDefaultNamingStrategyConstantNames())
-          .format(bestSourceCodeFormatter)
-          .exportWith(enumExporter, exporterOptions)
-          //.exportWith(EnumExporterFactory.getReportingEnumExporter())
-          .end();
+      //note that we use the fieldnames which are possibly been overriden!
+      myClassBuilder.setFields(data.getFieldNames(), data.getFieldClasses());
+
+      myClassBuilder.convertConstantNames(Objects.requireNonNull(getDefaultNamingStrategyConstantNames(), "NamingStrategy for ConstantNames is NULL!"));
+
+      final List<NameTypeValue> mapData = Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
+
+      //add each data record to the classbuilder
+      mapData.forEach((nameTypeValue) -> myClassBuilder.addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
+
+      String myEnum = myClassBuilder.build();
+
+      myEnum = mySourceFormatter.format(myEnum);
+
+      myEnumExporter.export(myEnum, myExporterOptions);
+
+      getLog().info(String.format("Enum successfully created with %s characters!", myEnum.length()));
 
     } catch (Exception e) {
       getLog().error("Cannot create your enum: " + className + "!", e);
