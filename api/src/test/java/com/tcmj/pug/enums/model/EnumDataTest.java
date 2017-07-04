@@ -1,8 +1,6 @@
 package com.tcmj.pug.enums.model;
 
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import org.hamcrest.CoreMatchers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
