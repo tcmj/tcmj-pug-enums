@@ -3,55 +3,21 @@ The tcmj pug enums project is a toolkit to create high quality java enum classes
 A highlight of the project is our maven plugin which allows you to create a java enum class simply by configuration.
 Our killer-use-case is to have a actual version of all iso-3166 countries ready in the form of a java enum.
 
-## Where to go
+***
+
+## Where to start
 * Wiki: https://github.com/tcmj/tcmj-pug-enums/wiki
 
-
+***
 
 ## Example Input Data
 Input data can be visited at https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements
 
 ## Example Output Result 
-automagically creates an enum containing 249 countries
+automagically created an enum containing 249 countries with no single line of java code - just configuration of the maven plugin
 
-```java
-package com.tcmj.iso3166;
+Have a look at the output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-Output-Result
 
-/** 
- * ISO-3166 Countries  including alpha2, alpha3 and numeric code. 
- * Loaded from https://en.wikipedia.org/wiki/ISO_3166-1
- */
-public enum Countries {
-  AFGHANISTAN("AF", "AFG", "004"),
-  ALANDISLANDS("AX", "ALA", "248"),
-  ALBANIA("AL", "ALB", "008"),
-  //..
-  GERMANY("DE", "DEU", "276"),
-  //..
-  YEMEN("YE", "YEM", "887"),
-  ZAMBIA("ZM", "ZMB", "894"),
-  ZIMBABWE("ZW", "ZWE", "716");
- 
-  private final String alpha2;
-  private final String alpha3;
-  private final String numeric;
-
-  Countries(String alpha2, String alpha3, String numeric) {
-    this.alpha2 = alpha2;
-    this.alpha3 = alpha3;
-    this.numeric = numeric;
-  }
-  public String getAlpha2() {
-    return this.alpha2;
-  }
-  public String getAlpha3() {
-    return this.alpha3;
-  }
-  public String getNumeric() {
-    return this.numeric;
-  }
-}
-```
 
 # Following a list of all modules of the **tcmj-pug-enums** project
 
@@ -76,17 +42,10 @@ public enum Countries {
 
 
 
-
 ---
-## Changelog
-### Version 1.2.6.15
-* First Release Version with a working version of all modules.
-
-### Version 1.2.7.1
-* Feature: Override Subfield Names #3
-* Cosmetic: Change system parameter names #4
-* Maven plugin does not work without subfields #5
-* Ability to define javadoc on class level in maven-plugin #6
 
 
+# Current Release Version: 1.2.7.1
+
+Here you can grab the dependency configuration: https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
 
