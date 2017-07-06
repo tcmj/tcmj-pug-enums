@@ -22,7 +22,8 @@ public class WikipediaExample {
       Fluent.builder()
           .fromDataSource(getMyDataProvider())
           .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
-          .convertConstantNames(getMyNamingStrategy())
+          .useFixedFieldNames(new String[]{"alpha2","alpha3","numeric"})
+          .convertConstantNames(getNamingStrategyForConstantNames())
           .format(SourceFormatterFactory.getBestSourceCodeFormatter())
           .exportWith(getMyEnumExporter())
           .end();
@@ -38,17 +39,18 @@ public class WikipediaExample {
         exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
   }
 
-  private static NamingStrategy getMyNamingStrategy() {
+  private static NamingStrategy getNamingStrategyForConstantNames() {
     NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
     NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
     NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
     NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-    return ns1.and(ns2).and(ns3).and(ns4);
+    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.test.MyWikipediaEnum", //enum name and path
+        "com.tcmj.iso3166.Countries", //enum name and path
         "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
         "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
         1, //enum constant column

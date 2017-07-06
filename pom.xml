@@ -5,7 +5,7 @@
 
     <groupId>com.tcmj.pug</groupId>
     <artifactId>tcmj-pug-enums</artifactId>
-    <version>1.2.7.1</version>
+    <version>1.2.7.15-SNAPSHOT</version>
 
     <name>tcmj-pug-enums</name>
     <description>
@@ -50,7 +50,13 @@
         <ch.qos.logback.version>1.2.3</ch.qos.logback.version>
         
     </properties>
-    
+    <prerequisites>
+        <maven>3.3.1</maven>
+    </prerequisites>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/tcmj/tcmj-pug-enums/issues/</url>
+    </issueManagement>
     <build>
         <pluginManagement>
             <plugins>
