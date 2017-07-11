@@ -1,7 +1,6 @@
 package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
@@ -24,19 +23,12 @@ public class WikipediaExample2 {
           .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .convertConstantNames(getMyNamingStrategy())
           .format(SourceFormatterFactory.getBestSourceCodeFormatter())
-          .exportWith(getMyEnumExporter())
+          .exportWith(EnumExporterFactory.getReportingEnumExporter(ReportingEnumExporter.LogLevel.SYSTEM_OUT))
           .end();
 
     } catch (Exception e) {
       LOG.error("Exception!", e);
     }
-  }
-
-  private static EnumExporter getMyEnumExporter() {
-    EnumExporter exporterA = EnumExporterFactory.getInMemoryCompilingExporter();
-    EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter();
-    return exporterA.and(
-        exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
   }
 
   private static NamingStrategy getMyNamingStrategy() {

@@ -17,7 +17,9 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,21 +44,39 @@ public class InMemoryCompilingExporter implements EnumExporter {
     return enumClass;
   }
 
+  /**
+   * Exports to a ClassLoader. Compiles the given enum source and loads it into a classloader.
+   * Formatters are ignored and data is used from the getResult method directly.
+   * The class name and package will be usually fetched from an existing EnumData object. In case
+   * of not providing a EnumData object in the EnumResult object it will be tried to fetch missing data from the content.
+   *
+   * @param enumResult containing the content and EnumData object with a class name and package.
+   * @return EnumResult containing payload
+   */
   @Override
-  public String export(String data, Map<String, Object> options) {
-    String className = MetaDataExtractor.getClassName(data);
+  public EnumResult export(EnumResult enumResult) {
+    LOG.debug("InMemoryCompilingExporter.export({})...", enumResult);
+    EnumResult localEnumResult = Objects.requireNonNull(enumResult, "Parameter EnumResult may not be null!");
+    String data = Objects.requireNonNull(enumResult.getResult(), "EnumResult has no content!");
+    String className;
+    if (localEnumResult.getData() == null) {
+      LOG.trace("Trying to build class name and package from content...");
+      className = MetaDataExtractor.getClassName(enumResult.getResult());
+    } else {
+      LOG.trace("Exporting class name and package from EnumData...");
+      className = MetaDataExtractor.getClassName(enumResult);
+    }
     try {
       ClassLoader classLoader = compile(className, data);
-      Class<? extends Enum> enumClass =
-          (Class<? extends Enum>) Class.forName(className, true, classLoader);
-      this.enumConstants = EnumSet.allOf(enumClass);
-      this.enumClass = enumClass;
-      LOG.debug("Result: {} : {}", enumClass, this.enumConstants);
+      Class<? extends Enum> localEnumClass = (Class<? extends Enum>) Class.forName(className, true, classLoader);
+      this.enumConstants = EnumSet.allOf(localEnumClass);
+      this.enumClass = localEnumClass;
+      LOG.debug("Result: {} : {}", this.enumClass, this.enumConstants);
     } catch (ClassNotFoundException e) {
       LOG.error("Cannot load enum class : '{}'", className, e);
       throw new ClassNotCompileAndLoadException(e);
     }
-    return data;
+    return enumResult;
   }
 
   private ClassLoader compile(String name, String src) {
@@ -66,8 +86,7 @@ public class InMemoryCompilingExporter implements EnumExporter {
     try (JavaFileManager fileManager = new MemJavaFileManager(compiler, classLoader)) {
       JavaFileObject javaFile = new StringJavaFileObject(name, src);
       Collection<JavaFileObject> units = Collections.singleton(javaFile);
-      JavaCompiler.CompilationTask task =
-          compiler.getTask(null, fileManager, null, null, null, units);
+      JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, units);
       LOG.debug("Starting CompilationTask: {} for {}", task, units);
       Boolean withoutErrors = task.call();
       if (withoutErrors) {

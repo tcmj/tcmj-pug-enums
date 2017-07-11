@@ -1,5 +1,9 @@
 package com.tcmj.pug.enums.exporter.tools;
 
+import com.tcmj.pug.enums.api.EnumResult;
+import com.tcmj.pug.enums.model.EnumData;
+import java.util.Objects;
+
 /** Extracts some data from the enum source needed by some exporter. */
 public class MetaDataExtractor {
 
@@ -41,6 +45,7 @@ public class MetaDataExtractor {
       return source.substring((idxPkg + 5), idxSemi).trim();
     }
   }
+
   private static String getClassNameSimple1(String source) {
     int idxPkg = source.indexOf("public enum ");
     if (idxPkg == -1) {
@@ -51,11 +56,17 @@ public class MetaDataExtractor {
     }
   }
 
+  /**
+   * Java styled package and class name separated with dots.
+   */
+  public static String getClassName(EnumResult enumResult) {
+    EnumData enumData = Objects.requireNonNull(enumResult.getData(), "Cannot get EnumData object from EnumResult!");
+    return enumData.getClassName();
+  }
+
   public static String getClassName(String source) {
     String packageName = getPackageName(source);
-    return packageName == null
-        ? getClassNameSimple(source)
-        : packageName + "." + getClassNameSimple(source);
+    return packageName == null ? getClassNameSimple(source) : packageName + "." + getClassNameSimple(source);
   }
 
   /** Full java path and file name ending with a '.java' eg.: com/tcmj/iso/MyEnum.java */
@@ -63,13 +74,25 @@ public class MetaDataExtractor {
     return getPackageDirectories(source) + "/" + getFileNameSingle(source);
   }
 
-  /** File name ending with a '.java' eg.: MyEnum.java */
   public static String getFileNameSingle(String source) {
-    return getClassNameSimple(source) + ".java";
+    return getClassNameSimple(source).concat(".java");
+  }
+
+  /** File name ending with a '.java' eg.: MyEnum.java */
+  public static String getFileNameSingle(EnumResult enumResult) {
+    EnumData enumData = Objects.requireNonNull(enumResult.getData(), "Cannot get EnumData object from EnumResult!");
+    String javaClassNameSimple = Objects.requireNonNull(enumData.getClassNameSimple(), "EnumData.getPackageName() of EnumResult!");
+    return javaClassNameSimple.concat(".java");
+  }
+
+  public static String getPackageDirectories(String source) {
+    return getPackageName(source).replace('.', '/').trim();
   }
 
   /** Package Directories eg.: com/tcmj/iso */
-  public static String getPackageDirectories(String source) {
-    return getPackageName(source).replace('.', '/').trim();
+  public static String getPackageDirectories(EnumResult enumResult) {
+    EnumData enumData = Objects.requireNonNull(enumResult.getData(), "Cannot get EnumData object from EnumResult!");
+    String javaPackageName = Objects.requireNonNull(enumData.getPackageName(), "EnumData.getPackageName() of EnumResult!");
+    return javaPackageName.replace('.', '/').trim();
   }
 }

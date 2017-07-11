@@ -9,6 +9,7 @@ import com.tcmj.pug.enums.builder.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
+import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,21 +23,23 @@ public class WikipediaExample {
       Fluent.builder()
           .fromDataSource(getMyDataProvider())
           .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
-          .useFixedFieldNames(new String[]{"alpha2","alpha3","numeric"})
+          .useFixedFieldNames(new String[]{"alpha2", "alpha3", "numeric"})
           .convertConstantNames(getNamingStrategyForConstantNames())
           .format(SourceFormatterFactory.getBestSourceCodeFormatter())
           .exportWith(getMyEnumExporter())
           .end();
 
     } catch (Exception e) {
-      LOG.error("Exception!", e);    }
+      LOG.error("Exception!", e);
+    }
   }
 
   private static EnumExporter getMyEnumExporter() {
     EnumExporter exporterA = EnumExporterFactory.getInMemoryCompilingExporter();
-    EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter();
-    return exporterA.and(
-        exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
+    EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter(ReportingEnumExporter.LogLevel.SYSTEM_OUT);
+    EnumExporter exporterC = new JavaSourceFileExporter("./src/main/generated");
+
+    return exporterA.and(exporterB).and(exporterC);
   }
 
   private static NamingStrategy getNamingStrategyForConstantNames() {
@@ -54,7 +57,7 @@ public class WikipediaExample {
         "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
         "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
         1, //enum constant column
-        new int[] {2, 3, 4} //sub columns
-        );
+        new int[]{2, 3, 4} //sub columns
+    );
   }
 }

@@ -16,9 +16,8 @@ import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
-import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
 
-/** Json data provider loadad from an url. 
+/** Json data provider loadad from an url.
  * TODO: not ready!
  */
 public class ContinentJsonProvider implements DataProvider {
@@ -29,8 +28,7 @@ public class ContinentJsonProvider implements DataProvider {
     try {
       model.setPackageName("com.tcmj.pug.enums.example.provider");
       model.setClassName("Continents");
-      
-      
+
       URL continentsURL = ContinentJsonProvider.class.getResource("continents.json");
       Path path = Paths.get(continentsURL.toURI());
       if (!Files.isRegularFile(path) || !Files.exists(path)) {
@@ -69,7 +67,7 @@ public class ContinentJsonProvider implements DataProvider {
       Fluent.builder()
           .fromDataSource(new ContinentJsonProvider())
           .usingClassBuilder(ClassBuilderFactory.getJavaPoetEnumBuilder())
-          .exportWith(exporter, exporter.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()))
+          .exportWith(exporter)
           .end();
 
     } catch (Exception ex) {

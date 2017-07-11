@@ -25,8 +25,8 @@ public class FluentStaticDataExample {
 
       /* Usage-Example of chaining several exporters together */
       EnumExporter exporterA = EnumExporterFactory.getInMemoryCompilingExporter();
-      EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter();
-      EnumExporter exporter = exporterA.and(exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
+      EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter(ReportingEnumExporter.LogLevel.SYSTEM_OUT);
+      EnumExporter exporter = exporterA.and(exporterB);
 
       /* Main call */
       Fluent.builder()

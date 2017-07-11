@@ -1,6 +1,5 @@
 package com.tcmj.pug.enums.exporter.impl;
 
-import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -8,13 +7,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Map;
 import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
@@ -35,30 +33,40 @@ public class JavaSourceFileExporterTest {
 
   @AfterClass
   public static void cleanUp() throws Exception {
-    try {
-      Files.walkFileTree(
-          testFiles,
-          new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                throws IOException {
-              Files.delete(file);
-              return FileVisitResult.CONTINUE;
-            }
+    rm(testFiles);
+  }
 
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
-              if (e == null) {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-              } else {
-                throw e;
-              }
-            }
-          });
+  public static void rm(Path path) throws Exception {
+    try {
+      Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+          Files.delete(file);
+          return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+          if (e == null) {
+            Files.delete(dir);
+            return FileVisitResult.CONTINUE;
+          } else {
+            throw e;
+          }
+        }
+      });
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @Test
+  public void shouldWorkUsingGlobalOptions() throws Exception {
+    EnumResult er = EnumResult.of(data.getExtendedEnum()).addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, testFiles.toString());
+    JavaSourceFileExporter exporter = new JavaSourceFileExporter();
+    exporter.export(er);
+    Path exportPath = Paths.get(testFiles.toString(), "org/Animal.java");
+    assertThat("File may not exist?", Files.exists(exportPath), is(Boolean.TRUE));
   }
 
   @Test
@@ -70,8 +78,9 @@ public class JavaSourceFileExporterTest {
 
     //when exporting
     EnumExporter exporter = new JavaSourceFileExporter();
-    Map<String, Object> options = exporter.createOptions(testFiles.toString());
-    exporter.export(source, options);
+    EnumResult enumResult = EnumResult.of(source);
+    enumResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, testFiles.toString());
+    exporter.export(enumResult);
 
     //then we expect a written file and no exception
     String fullPath = "com/tcmj/iso/exporter/impl/Writers.java";
@@ -81,32 +90,26 @@ public class JavaSourceFileExporterTest {
   }
 
   @Test
-  public void testExportWithNullOptions() throws Exception {
+  public void shouldExportWithoutOptions() throws Exception {
     try { //when exporting...
-      new JavaSourceFileExporter().export(data.getSimpleEnum(), null);
-      fail(" we expect a exception");
+      EnumResult enumResult = EnumResult.of(data.getSimpleEnum());
+      //without setting this option: enumResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, testFiles.toString());
+      new JavaSourceFileExporter().export(enumResult);
+      //we expect exporting to working dir extracting file name and package-directories from the content:
+      assertThat("Files may not exist?", Files.exists(Paths.get(".", "one/two/three/SimpleEnum.java")), is(Boolean.TRUE));
     } catch (Exception e) {
-      assertThat(
-          "ErrorText",
-          e.getMessage(),
-          equalTo("Your options seems to be null! Please provide a path for the export!"));
+      fail("We don't want a Exception at this point: " + e.getMessage());
+    } finally {
+      rm(Paths.get(".", "one"));
     }
-  }
-
-  @Test
-  public void shouldExportToFileAsOneLiner() throws Exception {
-    new JavaSourceFileExporter()
-        .export( data.getUnformatedEnum(), JavaSourceFileExporter.createExportPathOptions(testFiles) );
-
-    //validate com.tcmj.iso
-    Path exportPath = Paths.get(testFiles.toString(), "com/tcmj/iso/UnFormat.java");
-    assertThat("File may not exist?", Files.exists(exportPath), is(Boolean.TRUE));
   }
 
   @Test(expected = JavaSourceFileExporter.JavaFileHasNotBeenCreatedException.class)
   public void testExportWithInvalidOptions() throws Exception {
-    JavaSourceFileExporter exporter = new JavaSourceFileExporter();
-    exporter.export(
-        data.getSimpleEnum(), exporter.createOptions("::;;§$\\\\\\%§$%M;,§$% def;ectiveP,ath $§§"));
+    EnumExporter exporter = new JavaSourceFileExporter();
+    EnumResult enumResult = EnumResult.of(data.getSimpleEnum());
+    enumResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, "::;;§$\\\\\\%§$%M;,§$% def;ectiveP,ath $§§");
+    exporter.export(enumResult);
+
   }
 }

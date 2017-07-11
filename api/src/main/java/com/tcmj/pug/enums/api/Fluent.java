@@ -283,11 +283,12 @@ public class Fluent {
 
     if (end.getFormatter() != null) {
       LOG.trace("SourceFormatter: {}", end.getFormatter());
-      myEnum = end.getFormatter().format(myEnum);
     }
+    
+    EnumResult eResult = EnumResult.of(data, end.getFormatter(), myEnum);
 
     if (end.getEnumExporter() != null) {
-      end.getEnumExporter().export(myEnum, end.getEnumExporterOptions());
+      end.getEnumExporter().export(eResult);
     }
 
     LOG.info("Enum successfully created with {} characters!", myEnum.length());

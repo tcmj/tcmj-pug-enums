@@ -19,7 +19,11 @@ public class EnumExporterFactory {
   }
 
   /** Prints the enum. */
+  public static EnumExporter getReportingEnumExporter(ReportingEnumExporter.LogLevel logLevel) {
+    return new ReportingEnumExporter(logLevel);
+  }
+  /** Prints the enum. */
   public static EnumExporter getReportingEnumExporter() {
-    return new ReportingEnumExporter();
+    return new ReportingEnumExporter(ReportingEnumExporter.LogLevel.INFO);
   }
 }

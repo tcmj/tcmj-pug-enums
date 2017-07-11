@@ -1,6 +1,5 @@
 package com.tcmj.pug.enums.exporter.tools;
 
-import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
 import com.tcmj.pug.enums.exporter.impl.TestDataProvider;
 import org.junit.Test;
 
@@ -55,7 +54,7 @@ public class MetaDataExtractorTest {
         MetaDataExtractor.getClassNameSimple(data.getEnumNamed("a.b.c.d.e", "Food")),
         equalTo("Food"));
   }
-  
+
   @Test
   public void testGetClassNameSimpleFromEnumWithJavadoc() throws Exception {
     //given
@@ -73,31 +72,25 @@ public class MetaDataExtractorTest {
     assertThat(
         MetaDataExtractor.getClassNameSimple(tstenum),
         equalTo("ClassNameHtmlEnum"));
-    
+
   }
 
   @Test
   public void testGetClassNameUnformated() throws Exception {
-    String source =
-        " package   com.tcmj.iso ;  import java.util.Date;   public   enum   UnFormat  { A, B ,C  }";
+    String source = " package   com.tcmj.iso ;  import java.util.Date;   public   enum   UnFormat  { A, B ,C  }";
     assertThat(MetaDataExtractor.getClassNameSimple(source), equalTo("UnFormat"));
+    assertThat(MetaDataExtractor.getPackageDirectories(source), equalTo("com/tcmj/iso"));
     assertThat(MetaDataExtractor.getPackageDirectories(source), equalTo("com/tcmj/iso"));
     assertThat(MetaDataExtractor.getFileNameSingle(source), equalTo("UnFormat.java"));
   }
 
   @Test
   public void testGetFileNameFull() throws Exception {
-    assertThat(
-        "1",
-        MetaDataExtractor.getFileNameFull(data.getEnumNamed("com.tcmj.iso", "MyEnum")),
+    assertThat("1", MetaDataExtractor.getFileNameFull(data.getEnumNamed("com.tcmj.iso", "MyEnum")),
         equalTo("com/tcmj/iso/MyEnum.java"));
-    assertThat(
-        "2",
-        MetaDataExtractor.getFileNameFull(data.getEnumNamed("java.util.foo", "MyEnum")),
+    assertThat("2", MetaDataExtractor.getFileNameFull(data.getEnumNamed("java.util.foo", "MyEnum")),
         equalTo("java/util/foo/MyEnum.java"));
-    assertThat(
-        "3",
-        MetaDataExtractor.getFileNameFull(data.getEnumNamed("a.b.c.d.e", "Food")),
+    assertThat("3", MetaDataExtractor.getFileNameFull(data.getEnumNamed("a.b.c.d.e", "Food")),
         equalTo("a/b/c/d/e/Food.java"));
   }
 }

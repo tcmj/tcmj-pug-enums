@@ -34,9 +34,8 @@ public class FluentURLHtmlDataProviderIso3166Example {
 
   private static EnumExporter getMyEnumExporter() {
     EnumExporter exporterA = EnumExporterFactory.getInMemoryCompilingExporter();
-    EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter();
-    return exporterA.and(
-        exporterB, exporterB.createOptions(ReportingEnumExporter.LogLevel.SYSTEM_OUT.name()));
+    EnumExporter exporterB = EnumExporterFactory.getReportingEnumExporter(ReportingEnumExporter.LogLevel.SYSTEM_OUT);
+    return exporterA.and(exporterB);
   }
 
   private static NamingStrategy getConstantsNamingStrategy() {

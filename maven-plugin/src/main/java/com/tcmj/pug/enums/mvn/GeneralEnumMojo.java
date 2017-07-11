@@ -3,6 +3,7 @@ package com.tcmj.pug.enums.mvn;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
@@ -146,16 +147,19 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
       mapData.forEach((nameTypeValue) -> myClassBuilder.addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
 
       if (isParameterSet(this.javadocClassLevel)) {
-        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> myClassBuilder.addClassJavadoc(text) );
+        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> myClassBuilder.addClassJavadoc(text));
       } else {
-        myClassBuilder.addClassJavadoc(encloseJavaDoc("Data has been fetched from '"+this.url+"'."));
+        myClassBuilder.addClassJavadoc(encloseJavaDoc("Data has been fetched from '" + this.url + "'."));
       }
-      
+
       String myEnum = myClassBuilder.build();
 
-      myEnum = mySourceFormatter.format(myEnum);
+      EnumResult eResult = EnumResult.of(data, mySourceFormatter, myEnum);
 
-      myEnumExporter.export(myEnum, myExporterOptions);
+      //add option for JavaSourceFileExporter: as global option
+      eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, sourceDirectory);
+
+      myEnumExporter.export(eResult);
 
       getLog().info(String.format("Enum successfully created with %s characters!", myEnum.length()));
 

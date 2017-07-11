@@ -64,7 +64,7 @@ public class EnumData {
     return className;
   }
 
-  /** Full class name with package separated with dots if a package is provided. */
+  /** Full class name with package separated with dots if a package is provided. eg. 'com.tcmj.PugEnumeration'*/
   public String getClassName() {
     if (this.packageName == null
         || "".equals(this.packageName)

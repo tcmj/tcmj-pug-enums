@@ -1,6 +1,7 @@
 package com.tcmj.pug.enums.exporter.impl;
 
 import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.model.EnumData;
 
 /**
  * Creates java source enum test data in form of String objects. Used to test the {@link
@@ -8,13 +9,17 @@ import com.tcmj.pug.enums.api.EnumExporter;
  */
 public class TestDataProvider {
 
-  String[] data =
-      new String[] {
+  String[] data = new String[]{
         "package one.two.three; public enum SimpleEnum { ONE,TWO,THREE } ",
         "public enum NoPckEnum { ONE,TWO,THREE } ",
         " package   com.tcmj.iso ;  import java.util.Date;   public   enum   UnFormat  { A, B ,C  }",
         "package org; public enum Animal { DOG(\"Goldie\"); private final String name; Animal(String name) { this.name = name; } public String getName() { return name; } } "
       };
+
+  public EnumData getEnumData() {
+    EnumData enumData = new EnumData();
+    return enumData;
+  }
 
   public String getSimpleEnum() {
     return data[0];
