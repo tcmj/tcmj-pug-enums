@@ -28,7 +28,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** Abstract tcmj pug enums maven plugin base class which holds general functions and parameters. */
+/** 
+ <p>Abstract tcmj pug enums superclass for Mojos generating Java source enum classes from datasources.</p>
+ */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public abstract class GeneralEnumMojo extends AbstractMojo {
 
