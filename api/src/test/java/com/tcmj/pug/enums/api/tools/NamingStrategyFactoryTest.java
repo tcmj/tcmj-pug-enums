@@ -1,25 +1,25 @@
-package com.tcmj.pug.enums.builder;
+package com.tcmj.pug.enums.api.tools;
 
 import org.junit.Test;
 
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.camel;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.camelStrict;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.extractParenthesis;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.harmonize;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.lowerCase;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.removeProhibitedSpecials;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.removeSpaces;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.replaceAtoZ;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.space2underline;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.trim;
-import static com.tcmj.pug.enums.builder.NamingStrategyFactory.upperCase;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camel;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camelStrict;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthesis;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.lowerCase;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeSpaces;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.trim;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.upperCase;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
-/** pugproductions - 2017-05-22 - tcmj. */
 public class NamingStrategyFactoryTest {
-
+  
+  
   @Test
   public void testLowerCase() throws Exception {
     assertThat("lowerCase()", lowerCase().convert("PLEASE BE QUIET!"), equalTo("please be quiet!"));
@@ -141,4 +141,5 @@ public class NamingStrategyFactoryTest {
         extractParenthesis().convert(" Korea (Democratic People's Republic of) "),
         equalTo("Democratic People's Republic of Korea"));
   }
+  
 }
