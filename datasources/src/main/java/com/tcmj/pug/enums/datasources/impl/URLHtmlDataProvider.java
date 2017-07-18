@@ -8,7 +8,6 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -169,7 +168,7 @@ public class URLHtmlDataProvider implements DataProvider {
           String normalized = StringUtils.lowerCase(name);
           normalized = StringUtils.replace(normalized, "-", "_");
           normalized = StringUtils.replace(normalized, " ", "_");
-          LOG.debug("Column Header found: '{}'='{}'", name, normalized);
+          LOG.debug("Column Header {} found: '{}'='{}'", curPos,name, normalized);
           temp.add(normalized);
         }
     }
