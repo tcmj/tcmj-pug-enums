@@ -23,6 +23,9 @@ public class ContinentDataProvider implements DataProvider {
         "nameUS", "nameDE", "areaKM2", "areaPct", "elevationHighest", "elevationLowest");
     model.setFieldClasses(
         String.class, String.class, Integer.class, Float.class, Integer.class, Integer.class);
+    
+  
+//    addConstantValue(model, "AF", "Africa", "Afrika", 30_370_000, Float.valueOf( "20.4f"), 5_895, -155);
     addConstantValue(model, "AF", "Africa", "Afrika", 30_370_000, 20.4F, 5_895, -155);
     addConstantValue(model, "AN", "Antarctica", "Antarktis", 13_720_000, 9.2F, 4_892, -50);
     addConstantValue(model, "AS", "Asia", "Asien", 43_820_000, 29.5F, 8_848, -427);

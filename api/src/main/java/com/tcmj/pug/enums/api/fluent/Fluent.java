@@ -176,11 +176,6 @@ public class Fluent {
   }
 
   public static NamingStrategy getDefaultNamingStrategyConstantNames() {
-//    return extractParenthesis()
-//        .and(removeProhibitedSpecials())
-//        .and(camelStrict())
-//        .and(harmonize())
-//        .and(upperCase());
     return minus2underline()
         .and(flattenGermanUmlauts())
         .and(space2underline())

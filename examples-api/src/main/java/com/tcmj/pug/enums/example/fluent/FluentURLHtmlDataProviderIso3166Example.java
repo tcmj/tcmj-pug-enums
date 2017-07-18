@@ -24,6 +24,7 @@ public class FluentURLHtmlDataProviderIso3166Example {
   public static void main(String[] args) {
     try {
       Fluent.builder()
+          .className("com.tcmj.test.MyWikipediaEnum")
           .dataProvider(getMyDataProvider())
           .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .convertConstantNames(getConstantsNamingStrategy())

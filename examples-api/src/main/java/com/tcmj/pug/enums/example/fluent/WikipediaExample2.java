@@ -19,6 +19,7 @@ public class WikipediaExample2 {
   public static void main(String[] args) {
     try {
       Fluent.builder()
+          .className("com.tcmj.test.MTI")
           .dataProvider(getMyDataProvider())
           .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .convertConstantNames(getMyNamingStrategy())

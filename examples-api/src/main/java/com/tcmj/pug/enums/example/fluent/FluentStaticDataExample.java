@@ -29,8 +29,9 @@ public class FluentStaticDataExample {
 
       /* Main call */
       Fluent.builder()
+          .className("com.tcmj.iso.world.Continent")
           .dataProvider(new ContinentDataProvider())
-          .classBuilder(ClassBuilderFactory.getEnumClassBuilder())
+          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .sourceFormatter(sourceFormatter)
           .enumExporter(exporter)
           .build();
