@@ -32,12 +32,14 @@ public class URLHtmlDataProviderTest {
   public void testIsColumnInArrayUsingOrderedList() {
     final int[] columnPos = new int[]{1, 2, 3}; //given is a ordered list
     IntStream.of(3, 2, 1).forEach((value) -> assertThat("value=" + value, URLHtmlDataProvider.isColumnInArray(columnPos, value), is(true)));
+    assertThat("Not in List", URLHtmlDataProvider.isColumnInArray(columnPos, 9), is(false));
   }
 
   @Test
   public void testIsColumnInArrayUsingUnorderedList() {
     final int[] columnPos = new int[]{2, 1, 3}; //given is a un-ordered list
     IntStream.of(3, 2, 1).forEach((value) -> assertThat("value=" + value, URLHtmlDataProvider.isColumnInArray(columnPos, value), is(true)));
+    assertThat("Not in List", URLHtmlDataProvider.isColumnInArray(columnPos, 7), is(false));
   }
 
   @Test

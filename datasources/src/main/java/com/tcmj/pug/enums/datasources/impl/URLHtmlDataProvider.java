@@ -9,6 +9,7 @@ import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import java.io.IOException;
+import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -184,7 +185,7 @@ public class URLHtmlDataProvider implements DataProvider {
     return !(this.columnPos != null && this.columnPos.length > 0);
   }
   static boolean isColumnInArray(int[] array, int value) {
-    return (Arrays.binarySearch(array, value) >= 0);
+    return IntStream.of(array).filter(elem -> elem == value).findAny().isPresent();
   }
 
   private Class[] getColumnClasses(String[] fields) throws Exception {
