@@ -1,7 +1,8 @@
 # tcmj-pug-enums
 The tcmj pug enums project is a toolkit to create high quality java enum classes from several datasources like html pages or json data. 
 A highlight of the project is our maven plugin which allows you to create a java enum class simply by configuration.
-Our killer-use-case is to have a actual version of all iso-3166 countries ready in the form of a java enum.
+
+
 <br/><br/>
 ***
 
@@ -11,12 +12,13 @@ Our killer-use-case is to have a actual version of all iso-3166 countries ready 
 ***
 <br/><br/>
 ## Example Input Data
-Input data can be visited at https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements
+An example use-case is to have a actual version of all iso-3166 countries ready in the form of a java enum. This data has been fetched live from wikipedia:
+Input data: https://en.wikipedia.org/wiki/ISO_3166-1#Officially_assigned_code_elements
 
 ## Example Output Result 
-automagically created an enum containing 249 countries with no single line of java code - just configuration of the maven plugin
+Automagically created an java enum class containing 249 countries with no single line of java code - just configuration of the maven plugin
 
-Have a look at the output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-Output-Result
+Output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-Output-Result
 
 <br/><br/>
 
@@ -45,9 +47,9 @@ Have a look at the output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-O
 ---
 <br/><br/>
 
-# Current Release Version: 1.2.7.1
-# Current Development Snapshot: 1.2.7.15-SNAPSHOT
-# Next Release Version: 1.2.7.15 (not yet available)
+# Current Release Version: 1.2.7.15
+# Current Development Snapshot: 1.2.8.1-SNAPSHOT
+# Next Release Version: 1.2.8.1 (not yet available)
 
 Here you can grab the dependency configuration: https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
 
