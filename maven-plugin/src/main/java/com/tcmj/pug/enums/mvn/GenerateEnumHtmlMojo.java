@@ -2,6 +2,7 @@ package com.tcmj.pug.enums.mvn;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.NamingStrategy;
+import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
@@ -56,12 +57,13 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
 
   @Override
   protected NamingStrategy getDefaultNamingStrategyConstantNames() {
-    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
-    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
-    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
-    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
-    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
+    return Fluent.getDefaultNamingStrategyConstantNames();
+//    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
+//    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
+//    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
+//    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
+//    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
+//    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
   @Override

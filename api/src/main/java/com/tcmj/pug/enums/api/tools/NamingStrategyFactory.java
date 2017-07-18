@@ -61,6 +61,10 @@ public class NamingStrategyFactory {
   public static NamingStrategy removeSpaces() {
     return value -> value == null ? null : value.replace(" ", "");
   }
+  
+  public static NamingStrategy removeDots() {
+    return value -> value == null ? null : value.replace(".", "");
+  }
 
   /**
    * simple camel case meaning that the first character will always uppered and each character after

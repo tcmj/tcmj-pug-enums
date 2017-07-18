@@ -11,6 +11,7 @@ import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthe
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.flattenGermanUmlauts;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.minus2underline;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeDots;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
@@ -181,6 +182,7 @@ public class Fluent {
         .and(space2underline())
         .and(replaceAtoZ())
         .and(removeProhibitedSpecials())
+        .and(removeDots())
         .and(upperCase());
   }
 
