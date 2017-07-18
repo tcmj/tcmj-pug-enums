@@ -8,6 +8,7 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
+import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,6 +46,10 @@ public class URLHtmlDataProvider implements DataProvider {
     this.columnPos = columnPos; //column indexes to take
   }
 
+  Document getDocument(String urlToLoad)throws IOException{
+    return Jsoup.connect(urlToLoad).get();
+  }
+    
   Element locateTable(Document doc) throws Exception {
     Elements selectionOfAnyRecord = Objects.requireNonNull(doc.select(this.cssSelector), "Bad CSS selector result for: " + this.cssSelector);
     LOG.debug("CSS election result: {}", selectionOfAnyRecord);
@@ -69,7 +74,7 @@ public class URLHtmlDataProvider implements DataProvider {
   public EnumData load() {
     try {
       LOG.debug("Connection URL: {}", this.url);
-      Document doc = Jsoup.connect(this.url).get();
+      Document doc = getDocument(this.url);
 
       Element table = locateTable(doc);
 
@@ -153,7 +158,7 @@ public class URLHtmlDataProvider implements DataProvider {
     return value;
   }
 
-  private String[] getColumnNames(Element table) throws Exception {
+  String[] getColumnNames(Element table) throws Exception {
     if(isNoSubFieldsDefined()){
       return null;
     }
