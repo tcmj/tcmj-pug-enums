@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.Fluent;
+import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
@@ -65,10 +65,10 @@ public class ContinentJsonProvider implements DataProvider {
       EnumExporter exporter = EnumExporterFactory.getReportingEnumExporter();
 
       Fluent.builder()
-          .fromDataSource(new ContinentJsonProvider())
-          .usingClassBuilder(ClassBuilderFactory.getJavaPoetEnumBuilder())
-          .exportWith(exporter)
-          .end();
+          .dataProvider(new ContinentJsonProvider())
+          .classBuilder(ClassBuilderFactory.getJavaPoetEnumBuilder())
+          .enumExporter(exporter)
+          .build();
 
     } catch (Exception ex) {
       ex.printStackTrace();

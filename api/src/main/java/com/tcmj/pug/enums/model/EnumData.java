@@ -1,6 +1,5 @@
 package com.tcmj.pug.enums.model;
 
-import com.tcmj.pug.enums.api.ClassBuilder;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +36,7 @@ public class EnumData {
   public void setNamingStrategyConstants(NamingStrategy namingStrategy) {
     this.namingStrategyConstants = namingStrategy;
   }
-  
+
   /** NamingStrategy used to convert the field variables of the enum. */
   public NamingStrategy getNamingStrategyFields() {
     return namingStrategyFields;
@@ -47,6 +46,7 @@ public class EnumData {
   public void setNamingStrategyFields(NamingStrategy namingStrategy) {
     this.namingStrategyFields = namingStrategy;
   }
+
   //    public static final String CLASSJAVADOC = "CLSJD";
   public enum JDocKeys {
     CLASS
@@ -64,7 +64,7 @@ public class EnumData {
     return className;
   }
 
-  /** Full class name with package separated with dots if a package is provided. eg. 'com.tcmj.PugEnumeration'*/
+  /** Full class name with package separated with dots if a package is provided. eg. 'com.tcmj.PugEnumeration' */
   public String getClassName() {
     if (this.packageName == null
         || "".equals(this.packageName)
@@ -88,14 +88,14 @@ public class EnumData {
   }
 
   public EnumData addConstant(String constantName, Object... values) {
-    if(values==null){
+    if (values == null) {
       getData().add(NameTypeValue.of(constantName));
-    }else{
+    } else {
       getData().add(NameTypeValue.of(constantName, values));
     }
     return this;
   }
-  
+
   public int getEnumConstantsAmount() {
     return getData().size();
   }
@@ -121,14 +121,14 @@ public class EnumData {
   public String[] getFieldNames() {
     return fieldNames;
   }
+
   /** Get sub field name at given position with allready applied naming strategy. */
   public String getFieldName(int num) {
-    if(this.fieldNames == null || this.fieldNames.length==0){
+    if (this.fieldNames == null || this.fieldNames.length == 0) {
       throw new IllegalStateException("No sub field names available!");
     }
     return getNamingStrategyFields().convert(fieldNames[num]);
   }
- 
 
   public void setFieldNames(String... values) {
     if (this.fieldClasses != null && values != null && values.length != this.fieldClasses.length) {
@@ -138,7 +138,7 @@ public class EnumData {
   }
 
   public Class[] getFieldClasses() {
-     return fieldClasses;
+    return fieldClasses;
   }
 
   public void setFieldClasses(Class... values) {

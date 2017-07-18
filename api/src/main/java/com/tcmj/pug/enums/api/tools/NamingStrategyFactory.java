@@ -42,7 +42,16 @@ public class NamingStrategyFactory {
   }
 
   public static NamingStrategy space2underline() {
-    return value -> value == null ? null : value.replace(' ', '_');
+    return value -> {
+      if (value == null) {
+        return null;
+      }
+      String tmp = value.replace(' ', '_'); //spaces -> underline
+      while (tmp.contains("__")) {
+        tmp = tmp.replaceAll("__", "_"); //remove duplicates
+      }
+      return tmp;
+    };
   }
 
   public static NamingStrategy minus2underline() {
@@ -160,6 +169,66 @@ public class NamingStrategyFactory {
             LOG.debug("Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
             buffer.append(current);
           }
+        }
+      }
+      return buffer.toString();
+    };
+  }
+
+  /**
+   * Flattens german Umlauts.
+   * <pre>ö -> oe</pre>
+   * <pre>Ö -> OE</pre>
+   * <pre>ä -> ae</pre>
+   * <pre>ß -> ss</pre>
+   *
+   * @return
+   */
+  public static NamingStrategy flattenGermanUmlauts() {
+    return value -> {
+      if (value == null) {
+        return null;
+      }
+      StringBuilder buffer = new StringBuilder();
+      for (int i = 0; i < value.length(); i++) {
+        char current = value.charAt(i);
+        char next = (i + 1) < value.length() ? value.charAt(i + 1) : ' ';
+        switch (current) {
+          case 'Ö':
+            if (Character.isLowerCase(next)) {
+              buffer.append("Oe");
+            } else {
+              buffer.append("OE");
+            }
+            break;
+          case 'ö':
+            buffer.append("oe");
+            break;
+          case 'Ä':
+            if (Character.isLowerCase(next)) {
+              buffer.append("Ae");
+            } else {
+              buffer.append("AE");
+            }
+            break;
+          case 'ä':
+            buffer.append("ae");
+            break;
+          case 'Ü':
+            if (Character.isLowerCase(next)) {
+              buffer.append("Ue");
+            } else {
+              buffer.append("UE");
+            }
+            break;
+          case 'ü':
+            buffer.append("ue");
+            break;
+          case 'ß':
+            buffer.append("ss");
+            break;
+          default:
+            buffer.append(current);
         }
       }
       return buffer.toString();

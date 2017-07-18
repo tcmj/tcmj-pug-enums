@@ -2,7 +2,7 @@ package com.tcmj.pug.enums.mvn;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.NamingStrategy;
-import com.tcmj.pug.enums.builder.NamingStrategyFactory;
+import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;

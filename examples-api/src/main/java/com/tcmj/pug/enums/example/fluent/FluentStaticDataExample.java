@@ -1,9 +1,8 @@
 package com.tcmj.pug.enums.example.fluent;
 
-import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.SourceFormatter;
+import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
@@ -30,11 +29,11 @@ public class FluentStaticDataExample {
 
       /* Main call */
       Fluent.builder()
-          .fromDataSource(new ContinentDataProvider())
-          .usingClassBuilder(ClassBuilderFactory.getEnumClassBuilder())
-          .format(sourceFormatter)
-          .exportWith(exporter)
-          .end();
+          .dataProvider(new ContinentDataProvider())
+          .classBuilder(ClassBuilderFactory.getEnumClassBuilder())
+          .sourceFormatter(sourceFormatter)
+          .enumExporter(exporter)
+          .build();
 
     } catch (Exception e) {
       LOG.error("Exception!", e);    }

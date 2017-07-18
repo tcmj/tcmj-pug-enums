@@ -2,10 +2,10 @@ package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.NamingStrategy;
+import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
-import com.tcmj.pug.enums.builder.NamingStrategyFactory;
+import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
@@ -21,13 +21,13 @@ public class WikipediaExample {
   public static void main(String[] args) {
     try {
       Fluent.builder()
-          .fromDataSource(getMyDataProvider())
-          .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
+          .dataProvider(getMyDataProvider())
+          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .useFixedFieldNames(new String[]{"alpha2", "alpha3", "numeric"})
           .convertConstantNames(getNamingStrategyForConstantNames())
-          .format(SourceFormatterFactory.getBestSourceCodeFormatter())
-          .exportWith(getMyEnumExporter())
-          .end();
+          .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
+          .enumExporter(getMyEnumExporter())
+          .build();
 
     } catch (Exception e) {
       LOG.error("Exception!", e);

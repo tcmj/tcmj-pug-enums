@@ -2,10 +2,14 @@ package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.Fluent;
 import com.tcmj.pug.enums.api.NamingStrategy;
+import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
-import com.tcmj.pug.enums.builder.NamingStrategyFactory;
+import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.minus2underline;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
@@ -20,13 +24,13 @@ public class FluentURLHtmlDataProviderIso3166Example {
   public static void main(String[] args) {
     try {
       Fluent.builder()
-          .fromDataSource(getMyDataProvider())
-          .usingClassBuilder(ClassBuilderFactory.getBestEnumBuilder())
+          .dataProvider(getMyDataProvider())
+          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .convertConstantNames(getConstantsNamingStrategy())
           .convertFieldNames(getFieldsNamingStrategy())
-          .format(SourceFormatterFactory.getBestSourceCodeFormatter())
-          .exportWith(getMyEnumExporter())
-          .end();
+          .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
+          .enumExporter(getMyEnumExporter())
+          .build();
 
     } catch (Exception e) {
       LOG.error("Exception!", e);    }
@@ -40,15 +44,15 @@ public class FluentURLHtmlDataProviderIso3166Example {
 
   private static NamingStrategy getConstantsNamingStrategy() {
     return NamingStrategyFactory.upperCase()
-        .and(NamingStrategyFactory.space2underline())
-        .and(NamingStrategyFactory.replaceAtoZ())
-        .and(NamingStrategyFactory.removeProhibitedSpecials())
-        .and(NamingStrategyFactory.minus2underline());
+        .and(space2underline())
+        .and(replaceAtoZ())
+        .and(removeProhibitedSpecials())
+        .and(minus2underline());
   }
   private static NamingStrategy getFieldsNamingStrategy() {
     return 
         NamingStrategyFactory.removeProhibitedSpecials()
-        .and(NamingStrategyFactory.minus2underline());
+        .and(minus2underline());
   }
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(

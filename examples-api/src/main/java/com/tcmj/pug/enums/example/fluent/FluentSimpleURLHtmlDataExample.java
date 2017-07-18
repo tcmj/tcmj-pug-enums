@@ -1,9 +1,9 @@
 package com.tcmj.pug.enums.example.fluent;
 
 import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.pug.enums.api.Fluent;
+import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.api.NamingStrategy;
-import com.tcmj.pug.enums.builder.NamingStrategyFactory;
+import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.builder.impl.JavaPoetEnumBuilder;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
@@ -18,13 +18,27 @@ public class FluentSimpleURLHtmlDataExample {
   public static void main(String[] args) {
     try {
 
-      Fluent.builder()
-          .fromDataSource(new URLHtmlDataProvider("com.tcmj.StatesOfGermany", "https://en.wikipedia.org/wiki/States_of_Germany", "[title=Hanover]", 2, null))
-          .usingClassBuilder(new JavaPoetEnumBuilder())
-          .convertConstantNames(getMyNamingStrategy())
-          .format(SourceFormatterFactory.getBestSourceCodeFormatter())
-          .exportWith(EnumExporterFactory.getReportingEnumExporter())
-          .end();
+//      Fluent.builder()
+//          .fromDataSource(new URLHtmlDataProvider("com.tcmj.StatesOfGermany", "https://en.wikipedia.org/wiki/States_of_Germany", "[title=Hanover]", 3, null))
+//          .usingClassBuilder(new JavaPoetEnumBuilder())
+//          .convertConstantNames(getMyNamingStrategy())
+//          .format(SourceFormatterFactory.getBestSourceCodeFormatter())
+//          .exportWith(EnumExporterFactory.getReportingEnumExporter())
+//          .end();
+
+      EnumResult enumResult =
+      com.tcmj.pug.enums.api.fluent.Fluent.builder()
+          .dataProvider(new URLHtmlDataProvider("com.tcmj.StatesOfGermany", "https://en.wikipedia.org/wiki/States_of_Germany", "[title=Hanover]", 3, null))
+          .classBuilder(new JavaPoetEnumBuilder())
+          .usingDefaultConstantNameConversion()
+//          .convertConstantNames(getMyNamingStrategy())
+          .javaDocClassLevel("This is a java enum.", "Source is from xyz")
+          .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
+          .enumExporter(EnumExporterFactory.getReportingEnumExporter())
+          .className("com.tcmj.StatesOfGermany")
+          .build();
+      
+      enumResult.getResult();
 
     } catch (Exception e) {
       LOG.error("Exception!", e);

@@ -5,6 +5,7 @@ import org.junit.Test;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camel;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camelStrict;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthesis;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.flattenGermanUmlauts;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.lowerCase;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
@@ -40,7 +41,10 @@ public class NamingStrategyFactoryTest {
 
   @Test
   public void testSpace2underline() throws Exception {
-    assertThat("space2underline()", space2underline().convert("hallo welt"), equalTo("hallo_welt"));
+    assertThat("1", space2underline().convert("hallo welt"), equalTo("hallo_welt"));
+    assertThat("2", space2underline().convert("hallo  welt"), equalTo("hallo_welt"));
+    assertThat("3", space2underline().convert("hallo   welt"), equalTo("hallo_welt"));
+    assertThat("4", space2underline().convert("hallo       welt     zwei"), equalTo("hallo_welt_zwei"));
     assertThat("space2underline().nullsafe", space2underline().convert(null), nullValue());
   }
 
@@ -86,8 +90,7 @@ public class NamingStrategyFactoryTest {
     assertThat("é", harmonize().convert("é"), equalTo("e"));
     assertThat("è", harmonize().convert("è"), equalTo("e"));
     assertThat("É", harmonize().convert("É"), equalTo("E"));
-    assertThat(
-        "États", harmonize().convert("États-Unis d'Amérique"), equalTo("EtatsUnisdAmerique"));
+    assertThat("États", harmonize().convert("États-Unis d'Amérique"), equalTo("EtatsUnisdAmerique"));
     assertThat("specials-À", harmonize().convert("À"), equalTo("A"));
     assertThat("specials-2", harmonize().convert("()=?ß"), equalTo("s"));
     assertThat("specials-3", harmonize().convert("()=?ß`´üÖ*'+#-_.:,;"), equalTo("suO"));
@@ -102,12 +105,10 @@ public class NamingStrategyFactoryTest {
     assertThat("2.XYZ", replaceAtoZ().convert("XYZ"), equalTo("XYZ"));
     assertThat("3.abc", replaceAtoZ().convert("abc"), equalTo("abc"));
     assertThat("4.xyz", replaceAtoZ().convert("xyz"), equalTo("xyz"));
-    assertThat(
-        "États", replaceAtoZ().convert("États-Unis d'Amérique"), equalTo("Etats-Unis d'Amerique"));
+    assertThat("États", replaceAtoZ().convert("États-Unis d'Amérique"), equalTo("Etats-Unis d'Amerique"));
     assertThat("specials-À", replaceAtoZ().convert("À"), equalTo("A"));
     assertThat("specials-2", replaceAtoZ().convert("()=?ß"), equalTo("()=?s"));
-    assertThat(
-        "specials-3", replaceAtoZ().convert("()=?ß`´üÖ*'+#-_.:,;"), equalTo("()=?s`´uO*'+#-_.:,;"));
+    assertThat("specials-3", replaceAtoZ().convert("()=?ß`´üÖ*'+#-_.:,;"), equalTo("()=?s`´uO*'+#-_.:,;"));
     assertThat("specials-4", replaceAtoZ().convert("a°^1§$%&/"), equalTo("a°^1§$%&/"));
     assertThat("nullsafety", replaceAtoZ().convert(null), nullValue());
   }
@@ -128,18 +129,21 @@ public class NamingStrategyFactoryTest {
   @Test
   public void testExtractParenthesis() throws Exception {
     assertThat("null", extractParenthesis().convert(null), nullValue());
-    assertThat(
-        "1",
-        extractParenthesis().convert("Bolivia (Plurinational State of)"),
+    assertThat( "1", extractParenthesis().convert("Bolivia (Plurinational State of)"),
         equalTo("Plurinational State of Bolivia"));
-    assertThat(
-        "2",
-        extractParenthesis().convert("Congo (Democratic Republic of the)"),
+    assertThat( "2", extractParenthesis().convert("Congo (Democratic Republic of the)"),
         equalTo("Democratic Republic of the Congo"));
-    assertThat(
-        "3",
-        extractParenthesis().convert(" Korea (Democratic People's Republic of) "),
+    assertThat( "3", extractParenthesis().convert(" Korea (Democratic People's Republic of) "),
         equalTo("Democratic People's Republic of Korea"));
+  }
+  
+  @Test
+  public void testFlattenGermanUmlauts() throws Exception {
+    assertThat("1", flattenGermanUmlauts().convert("Mühle"), equalTo("Muehle"));
+    assertThat("2", flattenGermanUmlauts().convert("Ärger"), equalTo("Aerger"));
+    assertThat("3", flattenGermanUmlauts().convert("Hallö meine großen lüneburger Ösen"), equalTo("Halloe meine grossen lueneburger Oesen"));
+    assertThat("4", flattenGermanUmlauts().convert("xxöxx xxÖxx xxäxx xxÄxx xxüxx xxÜxx"), equalTo("xxoexx xxOexx xxaexx xxAexx xxuexx xxUexx"));
+    assertThat("nullsafe", flattenGermanUmlauts().convert(null), nullValue());
   }
   
 }

@@ -1,8 +1,6 @@
 package com.tcmj.pug.enums.api;
 
-import com.tcmj.pug.enums.api.NamingStrategy;
 import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
