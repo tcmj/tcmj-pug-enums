@@ -14,7 +14,7 @@ public class LittleHelper {
   public static String encloseJavaDoc(String text) {
     String prefixed = StringUtils.prependIfMissing(text, "<div>");
     String suffixed = StringUtils.appendIfMissing(prefixed, "</div>");
-    return suffixed;
+    return suffixed+System.getProperty("line.separator");
   }
 
   public static String getLine() {

@@ -145,4 +145,15 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
     }
     return raw;
   }
+  
+  @Override
+  public ClassBuilder importData(EnumData data) {
+    withName(data.getClassName());
+    convertFieldNames(data.getNamingStrategyFields());
+    convertConstantNames(data.getNamingStrategyConstants());
+    setFields(data.getFieldNames(), data.getFieldClasses());
+    data.getData().forEach((nameTypeValue) -> addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
+    this.model.getMapJavaDoc().putAll(data.getMapJavaDoc());
+    return this;
+  }
 }

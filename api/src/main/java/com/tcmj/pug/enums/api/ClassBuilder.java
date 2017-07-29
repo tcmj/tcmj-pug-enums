@@ -56,4 +56,8 @@ public interface ClassBuilder {
 
   /** Access to the values backing the object. */
   EnumData getModel();
+  
+  /** [Optional] Import an EnumData object. */
+  ClassBuilder importData(EnumData data);
+
 }

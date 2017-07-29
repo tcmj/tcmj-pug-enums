@@ -430,7 +430,5 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
     }
     return -1;
   }
-
-  
  
 }

@@ -28,8 +28,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** 
- <p>Abstract tcmj pug enums superclass for Mojos generating Java source enum classes from datasources.</p>
+/**
+ * <p>
+ * Abstract tcmj pug enums superclass for Mojos generating Java source enum classes from datasources.</p>
  */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public abstract class GeneralEnumMojo extends AbstractMojo {
@@ -124,36 +125,26 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
       getLog().info(arrange("SourceFormatter: " + mySourceFormatter));
 
       final EnumExporter myEnumExporter = Objects.requireNonNull(getEnumExporter(), "getEnumExporter() delivers a NULL EnumExporter object!");
-      final Map<String, Object> myExporterOptions = getEnumExporterOptions();
 
       final EnumData data = Objects.requireNonNull(myDataProvider.load(), "DataProvider.load() returns a NULL EnumData object!");
-
-      myClassBuilder.withName(className);
+      Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
       data.setClassName(className);
-      myClassBuilder.addClassJavadoc(data.getJavaDoc(EnumData.JDocKeys.CLASS.name()));
 
       if (isParameterSet(this.subFieldNames)) {
         //Overriding the field names usually fetched by the data provider implementation!
         data.setFieldNames(this.subFieldNames);
-      } else {
-        myClassBuilder.convertFieldNames(Objects.requireNonNull(getDefaultNamingStrategyFieldNames(), "NamingStrategy for FieldNames is NULL!"));
       }
 
-      //note that we use the fieldnames which are possibly been overriden!
-      myClassBuilder.setFields(data.getFieldNames(), data.getFieldClasses());
-
-      myClassBuilder.convertConstantNames(Objects.requireNonNull(getDefaultNamingStrategyConstantNames(), "NamingStrategy for ConstantNames is NULL!"));
-
-      final List<NameTypeValue> mapData = Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
-
-      //add each data record to the classbuilder
-      mapData.forEach((nameTypeValue) -> myClassBuilder.addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
+      data.setNamingStrategyConstants(getDefaultNamingStrategyConstantNames());
+      data.setNamingStrategyFields(getDefaultNamingStrategyFieldNames());
 
       if (isParameterSet(this.javadocClassLevel)) {
-        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> myClassBuilder.addClassJavadoc(text));
+        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
       } else {
-        myClassBuilder.addClassJavadoc(encloseJavaDoc("Data has been fetched from '" + this.url + "'."));
+        data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), encloseJavaDoc("Data has been fetched from '" + this.url + "'."));
       }
+
+      myClassBuilder.importData(data);
 
       String myEnum = myClassBuilder.build();
 
@@ -175,10 +166,5 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
   /** Usually we want always the FileExporter to save the enum into file system. */
   protected EnumExporter getEnumExporter() {
     return new JavaSourceFileExporter();
-  }
-
-  protected Map<String, Object> getEnumExporterOptions() {
-    Path exportPath = this.sourceDirectory.toPath();
-    return JavaSourceFileExporter.createExportPathOptions(exportPath);
   }
 }
