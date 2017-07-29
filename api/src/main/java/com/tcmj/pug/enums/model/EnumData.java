@@ -14,6 +14,7 @@ public class EnumData {
 
   private String packageName;
   private String className;
+  
   private NamingStrategy namingStrategyConstants = NamingStrategy.getDefault();
   private NamingStrategy namingStrategyFields = NamingStrategy.getDefault();
   private final List<String> imports = new LinkedList<>();
@@ -47,7 +48,6 @@ public class EnumData {
     this.namingStrategyFields = namingStrategy;
   }
 
-  //    public static final String CLASSJAVADOC = "CLSJD";
   public enum JDocKeys {
     CLASS
   }
@@ -55,20 +55,14 @@ public class EnumData {
   public String getPackageName() {
     return packageName;
   }
-
-  public void setPackageName(String packageName) {
-    this.packageName = packageName;
-  }
-
+ 
   public String getClassNameSimple() {
     return className;
   }
 
   /** Full class name with package separated with dots if a package is provided. eg. 'com.tcmj.PugEnumeration' */
   public String getClassName() {
-    if (this.packageName == null
-        || "".equals(this.packageName)
-        || this.packageName.trim().length() < 1) {
+    if (this.packageName == null || "".equals(this.packageName) || this.packageName.trim().length() < 1) {
       return className;
     } else {
       return this.packageName + "." + this.className;
@@ -76,7 +70,14 @@ public class EnumData {
   }
 
   public void setClassName(String className) {
-    this.className = Objects.requireNonNull(className, "Class name may not be null!");
+    Objects.requireNonNull(className, "Class name may not be null!");
+    int posLastDot = className.lastIndexOf('.');
+    if(posLastDot >= 0){
+       this.packageName = className.substring(0, posLastDot);
+       this.className = className.substring(posLastDot+1);
+    }else{
+      this.className = className;
+    }
   }
 
   public List<String> getImports() {

@@ -57,7 +57,6 @@ public class FluentURLHtmlDataProviderIso3166Example {
   }
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.test.MyWikipediaEnum", //enum name and path
         "http://www.nationsonline.org/oneworld/country_code_list.htm", //url to load
         "table#codelist", //css to a record to further (also to a table possible)
         2, //enum constant column

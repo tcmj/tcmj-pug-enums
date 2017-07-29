@@ -4,8 +4,9 @@ import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import org.hamcrest.CoreMatchers;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.Before;
 
 /**
@@ -59,6 +60,26 @@ public class EnumDataTest {
     EnumDataHelper.addConstantWithoutSubfield(cut, "BLUE");
     //when
     cut.getData().stream().map(t -> t.getConstantName()).forEach(a -> assertThat(a, CoreMatchers.anyOf(equalTo("BLUE"), equalTo("RED"), equalTo("GREEN"))));
+  }
+  
+  @Test
+  public void testSetClassNameWithPackage() {
+    //when
+    cut.setClassName("pa.ck.age.AnotherClass");
+    //then
+    assertThat("getClassName", cut.getClassName(), equalTo("pa.ck.age.AnotherClass"));
+    assertThat("getClassNameSimple", cut.getClassNameSimple(), equalTo("AnotherClass"));
+    assertThat("getPackageName", cut.getPackageName(), equalTo("pa.ck.age"));
+  }
+  
+  @Test
+  public void testSetClassNameWithoutPackage() {
+    //when
+    cut.setClassName("ClassOnly");
+    //then
+    assertThat("getClassName", cut.getClassName(), equalTo("ClassOnly"));
+    assertThat("getClassNameSimple", cut.getClassNameSimple(), equalTo("ClassOnly"));
+    assertThat("getPackageName", cut.getPackageName(), nullValue());
   }
   
 }

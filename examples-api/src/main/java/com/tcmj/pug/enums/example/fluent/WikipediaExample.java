@@ -54,7 +54,6 @@ public class WikipediaExample {
 
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.iso3166.Countries", //enum name and path
         "https://en.wikipedia.org/wiki/ISO_3166-1", //url to load
         "[title=Afghanistan]", //xpath to a record to further (also to a table possible)
         1, //enum constant column

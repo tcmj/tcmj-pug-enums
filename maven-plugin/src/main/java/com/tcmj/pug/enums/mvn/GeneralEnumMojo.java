@@ -128,7 +128,8 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
 
       final EnumData data = Objects.requireNonNull(myDataProvider.load(), "DataProvider.load() returns a NULL EnumData object!");
 
-      myClassBuilder.withName(data.getClassName());
+      myClassBuilder.withName(className);
+      data.setClassName(className);
       myClassBuilder.addClassJavadoc(data.getJavaDoc(EnumData.JDocKeys.CLASS.name()));
 
       if (isParameterSet(this.subFieldNames)) {

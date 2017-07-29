@@ -33,14 +33,7 @@ public class URLHtmlDataProvider implements DataProvider {
   final int[] columnPos;
   final String cssSelector;
 
-  public URLHtmlDataProvider(
-      String fullClassName,
-      String url,
-      String tableSelector,
-      int columnPosConstant,
-      int[] columnPos) {
-    model.setPackageName(EnumDataHelper.extractPackage(fullClassName));
-    model.setClassName(EnumDataHelper.extractSimpleClassName(fullClassName));
+  public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
     this.cssSelector = Objects.requireNonNull(tableSelector, "XPath selector for table cannot be null!");
     this.columnPosConstant = Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");

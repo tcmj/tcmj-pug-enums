@@ -12,18 +12,10 @@ public class StaticDataProvider implements DataProvider {
   private static final transient Logger LOG = LoggerFactory.getLogger(StaticDataProvider.class);
   EnumData model = new EnumData();
 
-  public StaticDataProvider(String fullClassName) {
-    model.setPackageName(EnumDataHelper.extractPackage(fullClassName));
-    model.setClassName(EnumDataHelper.extractSimpleClassName(fullClassName));
-    LOG.info(
-        "PackageName={}, ClassName={}, FullClassName={}",
-        model.getPackageName(),
-        model.getClassNameSimple(),
-        model.getClassName());
+  public StaticDataProvider() {
   }
 
-  public StaticDataProvider(String fullClassName, String[] fieldNames, Class[] fieldClasses) {
-    this(fullClassName);
+  public StaticDataProvider(String[] fieldNames, Class[] fieldClasses) {
     model.setFieldNames(Objects.requireNonNull(fieldNames, "FieldNames cannot be null!"));
     model.setFieldClasses(Objects.requireNonNull(fieldClasses, "FieldClasses cannot be null!"));
     LOG.info("FieldNames={}, FieldClasses={}", model.getFieldNames(), model.getFieldClasses());

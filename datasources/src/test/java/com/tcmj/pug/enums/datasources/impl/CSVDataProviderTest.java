@@ -1,6 +1,5 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import com.tcmj.pug.enums.datasources.impl.CSVDataProvider;
 import java.io.Reader;
 import java.util.Arrays;
 import com.tcmj.pug.enums.model.EnumData;
@@ -11,7 +10,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/** pugproductions - 2017-05-16 - tcmj. */
+/** Test of CSVDataProvider. */
 public class CSVDataProviderTest {
 
   @Test
@@ -21,12 +20,9 @@ public class CSVDataProviderTest {
     String[] fieldNames = null;
     Class[] fieldClasses = null;
 
-    CSVDataProvider dataProvider = new CSVDataProvider("com.tcmj.test.MySimpleCsvEnum", reader, fieldNameConstant, fieldNames, fieldClasses);
+    CSVDataProvider dataProvider = new CSVDataProvider(reader, fieldNameConstant, fieldNames, fieldClasses);
     EnumData data = dataProvider.load();
 
-    assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("MySimpleCsvEnum"));
-    assertThat("getClassName", data.getClassName(), equalTo("com.tcmj.test.MySimpleCsvEnum"));
-    assertThat("getPackageName", data.getPackageName(), equalTo("com.tcmj.test"));
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
@@ -35,18 +31,14 @@ public class CSVDataProviderTest {
 
   @Test
   public void overallTestWithSubfields() throws Exception {
-    String fullClassName = "a.b.c.JsonEnum";
     Reader reader = ReaderHelper.getResource(JsonDataProviderTest.class, "continents.csv");
     String fieldNameConstant = "nameUS";
     String[] fieldNames = new String[]{"areaKM2", "areaPct", "name"};
     Class[] fieldClasses = new Class[]{Integer.class, Float.class, String.class};
 
-    CSVDataProvider dataProvider = new CSVDataProvider(fullClassName, reader, fieldNameConstant, fieldNames, fieldClasses);
+    CSVDataProvider dataProvider = new CSVDataProvider(reader, fieldNameConstant, fieldNames, fieldClasses);
     EnumData data = dataProvider.load();
 
-    assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("JsonEnum"));
-    assertThat("getClassName", data.getClassName(), equalTo("a.b.c.JsonEnum"));
-    assertThat("getPackageName", data.getPackageName(), equalTo("a.b.c"));
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));

@@ -47,7 +47,6 @@ public class GenerateEnumHtmlMojo extends GeneralEnumMojo {
       throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: "+this.dataProvider);
     }
     return new URLHtmlDataProvider(
-        this.className,
         this.url,
         this.tableCssSelector, //xpath to a record to further (also to a table possible)
         this.constantColumn, //enum constant column

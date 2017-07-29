@@ -29,8 +29,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
 
   @Override
   public ClassBuilder withName(String name) {
-    this.model.setPackageName(StringUtils.substringBeforeLast(name, "."));
-    this.model.setClassName(StringUtils.substringAfterLast(name, "."));
+    this.model.setClassName(name);
     return this;
   }
 

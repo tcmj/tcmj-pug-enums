@@ -11,8 +11,7 @@ public class ContinentDataProvider implements DataProvider {
   @Override
   public EnumData load() {
     EnumData model = new EnumData();
-    model.setPackageName("com.tcmj.iso.world");
-    model.setClassName("Continent");
+    model.setClassName("com.tcmj.iso.world.Continent");
 
     model.addJavaDoc(EnumData.JDocKeys.CLASS.name(), "7 Continents of the World.");
     model.addJavaDoc(EnumData.JDocKeys.CLASS.name(), "https://en.wikipedia.org/wiki/Continent");

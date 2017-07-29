@@ -26,8 +26,7 @@ public class ContinentJsonProvider implements DataProvider {
   public EnumData load() {
     EnumData model = new EnumData();
     try {
-      model.setPackageName("com.tcmj.pug.enums.example.provider");
-      model.setClassName("Continents");
+      model.setClassName("com.tcmj.pug.enums.example.provider.Continents");
 
       URL continentsURL = ContinentJsonProvider.class.getResource("continents.json");
       Path path = Paths.get(continentsURL.toURI());

@@ -42,7 +42,6 @@ public class WikipediaExample3 {
 
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.html.MyStatesEnum4", 
         "https://en.wikipedia.org/wiki/States_of_Germany", 
         "table.sortable", 
         3, //enum constant column

@@ -20,7 +20,6 @@ public class URLHtmlDataProviderTest {
 
   private URLHtmlDataProvider getDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.html.MyStatesEnum4",
         "https://en.wikipedia.org/wiki/States_of_Germany",
         "table.sortable",
         1, //enum constant column
@@ -57,7 +56,6 @@ public class URLHtmlDataProviderTest {
   @Test
   public void overallTestWithoutSubfields() throws Exception {
     URLHtmlDataProvider dataProvider = spy(new URLHtmlDataProvider(
-        "com.tcmj.test.MyWikipediaEnum",
         "mockedunittest",
         "[title=Afghanistan]",
         3,
@@ -67,9 +65,6 @@ public class URLHtmlDataProviderTest {
 
     EnumData data = dataProvider.load();
 
-    assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("MyWikipediaEnum"));
-    assertThat("getClassName", data.getClassName(), equalTo("com.tcmj.test.MyWikipediaEnum"));
-    assertThat("getPackageName", data.getPackageName(), equalTo("com.tcmj.test"));
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(3));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
@@ -83,7 +78,6 @@ public class URLHtmlDataProviderTest {
   @Test
   public void overallTestWithSubfields() throws Exception {
     URLHtmlDataProvider dataProvider = spy(new URLHtmlDataProvider(
-        "com.tcmj.test.MyWikipediaEnum",
         "https://ttt.wikipedia.org/wiki/ISO_3166-1",
         "[title=Afghanistan]",
         1,
@@ -93,9 +87,6 @@ public class URLHtmlDataProviderTest {
 
     EnumData data = dataProvider.load();
 
-    assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("MyWikipediaEnum"));
-    assertThat("getClassName", data.getClassName(), equalTo("com.tcmj.test.MyWikipediaEnum"));
-    assertThat("getPackageName", data.getPackageName(), equalTo("com.tcmj.test"));
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(3));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
@@ -106,14 +97,11 @@ public class URLHtmlDataProviderTest {
 
   @Test
   public void testGetValueSpecialCase() throws Exception {
-    URLHtmlDataProvider cut = spy(new URLHtmlDataProvider("a.b.c.MyEnum", "States_of_Germany", "table.sortable", 3, new int[]{2, 3, 4}));
+    URLHtmlDataProvider cut = spy(new URLHtmlDataProvider("States_of_Germany", "table.sortable", 3, new int[]{2, 3, 4}));//"a.b.c.MyEnum", 
     doReturn(getMockHtmlFile("states.html")).when(cut).getDocument("States_of_Germany");
 
     EnumData data = cut.load();
     
-    assertThat("getClassNameSimple", data.getClassNameSimple(), equalTo("MyEnum"));
-    assertThat("getClassName", data.getClassName(), equalTo("a.b.c.MyEnum"));
-    assertThat("getPackageName", data.getPackageName(), equalTo("a.b.c"));
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(16));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));

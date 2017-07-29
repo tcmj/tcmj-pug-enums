@@ -1,7 +1,5 @@
 package com.tcmj.pug.enums.api;
 
-import com.tcmj.pug.enums.api.DataProvider;
-import java.util.Set;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import java.util.List;
@@ -15,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
-/** pugproductions - 2017-05-16 - tcmj. */
+/** Test of DataProvider. */
 public class DataProviderTest {
 
   @Test

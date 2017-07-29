@@ -24,30 +24,13 @@ public class CSVDataProvider implements DataProvider {
   /** CSV Field which should be used for the enum constant values. */
   private final String fieldNameConstants;
 
-  public CSVDataProvider(
-      String fullClassName,
-      Reader reader,
-      String fieldNameConstant,
-      String[] fieldNames,
-      Class[] fieldClasses) {
-    this.fieldNameConstants =
-        Objects.requireNonNull(
-            fieldNameConstant, "Please define the csv field name used for the enum constants!");
-    model.setPackageName(EnumDataHelper.extractPackage(fullClassName));
-    model.setClassName(EnumDataHelper.extractSimpleClassName(fullClassName));
+  public CSVDataProvider(Reader reader, String fieldNameConstant, String[] fieldNames, Class[] fieldClasses) {
+    this.fieldNameConstants = Objects.requireNonNull(fieldNameConstant, "Please define the csv field name used for the enum constants!");
     this.reader = Objects.requireNonNull(reader, "Reader cannot be null!");
     model.setFieldNames(fieldNames);
     model.setFieldClasses(fieldClasses);
-    LOG.info(
-        "PackageName={}, SimpleClassName={}, FullClassName={}",
-        model.getPackageName(),
-        model.getClassNameSimple(),
-        model.getClassName());
-    LOG.info(
-        "CSVFieldNameConstants={}, FieldNames={}, FieldClasses={}",
-        fieldNameConstant,
-        model.getFieldNames(),
-        model.getFieldClasses());
+    LOG.info("PackageName={}, SimpleClassName={}, FullClassName={}", model.getPackageName(), model.getClassNameSimple(), model.getClassName());
+    LOG.info("CSVFieldNameConstants={}, FieldNames={}, FieldClasses={}", fieldNameConstant, model.getFieldNames(), model.getFieldClasses());
   }
 
   private Set<String> getHeaders(Map<String, Integer> map) throws Exception {
@@ -70,14 +53,8 @@ public class CSVDataProvider implements DataProvider {
       LOG.info("Header: {}", parser.getHeaderMap());
       LOG.info("HeaderUsing: {}", headers);
       for (CSVRecord record : parser.getRecords()) {
-        String constantName =
-            Objects.requireNonNull(
-                record.get(fieldNameConstants),
-                "ConstantFieldName not found: " + fieldNameConstants);
-        LOG.debug(
-            "CSV field successfully found for enum constant value: '{}'='{}'",
-            fieldNameConstants,
-            constantName);
+        String constantName = Objects.requireNonNull(record.get(fieldNameConstants), "ConstantFieldName not found: " + fieldNameConstants);
+        LOG.debug("CSV field successfully found for enum constant value: '{}'='{}'", fieldNameConstants, constantName);
         boolean removed = headers.remove(constantName);
         if (removed) {
           LOG.debug("Constant CSV field successfully removed from headermap!");
@@ -94,8 +71,7 @@ public class CSVDataProvider implements DataProvider {
             i++;
           }
           EnumDataHelper.addConstantValue(model, name, values);
-          LOG.debug(
-              "Successfully added following values '{}'  to enum constant '{}'", values, name);
+          LOG.debug("Successfully added following values '{}'  to enum constant '{}'", values, name);
         } else {
           LOG.trace("Simple Enum: {}={} ", fieldNameConstants, name);
           EnumDataHelper.addConstantWithoutSubfield(model, name);

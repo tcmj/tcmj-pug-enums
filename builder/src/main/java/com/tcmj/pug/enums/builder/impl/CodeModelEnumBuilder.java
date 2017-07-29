@@ -62,17 +62,19 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
   Map<String, String> mapCustomCodeJavaDoc = new HashMap<>();
 
-  public CodeModelEnumBuilder() {}
+  public CodeModelEnumBuilder() {
+  }
 
-  private CodeModelEnumBuilder(String packageName, String className) {
+  private CodeModelEnumBuilder(String className) {
     this.model.setClassName(className);
-    this.model.setPackageName(packageName);
+
     try {
-      if (packageName == null) {
+      String pkgName = this.model.getPackageName();
+      if (pkgName == null) {
         this.jclass = codeModel.rootPackage()._class(JMod.PUBLIC, className, ClassType.ENUM);
       } else {
-        this.jpackage = codeModel._package(packageName);
-        this.jclass = this.jpackage._enum(className);
+        this.jpackage = codeModel._package(pkgName);
+        this.jclass = this.jpackage._enum(this.model.getClassNameSimple());
       }
     } catch (Exception e) {
       throw new ClassCreationException(e);
@@ -84,8 +86,8 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
     super.withName(name);
     try {
       if (model.getPackageName() == null) {
-        this.jclass =
-            codeModel
+        this.jclass
+            = codeModel
                 .rootPackage()
                 ._class(JMod.PUBLIC, this.model.getPackageName(), ClassType.ENUM);
       } else {
@@ -162,8 +164,7 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
     for (Map.Entry<String, JFieldVar> jFieldVarEntry : jfields.entrySet()) {
       String name = jFieldVarEntry.getKey();
       JFieldVar field1 = jFieldVarEntry.getValue();
-      JMethod field1GetterMethod =
-          this.jclass.method(JMod.PUBLIC, field1.type(), toGetter(name).toString());
+      JMethod field1GetterMethod = this.jclass.method(JMod.PUBLIC, field1.type(), toGetter(name).toString());
 
       final String customCode = this.model.getCustomCode(name);
       if (customCode == null) {
@@ -330,5 +331,5 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
     return this;
   }
- 
+
 }

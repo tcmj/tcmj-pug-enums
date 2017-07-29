@@ -42,7 +42,6 @@ public class WikipediaExample2 {
 
   private static DataProvider getMyDataProvider() {
     return new URLHtmlDataProvider(
-        "com.tcmj.test.MTI", //enum name and path
         "https://de.wikipedia.org/wiki/ISO_8583", //url to load
         "table:nth-of-type(3)", //xpath to a record to further (also to a table possible)
         1, //enum constant column
