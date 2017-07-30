@@ -32,6 +32,9 @@ public class NamingStrategyFactory {
   public static NamingStrategy lowerCase() {
     return value -> value == null ? null : value.toLowerCase();
   }
+  public static NamingStrategy lowerCaseFirstLetter() {
+    return value -> value == null ? null : Character.toLowerCase(value.charAt(0)) + value.substring(1);
+  }
 
   public static NamingStrategy trim() {
     return value -> value == null ? null : value.trim();

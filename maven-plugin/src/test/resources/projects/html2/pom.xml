@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tcmj.plugins.test</groupId>
+    <artifactId>pug-enum-maven-plugin-test02</artifactId>
+    <version>TEST</version>
+    <packaging>jar</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>LATEST</version>
+                <configuration>
+                    <className>com.tcmj.html.test.MyCountriesEnum2</className>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+
+                    <url>https://en.wikipedia.org/wiki/ISO_3166-1</url>
+                    <tableCssSelector>[title=Afghanistan]</tableCssSelector>
+                    <constantColumn>1</constantColumn>
+                    <subDataColumns>
+                        <value>2</value>
+                        <value>3</value>
+                        <value>4</value>
+                    </subDataColumns>
+                    
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

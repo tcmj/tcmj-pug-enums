@@ -99,11 +99,11 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
       getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
     }
 
-    Object project = getPluginContext().get("project");
-    getLog().info(arrange("org.apache.maven.project.MavenProject: " + project.getClass()));
-    Object pluginDescriptor = getPluginContext().get("pluginDescriptor");
-    getLog().info(arrange("org.apache.maven.plugin.descriptor.PluginDescriptor: " + pluginDescriptor.getClass()));
-    getLog().info(getLine());
+//    Object project = getPluginContext().get("project");
+//    getLog().info(arrange("org.apache.maven.project.MavenProject: " + project.getClass()));
+//    Object pluginDescriptor = getPluginContext().get("pluginDescriptor");
+//    getLog().info(arrange("org.apache.maven.plugin.descriptor.PluginDescriptor: " + pluginDescriptor.getClass()));
+//    getLog().info(getLine());
   }
 
   protected static boolean isParameterSet(String[] param) {
