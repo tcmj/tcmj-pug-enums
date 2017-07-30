@@ -3,7 +3,7 @@ package com.tcmj.pug.enums.mvn;
 import org.apache.commons.lang3.StringUtils;
 
 /** Common helping functions. */
-public class LittleHelper {
+public class LogFormatter {
   private static final String STARS = StringUtils.repeat("* ", 75);
 
   public static String arrange(String text) {
