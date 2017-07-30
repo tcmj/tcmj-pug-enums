@@ -6,21 +6,21 @@ import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.SourceFormatter;
+import com.tcmj.pug.enums.api.fluent.Fluent;
+import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
+import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.pug.enums.model.NameTypeValue;
 import static com.tcmj.pug.enums.mvn.LittleHelper.arrange;
 import static com.tcmj.pug.enums.mvn.LittleHelper.encloseJavaDoc;
 import static com.tcmj.pug.enums.mvn.LittleHelper.getLine;
 import java.io.File;
-import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -28,12 +28,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/**
- * <p>
- * Abstract tcmj pug enums superclass for Mojos generating Java source enum classes from datasources.</p>
- */
+/** Goal which extracts data from a URL (html table). */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
-public abstract class GeneralEnumMojo extends AbstractMojo {
+public class GenerateEnumMojo extends AbstractMojo {
 
   /** Mandatory Property which data provider should be used. This class name should be created in the {@link #getDataProvider()} method. */
   @Parameter(property = "com.tcmj.pug.enums.dataprovider", defaultValue = "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")
@@ -59,27 +56,23 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.classjavadoc", required = false)
   protected String[] javadocClassLevel;
 
-  /** Subclasses have to provide the DataProvider to be used. */
-  protected abstract DataProvider getDataProvider();
+  /** Css selector to a record (also to a table possible). */
+  @Parameter(property = "com.tcmj.pug.enums.cssselector", defaultValue = "table", required = true)
+  private String tableCssSelector;
 
-  /** Subclasses have to provide the naming conversion strategy used to change constant names. */
-  protected abstract NamingStrategy getDefaultNamingStrategyConstantNames();
+  /** Physical position of the column to be used to extract the enum constant names (beginning/defaulting with/to 1). */
+  @Parameter(property = "com.tcmj.pug.enums.constantcolumn", defaultValue = "1", required = true)
+  private Integer constantColumn;
 
-  /** Subclasses have to provide the naming conversion strategy used to change field names. */
-  protected abstract NamingStrategy getDefaultNamingStrategyFieldNames();
+  /** Optional possibiity to extract further columns and use it as fields in the enum. */
+  @Parameter(property = "com.tcmj.pug.enums.subdatacolumns", required = false)
+  private Integer[] subDataColumns;
 
-  /** Define which ClassBuilder implementation we want to use. */
-  protected ClassBuilder getClassBuilder() {
-    return ClassBuilderFactory.getBestEnumBuilder(); //..the best we can get
+  protected static <T> boolean isParameterSet(T[] param) {
+    return param != null && param.length > 0;
   }
 
-  /** Define which Source Formatter implementation we want to use. */
-  protected SourceFormatter getSourceFormatter() {
-    return SourceFormatterFactory.getBestSourceCodeFormatter(); //..the best we can get
-  }
-
-  /** Print actual configuration settings and version info of the plugin. */
-  protected void displayYoureWelcome() {
+  private void displayYoureWelcome() {  //attach some more logging..
     getLog().info(getLine());
     getLog().info(arrange("Welcome to the tcmj pug enums maven plugin!"));
     getLog().info(getLine());
@@ -98,16 +91,44 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
     } else {
       getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
     }
-
-//    Object project = getPluginContext().get("project");
-//    getLog().info(arrange("org.apache.maven.project.MavenProject: " + project.getClass()));
-//    Object pluginDescriptor = getPluginContext().get("pluginDescriptor");
-//    getLog().info(arrange("org.apache.maven.plugin.descriptor.PluginDescriptor: " + pluginDescriptor.getClass()));
-//    getLog().info(getLine());
+    getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
+    getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
+    getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
+    
+    if (isParameterSet(this.subDataColumns)) {
+      getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
+    }
   }
 
-  protected static boolean isParameterSet(String[] param) {
-    return param != null && param.length > 0;
+  protected DataProvider getDataProvider() {
+    if (this.dataProvider != null && !StringUtils.equals(this.dataProvider, "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")) {
+      throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: " + this.dataProvider);
+    }
+    return new URLHtmlDataProvider(
+        this.url,
+        this.tableCssSelector, //xpath to a record to further (also to a table possible)
+        this.constantColumn, //enum constant column
+        this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray() //convert to int[]
+    );
+  }
+
+  protected NamingStrategy getDefaultNamingStrategyConstantNames() {
+    return Fluent.getDefaultNamingStrategyConstantNames();
+//    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
+//    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
+//    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
+//    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
+//    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
+//    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
+  }
+
+  protected NamingStrategy getDefaultNamingStrategyFieldNames() {
+    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
+    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
+    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
+    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
+    NamingStrategy ns5 = NamingStrategyFactory.lowerCaseFirstLetter();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
   @Override
@@ -155,8 +176,8 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
 
       myEnumExporter.export(eResult);
 
-      getLog().info(String.format("Enum successfully created with %s characters!", myEnum.length()));
-
+      getLog().info(arrange(String.format("Enum successfully created with %s characters!", myEnum.length())));
+ 
     } catch (Exception e) {
       getLog().error("Cannot create your enum: " + className + "!", e);
       throw new MojoExecutionException("ExecutionFailure!", e);
@@ -164,7 +185,17 @@ public abstract class GeneralEnumMojo extends AbstractMojo {
   }
 
   /** Usually we want always the FileExporter to save the enum into file system. */
-  protected EnumExporter getEnumExporter() {
+  private EnumExporter getEnumExporter() {
     return new JavaSourceFileExporter();
+  }
+
+  /** Define which ClassBuilder implementation we want to use. */
+  private ClassBuilder getClassBuilder() {
+    return ClassBuilderFactory.getBestEnumBuilder(); //..the best we can get
+  }
+
+  /** Define which Source Formatter implementation we want to use. */
+  private SourceFormatter getSourceFormatter() {
+    return SourceFormatterFactory.getBestSourceCodeFormatter(); //..the best we can get
   }
 }

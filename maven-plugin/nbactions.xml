@@ -5,7 +5,7 @@
             <displayName>run_generate_enum_html</displayName>
             <goals>
                 <goal>install</goal>
-                <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.8.1-SNAPSHOT:generate-enum-html</goal>
+                <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.8.1-SNAPSHOT:generate-enum</goal>
             </goals>
             <properties>
                 <com.tcmj.pug.enums.classname>com.tcmj.html.ClassNameHtmlEnum</com.tcmj.pug.enums.classname>

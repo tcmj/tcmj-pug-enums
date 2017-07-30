@@ -33,7 +33,7 @@ public class GenerateEnumHtmlMojoTest {
     Assert.assertNotNull(pom);
     Assert.assertTrue(pom.exists());
 
-    GenerateEnumHtmlMojo mojo = (GenerateEnumHtmlMojo) this.rule.lookupMojo("generate-enum-html", pom);
+    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
     Assert.assertNotNull(mojo);
     mojo.execute();
   }
@@ -44,7 +44,7 @@ public class GenerateEnumHtmlMojoTest {
     Assert.assertNotNull(pom);
     Assert.assertTrue(pom.exists());
 
-    GenerateEnumHtmlMojo mojo = (GenerateEnumHtmlMojo) this.rule.lookupMojo("generate-enum-html", pom);
+    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
     Assert.assertNotNull(mojo);
     mojo.execute();
   }
@@ -55,7 +55,7 @@ public class GenerateEnumHtmlMojoTest {
     Assert.assertNotNull(pom);
     Assert.assertTrue(pom.exists());
 
-    GenerateEnumHtmlMojo mojo = (GenerateEnumHtmlMojo) this.rule.lookupMojo("generate-enum-html", pom);
+    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
     Assert.assertNotNull(mojo);
     mojo.execute();
   }
