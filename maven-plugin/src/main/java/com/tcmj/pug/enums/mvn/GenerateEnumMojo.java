@@ -28,7 +28,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** Goal which extracts data from a URL (html table). */
+/** Main Mojo which extracts data from a URL and creates a java enum source file. */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class GenerateEnumMojo extends AbstractMojo {
 
@@ -94,7 +94,7 @@ public class GenerateEnumMojo extends AbstractMojo {
     getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
     getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
     getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
-    
+
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
     }
@@ -114,12 +114,6 @@ public class GenerateEnumMojo extends AbstractMojo {
 
   protected NamingStrategy getDefaultNamingStrategyConstantNames() {
     return Fluent.getDefaultNamingStrategyConstantNames();
-//    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
-//    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
-//    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
-//    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-//    NamingStrategy ns5 = NamingStrategyFactory.upperCase();
-//    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
   protected NamingStrategy getDefaultNamingStrategyFieldNames() {
@@ -177,7 +171,7 @@ public class GenerateEnumMojo extends AbstractMojo {
       myEnumExporter.export(eResult);
 
       getLog().info(arrange(String.format("Enum successfully created with %s characters!", myEnum.length())));
- 
+
     } catch (Exception e) {
       getLog().error("Cannot create your enum: " + className + "!", e);
       throw new MojoExecutionException("ExecutionFailure!", e);

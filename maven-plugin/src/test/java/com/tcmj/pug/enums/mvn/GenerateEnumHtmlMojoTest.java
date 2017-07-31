@@ -1,12 +1,13 @@
 package com.tcmj.pug.enums.mvn;
 
 import java.io.File;
+import java.nio.file.Files;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
 import static org.codehaus.plexus.PlexusTestCase.getTestFile;
-import org.junit.Assert;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -22,42 +23,37 @@ public class GenerateEnumHtmlMojoTest {
   @Rule
   public TestResources resources = new TestResources("src/test/resources/projects", "target/test-projects");
 
-  public GenerateEnumHtmlMojoTest() {
+  private GenerateEnumMojo getMojo(String projectDir) throws Exception {
+    File pom = new File(this.resources.getBasedir(projectDir), "pom.xml");
+    assertThat("pom File object is null", pom, notNullValue());
+    assertThat("pom.xml does not exist", Files.isRegularFile(pom.toPath()), is(true));
+    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
+    assertThat("Mojo is null in " + projectDir, mojo, notNullValue());
+    return mojo;
   }
 
   @Test
-  public void simple() throws Exception {
-    File pom4 = getTestFile("src/test/resources/projects/html1/pom.xml");
-    File projectCopy = this.resources.getBasedir("html1");
-    File pom = new File(projectCopy, "pom.xml");
-    Assert.assertNotNull(pom);
-    Assert.assertTrue(pom.exists());
-
-    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
-    Assert.assertNotNull(mojo);
+  public void simpleEnumWithoutSubfields() throws Exception {
+    GenerateEnumMojo mojo = getMojo("html1");
     mojo.execute();
+    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum1.java");
+    assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
-  @Test
-  public void subs() throws Exception {
-     File projectCopy = this.resources.getBasedir("html2");
-    File pom = new File(projectCopy, "pom.xml");
-    Assert.assertNotNull(pom);
-    Assert.assertTrue(pom.exists());
 
-    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
-    Assert.assertNotNull(mojo);
+  @Test
+  public void enumWithSubfields() throws Exception {
+    GenerateEnumMojo mojo = getMojo("html2");
     mojo.execute();
+    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum2.java");
+    assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
-  @Test
-  public void subs3() throws Exception {
-     File projectCopy = this.resources.getBasedir("html3");
-    File pom = new File(projectCopy, "pom.xml");
-    Assert.assertNotNull(pom);
-    Assert.assertTrue(pom.exists());
 
-    GenerateEnumMojo mojo = (GenerateEnumMojo) this.rule.lookupMojo("generate-enum", pom);
-    Assert.assertNotNull(mojo);
+  @Test
+  public void overridenFieldNames() throws Exception {
+    GenerateEnumMojo mojo = getMojo("html3");
     mojo.execute();
+    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/StatesEnum.java");
+    assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
 
 }
