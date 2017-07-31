@@ -28,7 +28,10 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** Main Mojo which extracts data from a URL and creates a java enum source file. */
+/** 
+ * Main Mojo which extracts data from a URL and creates a java enum source file. 
+ * @since 2017
+ */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
 public class GenerateEnumMojo extends AbstractMojo {
 

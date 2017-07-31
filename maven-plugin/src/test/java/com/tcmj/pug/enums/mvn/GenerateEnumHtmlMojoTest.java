@@ -1,6 +1,7 @@
 package com.tcmj.pug.enums.mvn;
 
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Files;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
@@ -56,4 +57,19 @@ public class GenerateEnumHtmlMojoTest {
     assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
 
+  @Test
+  public void staticHtmlFile() throws Exception {
+    //Just ensure that our static html file is available
+    File html = new File(this.resources.getBasedir("html4"), "javacodes.html");
+    assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
+    
+    URL myUrl = html.toURI().toURL();
+    System.out.println("myUrl="+myUrl);
+        
+    //..continue with regular test...
+    GenerateEnumMojo mojo = getMojo("html4");
+    mojo.execute();
+    
+  }
+  
 }

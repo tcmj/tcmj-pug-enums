@@ -2,6 +2,11 @@ package com.tcmj.pug.enums.datasources.impl;
 
 import java.util.Arrays;
 import com.tcmj.pug.enums.model.EnumData;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -106,4 +111,23 @@ public class URLHtmlDataProviderTest {
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(16));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
   }
+  
+  @Test
+  public void staticHtmlFileOffline() throws Exception {
+    URL url = URLHtmlDataProvider.class.getResource("java.html");
+    String myURL = url.toURI().toString();
+    String mySelector = null;
+    assertThat("HtmlTestFile must be available", Files.isRegularFile(Paths.get(URI.create(myURL))), is(true));
+    URLHtmlDataProvider dataProvider =  new URLHtmlDataProvider( myURL, mySelector, 1, new int[]{2, 3} );
+    EnumData data = dataProvider.load();
+    assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
+    assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(3));
+    assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(2));
+    assertThat("getName", Arrays.toString(data.getFieldNames()), equalTo("[codename, date]"));
+    assertThat("getType", Arrays.toString(data.getFieldClasses()), equalTo("[class java.lang.String, class java.lang.String]"));
+    assertThat("getConstantName", data.getData().stream().findFirst().get().getConstantName(), equalTo("JDK 1.0"));
+    assertThat("getValue", Arrays.toString(data.getData().stream().findFirst().get().getValue()), equalTo("[Oak, 23.05.1995]"));
+  }
+
+  
 }

@@ -9,6 +9,11 @@ import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
@@ -35,19 +40,37 @@ public class URLHtmlDataProvider implements DataProvider {
 
   public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
-    this.cssSelector = Objects.requireNonNull(tableSelector, "XPath selector for table cannot be null!");
+    if (tableSelector == null) {
+      LOG.debug("No CSS selection set! Defaulting to the first '<table>' found!");
+      this.cssSelector = "table";
+    } else {
+      this.cssSelector = tableSelector;
+    }
     this.columnPosConstant = Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");
     this.columnPos = columnPos; //column indexes to take
   }
 
-  Document getDocument(String urlToLoad)throws IOException{
+  Document getDocument(String urlToLoad) throws IOException {
+    if (StringUtils.startsWith(urlToLoad, "file:")) {
+      Path path = Paths.get(URI.create(urlToLoad));
+      InputStream inStream = Files.newInputStream(path);
+      return Jsoup.parse(inStream, "UTF-8", "");
+    }
     return Jsoup.connect(urlToLoad).get();
   }
-    
+
   Element locateTable(Document doc) throws Exception {
-    Elements selectionOfAnyRecord = Objects.requireNonNull(doc.select(this.cssSelector), "Bad CSS selector result for: " + this.cssSelector);
-    LOG.debug("CSS election result: {}", selectionOfAnyRecord);
-    Element table = Objects.requireNonNull(selectionOfAnyRecord.get(0), "Bad CSS selector result for: " + this.cssSelector);
+
+    Elements cssSelection = Objects.requireNonNull(doc, "No Document loaded!").select(this.cssSelector);
+
+    if (cssSelection.isEmpty()) {
+      throw new ClassCreationException("Bad CSS selector! No results found with: " + this.cssSelector);
+    } else {
+      LOG.debug("CSS selection got {} entries: {}", cssSelection.size(), cssSelection);
+    }
+
+    Element table = cssSelection.get(0); //use first
+
     boolean stillNotFound = true;
     while (stillNotFound) {
       if ("table".equalsIgnoreCase(table.tagName())) {
@@ -72,10 +95,14 @@ public class URLHtmlDataProvider implements DataProvider {
 
       Element table = locateTable(doc);
 
-      String[] columnNames = getColumnNames(table);
-
-      model.setFieldNames(columnNames);
-      model.setFieldClasses(getColumnClasses(columnNames));
+      if (this.columnPos != null) {
+        String[] columnNames = getColumnNames(table);
+        if (columnNames.length != columnPos.length) {
+          throw new ClassCreationException(String.format("Amount of configured subfield columns (%d) does not match with header columns found (%d)!", columnPos.length, columnNames.length));
+        }
+        model.setFieldNames(columnNames);
+        model.setFieldClasses(getColumnClasses(columnNames));
+      }
 
       getRecordData(table);
 
@@ -153,23 +180,23 @@ public class URLHtmlDataProvider implements DataProvider {
   }
 
   String[] getColumnNames(Element table) throws Exception {
-    if(isNoSubFieldsDefined()){
+    if (isNoSubFieldsDefined()) {
       return null;
     }
-    
+
     List<String> temp = new LinkedList<>();
     Elements th = table.select("th");
     int curPos = 0;
     for (Element element : th) {
       curPos++;
       String name = getValue(element);
-        if (isColumnInArray(this.columnPos, curPos)) {
-          String normalized = StringUtils.lowerCase(name);
-          normalized = StringUtils.replace(normalized, "-", "_");
-          normalized = StringUtils.replace(normalized, " ", "_");
-          LOG.debug("Column Header {} found: '{}'='{}'", curPos,name, normalized);
-          temp.add(normalized);
-        }
+      if (isColumnInArray(this.columnPos, curPos)) {
+        String normalized = StringUtils.lowerCase(name);
+        normalized = StringUtils.replace(normalized, "-", "_");
+        normalized = StringUtils.replace(normalized, " ", "_");
+        LOG.debug("Column Header {} found: '{}'='{}'", curPos, name, normalized);
+        temp.add(normalized);
+      }
     }
     return temp.toArray(new String[0]);
   }
@@ -177,6 +204,7 @@ public class URLHtmlDataProvider implements DataProvider {
   private boolean isNoSubFieldsDefined() {
     return !(this.columnPos != null && this.columnPos.length > 0);
   }
+
   static boolean isColumnInArray(int[] array, int value) {
     return IntStream.of(array).filter(elem -> elem == value).findAny().isPresent();
   }

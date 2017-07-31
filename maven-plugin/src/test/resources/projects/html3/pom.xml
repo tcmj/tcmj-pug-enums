@@ -6,12 +6,23 @@
     <artifactId>pug-enum-maven-plugin-test03</artifactId>
     <version>TEST</version>
     <packaging>jar</packaging>
+    
+    <description>
+        Usage example of
+        -loading states of germany from wikipedia
+        -css selector points directly to a table
+        -using third column for the enum constant values
+        -we want one additional subfield from column 4
+        -we define the name of the subfield by ourself as 'joined'
+        -writing the enum as a java source file to a specific directory
+    </description>
+    
     <build>
         <plugins>
             <plugin>
                 <groupId>com.tcmj.plugins</groupId>
                 <artifactId>pug-enum-maven-plugin</artifactId>
-                <version>LATEST</version>
+                <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.StatesEnum</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
@@ -24,7 +35,6 @@
                     <subFieldNames>
                         <value>joined</value>
                     </subFieldNames>
-                    
                 </configuration>
             </plugin>
         </plugins>

@@ -3,17 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tcmj.plugins.test</groupId>
-    <artifactId>pug-enum-maven-plugin-test02</artifactId>
+    <artifactId>pug-enum-maven-plugin-test03</artifactId>
     <version>TEST</version>
     <packaging>jar</packaging>
     
     <description>
         Usage example of
-        -loading data from wikipedia
-        -locating the tabular data inside the html using a css selector which simply points to an entry
-        -using first column for the enum constant values
+        -loading java code names from a html file
+        -css selector points directly to a table
+        -using third column for the enum constant values
+        -we want one additional subfield from column 4
+        -we define the name of the subfield by ourself as 'joined'
         -writing the enum as a java source file to a specific directory
-        -we want 3 subfields which will be read from column 2, 3 and 4
     </description>
     
     <build>
@@ -23,13 +24,12 @@
                 <artifactId>pug-enum-maven-plugin</artifactId>
                 <version>LATEST_VERSION</version>
                 <configuration>
-                    <className>com.tcmj.html.test.MyCountriesEnum2</className>
+                    <className>com.tcmj.html.test.JavaCodesEnum</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
-                    <url>https://en.wikipedia.org/wiki/ISO_3166-1</url>
-                    <tableCssSelector>[title=Afghanistan]</tableCssSelector>
-                    <constantColumn>1</constantColumn>
+                    <url>file:/D:/gitwork/workspace-tcmj-iso/tcmj-pug-enums/maven-plugin/target/test-projects/GenerateEnumHtmlMojoTest_staticHtmlFile_html4/javacodes.html</url>
+                    <tableCssSelector>table.scrollTable</tableCssSelector>
+                    <constantColumn>2</constantColumn>
                     <subDataColumns>
-                        <value>2</value>
                         <value>3</value>
                         <value>4</value>
                     </subDataColumns>

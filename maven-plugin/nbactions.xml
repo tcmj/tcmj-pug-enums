@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-run_generate_enum_html</actionName>
-            <displayName>run_generate_enum_html</displayName>
+            <actionName>CUSTOM-generate_enum</actionName>
+            <displayName>generate_enum</displayName>
             <goals>
-                <goal>install</goal>
                 <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.8.1-SNAPSHOT:generate-enum</goal>
             </goals>
             <properties>
@@ -18,16 +17,5 @@
                 <com.tcmj.pug.enums.classjavadoc>This is a dynamically generated java enum class.,Data has been fetched from ${com.tcmj.pug.enums.url}</com.tcmj.pug.enums.classjavadoc>
             </properties>
         </action>
-        <action>
-            <actionName>CUSTOM-run_generate_enum_json</actionName>
-            <displayName>run_generate_enum_json</displayName>
-            <goals>
-                <goal>install</goal>
-                <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.8.1-SNAPSHOT:generate-enum-json</goal>
-            </goals>
-            <properties>
-                <com.tcmj.pug.enums.classname>com.tcmj.json.ClassNameJsonEnum</com.tcmj.pug.enums.classname>
-                <com.tcmj.pug.enums.url>todo</com.tcmj.pug.enums.url>
-            </properties>
-        </action>
+        
     </actions>
