@@ -1,21 +1,21 @@
 package com.tcmj.pug.enums.mvn;
 
-import java.io.File;
-import java.net.URL;
-import java.nio.file.Files;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.apache.maven.plugin.testing.resources.TestResources;
-import static org.codehaus.plexus.PlexusTestCase.getTestFile;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 /**
  * Test of GenerateEnumHtmlMojo.
- *
- * @see http://maven.apache.org/plugin-testing/maven-plugin-testing-harness/getting-started/index.html
+ * @see <url>http://maven.apache.org/plugin-testing/maven-plugin-testing-harness/getting-started/index.html</url>
  */
 public class GenerateEnumHtmlMojoTest {
   @Rule
@@ -37,7 +37,7 @@ public class GenerateEnumHtmlMojoTest {
   public void simpleEnumWithoutSubfields() throws Exception {
     GenerateEnumMojo mojo = getMojo("html1");
     mojo.execute();
-    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum1.java");
+    File src = new File("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum1.java");
     assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
 
@@ -45,7 +45,7 @@ public class GenerateEnumHtmlMojoTest {
   public void enumWithSubfields() throws Exception {
     GenerateEnumMojo mojo = getMojo("html2");
     mojo.execute();
-    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum2.java");
+    File src = new File("target/generated-test-sources/project-to-test/com/tcmj/html/test/MyCountriesEnum2.java");
     assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
 
@@ -53,7 +53,7 @@ public class GenerateEnumHtmlMojoTest {
   public void overridenFieldNames() throws Exception {
     GenerateEnumMojo mojo = getMojo("html3");
     mojo.execute();
-    File src = getTestFile("target/generated-test-sources/project-to-test/com/tcmj/html/test/StatesEnum.java");
+    File src = new File("target/generated-test-sources/project-to-test/com/tcmj/html/test/StatesEnum.java");
     assertThat("Enum does not exist", Files.isRegularFile(src.toPath()), is(true));
   }
 
@@ -71,5 +71,18 @@ public class GenerateEnumHtmlMojoTest {
     mojo.execute();
     
   }
-  
+  @Test
+  public void staticHtmlFile5() throws Exception {
+    //Just ensure that our static html file is available
+    File html = new File(this.resources.getBasedir("html5"), "eu.html");
+    assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
+    
+    URL myUrl = html.toURI().toURL();
+    System.out.println("myUrl="+myUrl);
+        
+    //..continue with regular test...
+    GenerateEnumMojo mojo = getMojo("html5");
+    mojo.execute();
+    
+  }
 }

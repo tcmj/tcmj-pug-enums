@@ -1,36 +1,36 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
 import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.pug.enums.api.tools.EnumDataHelper;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.IntStream;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.stream.IntStream;
+
 /**
- * Dataprovider which loads a given URL, applies a xpath expression to obtain a html table and parse
- * the table data into an EnumData model. Input.1 = URL -> HTML Document Input.2 = HTML.DOC ->
- * HTML.TABLE via XPath Input.3 = HTML.TABLE -> TR.TD (specifying one for the constants)
- * https://en.wikipedia.org/wiki/ISO_3166-1
+ * DataProvider which loads a given URL, applies a css select expression to obtain a html table and parse
+ * the table data into an EnumData model.
+ * Input.1 = URL -> HTML Document
+ * Input.2 = HTML.DOC -> HTML.TABLE via CSS Select
+ * Input.3 = HTML.TABLE -> TR.TD (specifying one for the constants)
  */
 public class URLHtmlDataProvider implements DataProvider {
-
   private static final transient Logger LOG = LoggerFactory.getLogger(URLHtmlDataProvider.class);
   EnumData model = new EnumData();
   final String url;
@@ -50,13 +50,35 @@ public class URLHtmlDataProvider implements DataProvider {
     this.columnPos = columnPos; //column indexes to take
   }
 
+  /** Parse a html document either from a http url or a file. */
   Document getDocument(String urlToLoad) throws IOException {
-    if (StringUtils.startsWith(urlToLoad, "file:")) {
-      Path path = Paths.get(URI.create(urlToLoad));
-      InputStream inStream = Files.newInputStream(path);
-      return Jsoup.parse(inStream, "UTF-8", "");
+
+    if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
+      return Jsoup.connect(urlToLoad).get();
     }
-    return Jsoup.connect(urlToLoad).get();
+
+//    URL urls = new URL(new URL("file:"), urlToLoad);
+    if (StringUtils.startsWithAny(urlToLoad, "file:")) {
+
+      URI baseURI = URI.create("file:/");
+      URI uri = URI.create(urlToLoad);
+      URI resultURI = baseURI.resolve(uri);
+
+      Path path = Paths.get(resultURI);
+      try (InputStream inStream = Files.newInputStream(path)) {
+        String encoding = Charset.defaultCharset().name();
+        return Jsoup.parse(inStream, encoding, "");
+      }
+    }
+
+    final Path patha = Paths.get(urlToLoad);
+    if (Files.isRegularFile(patha)) {
+      try (InputStream inStream = Files.newInputStream(patha)) {
+        String encoding = Charset.defaultCharset().name();
+        return Jsoup.parse(inStream, encoding, "");
+      }
+    }
+    return null;
   }
 
   Element locateTable(Document doc) throws Exception {
@@ -97,7 +119,7 @@ public class URLHtmlDataProvider implements DataProvider {
 
       if (this.columnPos != null) {
         String[] columnNames = getColumnNames(table);
-        if (columnNames.length != columnPos.length) {
+        if (columnNames != null && columnNames.length != columnPos.length) {
           throw new ClassCreationException(String.format("Amount of configured subfield columns (%d) does not match with header columns found (%d)!", columnPos.length, columnNames.length));
         }
         model.setFieldNames(columnNames);
@@ -149,8 +171,24 @@ public class URLHtmlDataProvider implements DataProvider {
     }
   }
 
+  /**
+   * Universal extraction function used for html table records.
+   *
+   * @param element <th> Jsoup Element Object which can be contain everything (eg. links)
+   * @return hopefully the value you want to extract.
+   */
   String getValue(Element element) throws Exception {
     String value = null;
+    //get all text nodes and take the first found
+    Optional<TextNode> first = element.textNodes().stream().findFirst();
+    if (first.isPresent()) {
+      String text = first.get().text();
+      String alpha = text.replaceAll("[^a-zA-Z0-9]", "");
+      boolean moreThanOneChars = StringUtils.trim(alpha).length() >= 1;
+      if(moreThanOneChars){
+        return text;
+      }
+    }
     if (element.hasText()) {
       if (element.children().size() == 1) {
         value = element.text();

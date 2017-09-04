@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.tcmj.plugins.test</groupId>
-    <artifactId>pug-enum-maven-plugin-test04</artifactId>
+    <artifactId>pug-enum-maven-plugin-test05</artifactId>
     <version>TEST</version>
     <packaging>jar</packaging>
     
@@ -26,13 +26,17 @@
                 <configuration>
                     <className>com.tcmj.html.test.JavaCodesEnum</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
-                    <url>file:/D:/gitwork/workspace-tcmj-iso/tcmj-pug-enums/maven-plugin/target/test-projects/GenerateEnumHtmlMojoTest_staticHtmlFile_html4/javacodes.html</url>
-                    <tableCssSelector>table.scrollTable</tableCssSelector>
-                    <constantColumn>2</constantColumn>
+                    <url>src/test/resources/projects/html5/eu.html</url>
+                    <tableCssSelector>table</tableCssSelector>
+                    <constantColumn>1</constantColumn>
                     <subDataColumns>
                         <value>3</value>
-                        <value>4</value>
+                        <value>5</value>
                     </subDataColumns>
+                    <subFieldNames>
+                        <value>capital</value>
+                        <value>population</value>
+                    </subFieldNames>
                 </configuration>
             </plugin>
         </plugins>

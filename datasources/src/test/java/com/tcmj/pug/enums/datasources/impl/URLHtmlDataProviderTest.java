@@ -1,23 +1,23 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import java.util.Arrays;
 import com.tcmj.pug.enums.model.EnumData;
+import org.hamcrest.CoreMatchers;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.junit.Test;
+
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.hamcrest.CoreMatchers;
-import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 
@@ -106,16 +106,63 @@ public class URLHtmlDataProviderTest {
     doReturn(getMockHtmlFile("states.html")).when(cut).getDocument("States_of_Germany");
 
     EnumData data = cut.load();
+    data.getData().stream().forEach(System.out::println);
     
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(16));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(3));
   }
-  
+
+  private static Element buildTestElement(String html) {
+    Document document = Jsoup.parseBodyFragment("<body><table>" + html + "</table></body>");
+    return document.select("table").select("tr").get(0).child(0);
+  }
+
+  @Test
+  public void testGetValueSpecialCase001() throws Exception {
+    assertThat("UnexpectedResult", getDataProvider().getValue(buildTestElement("<td class=\"abs\"><a href=\"bahamas.htm\">Bahamas</a></td>")), equalTo("Bahamas"));
+  }
+
+  @Test
+  public void testGetValueSpecialCase002() throws Exception {
+    URLHtmlDataProvider ccc = getDataProvider();
+    String testValue = "<td style=\"text-align:right\"><span style=\"display:none\" class=\"sortkey\">7007112898530000000♠</span>11,289,853</td>";
+    Element element = buildTestElement(testValue);
+    String value = ccc.getValue(element);
+    assertThat("UnexpectedResult", value, equalTo("11,289,853"));
+  }
+
+  @Test
+  public void testGetValueSpecialCase003() throws Exception {
+    String testValue1 = "<td><a href=\"/wiki/Mayotte\" title=\"Mayotte\">Mayotte</a></td>";
+    String testValue2 = "<td><a href=\"/wiki/ISO_3166-1_alpha-2#YT\" title=\"ISO 3166-1 alpha-2\"><span style=\"font-family: monospace, monospace;\">YT</span></a></td>";
+    String testValue3 = "<td><span style=\"font-family: monospace, monospace;\">MYT</span></td>";
+    String testValue4 = "<td><span style=\"font-family: monospace, monospace;\">175</span></td>";
+    String testValue5 = "<td><a href=\"/wiki/ISO_3166-2:YT\" title=\"ISO 3166-2:YT\">ISO 3166-2:YT</a></td>";
+    String testValue6 = "<td style=\"background:#F99;vertical-align:middle;text-align:center;\" class=\"table-no\">No</td>";
+
+    URLHtmlDataProvider ccc = getDataProvider();
+    assertThat("R1", ccc.getValue(buildTestElement(testValue1)), equalTo("Mayotte"));
+    assertThat("R2", ccc.getValue(buildTestElement(testValue2)), equalTo("YT"));
+    assertThat("R3", ccc.getValue(buildTestElement(testValue3)), equalTo("MYT"));
+    assertThat("R4", ccc.getValue(buildTestElement(testValue4)), equalTo("175"));
+    assertThat("R5", ccc.getValue(buildTestElement(testValue5)), equalTo("ISO 3166-2:YT"));
+    assertThat("R6", ccc.getValue(buildTestElement(testValue6)), equalTo("No"));
+  }
+
+  @Test
+  public void testGetValueSpecialCase004() throws Exception {
+    String testValue = "<td><a href=\"/wiki/Bavaria\">Bavaria</a><br>\n" +
+        "                        (<i>Freistaat Bayern</i>)</td>";
+    String result = getDataProvider().getValue(buildTestElement(testValue));
+    assertThat("UnexpectedResult", result,
+        anyOf(equalTo("Bavaria"), equalTo("Freistaat Bayern")));
+  }
+
   @Test
   public void staticHtmlFileOffline() throws Exception {
     URL url = URLHtmlDataProvider.class.getResource("java.html");
-    String myURL = url.toURI().toString();
+    String myURL = url.toString();
     String mySelector = null;
     assertThat("HtmlTestFile must be available", Files.isRegularFile(Paths.get(URI.create(myURL))), is(true));
     URLHtmlDataProvider dataProvider =  new URLHtmlDataProvider( myURL, mySelector, 1, new int[]{2, 3} );
