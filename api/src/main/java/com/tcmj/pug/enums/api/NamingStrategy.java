@@ -10,7 +10,7 @@ public interface NamingStrategy {
   /** No conversion - does nothing. */
   static NamingStrategy getDefault() {
     return value -> value;
-  };
+  }
 
   default NamingStrategy and(NamingStrategy other) {
     Objects.requireNonNull(other);
