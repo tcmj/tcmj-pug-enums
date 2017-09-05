@@ -1,6 +1,7 @@
 package com.tcmj.pug.enums.datasources.impl;
 
 import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import org.hamcrest.CoreMatchers;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -74,7 +75,7 @@ public class URLHtmlDataProviderTest {
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(3));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
     assertThat("getKey", Arrays.toString(data.getData().stream()
-        .map(e -> e.getConstantName())
+        .map(NameTypeValue::getConstantName)
         .filter(s -> s.startsWith("D"))
         .toArray()),
         equalTo("[DMA, DOM]"));

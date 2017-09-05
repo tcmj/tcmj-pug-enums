@@ -15,6 +15,6 @@ public class CompressSpaces implements SourceFormatter {
       result = result.replace("  ", SPACE);
       return result;
     }
-    return source;
+    return null;
   }
 }

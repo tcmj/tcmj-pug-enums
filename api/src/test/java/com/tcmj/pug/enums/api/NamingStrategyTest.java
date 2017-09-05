@@ -1,6 +1,7 @@
 package com.tcmj.pug.enums.api;
 
 import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,29 +19,28 @@ public class NamingStrategyTest {
   @Test
   public void shouldConvertSimpleUsageTrim() {
     String given = "  Trimming    ";
-    NamingStrategy ns = value -> value.trim();
+    NamingStrategy ns = String::trim;
     assertThat("value.trim()", ns.convert(given), equalTo("Trimming"));
   }
 
   @Test
   public void shouldConvertSimpleUsageLowerCase() {
     String given = "PLEASE BE QUIET!";
-    NamingStrategy ns = value -> value.toLowerCase();
+    NamingStrategy ns = String::toLowerCase;
     assertThat("value.toLowerCase()", ns.convert(given), equalTo("please be quiet!"));
   }
 
   @Test
   public void shouldImplementedInANullSafeManner() {
-    String given = null;
     NamingStrategy ns = value -> value;
-    assertThat("null", ns.convert(given), nullValue());
+    assertThat("null", ns.convert(null), nullValue());
   }
 
   @Test
   public void chainingIsAwesome() {
     String given = "  OH How Can i use this VALUE   ";
-    NamingStrategy trim = value -> value.trim();
-    NamingStrategy lower = value -> value.toLowerCase();
+    NamingStrategy trim = String::trim;
+    NamingStrategy lower = String::toLowerCase;
     NamingStrategy space2underline = value -> value.replace(' ', '_');
     NamingStrategy ns = trim.and(lower).and(space2underline);
     assertThat(ns.convert(given), equalTo("oh_how_can_i_use_this_value"));

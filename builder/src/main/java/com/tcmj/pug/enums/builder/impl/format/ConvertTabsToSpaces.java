@@ -9,6 +9,6 @@ public class ConvertTabsToSpaces implements SourceFormatter {
     if (source != null) {
       return source.replace('\t', ' ');
     }
-    return source;
+    return null;
   }
 }

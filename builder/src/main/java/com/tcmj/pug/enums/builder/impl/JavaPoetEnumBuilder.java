@@ -1,9 +1,5 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -17,6 +13,10 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.lang.model.element.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /** EnumBuilder implementation using JavaPoet framework. */
 public class JavaPoetEnumBuilder extends AbstractClassBuilder {

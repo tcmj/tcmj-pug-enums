@@ -17,8 +17,7 @@ public class TestDataProvider {
       };
 
   public EnumData getEnumData() {
-    EnumData enumData = new EnumData();
-    return enumData;
+    return new EnumData();
   }
 
   public String getSimpleEnum() {

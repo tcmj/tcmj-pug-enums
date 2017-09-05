@@ -1,11 +1,6 @@
 package com.tcmj.pug.enums.mvn;
 
-import com.tcmj.pug.enums.api.ClassBuilder;
-import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.EnumResult;
-import com.tcmj.pug.enums.api.NamingStrategy;
-import com.tcmj.pug.enums.api.SourceFormatter;
+import com.tcmj.pug.enums.api.*;
 import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
@@ -13,13 +8,6 @@ import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.pug.enums.model.EnumData;
-import static com.tcmj.pug.enums.mvn.LogFormatter.arrange;
-import static com.tcmj.pug.enums.mvn.LogFormatter.encloseJavaDoc;
-import static com.tcmj.pug.enums.mvn.LogFormatter.getLine;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,6 +15,13 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static com.tcmj.pug.enums.mvn.LogFormatter.*;
 
 /** 
  * Main Mojo which extracts data from a URL and creates a java enum source file. 
@@ -157,7 +152,7 @@ public class GenerateEnumMojo extends AbstractMojo {
       data.setNamingStrategyFields(getDefaultNamingStrategyFieldNames());
 
       if (isParameterSet(this.javadocClassLevel)) {
-        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
+        Stream.of(this.javadocClassLevel).map(LogFormatter::encloseJavaDoc).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
       } else {
         data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), encloseJavaDoc("Data has been fetched from '" + this.url + "'."));
       }

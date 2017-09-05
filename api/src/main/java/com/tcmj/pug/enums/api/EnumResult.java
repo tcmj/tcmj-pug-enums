@@ -1,6 +1,7 @@
 package com.tcmj.pug.enums.api;
 
 import com.tcmj.pug.enums.model.EnumData;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class EnumResult {
   }
 
   public Object getOption(String key, Object value) {
-    return options.containsKey(key) ? options.get(key) : value;
+    return options.getOrDefault(key, value);
   }
 
   public EnumResult(EnumData data, SourceFormatter formatter, String result) {
