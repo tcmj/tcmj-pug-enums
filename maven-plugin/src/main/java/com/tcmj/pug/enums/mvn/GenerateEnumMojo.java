@@ -66,6 +66,15 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.subdatacolumns", required = false)
   private Integer[] subDataColumns;
 
+  /** Optional Property NamingStrategy Constants. */
+  @Parameter(property = "com.tcmj.pug.enums.namingstrategy.constants", required = false)
+  protected String[] namingStrategyConstants;
+
+  /** Optional Property NamingStrategy FieldNames. */
+  @Parameter(property = "com.tcmj.pug.enums.namingstrategy.fields", required = false)
+  protected String[] namingStrategyFieldNames;
+
+
   protected static <T> boolean isParameterSet(T[] param) {
     return param != null && param.length > 0;
   }
@@ -82,6 +91,17 @@ public class GenerateEnumMojo extends AbstractMojo {
       getLog().info(arrange("SubFieldNames fixed to: " + Arrays.toString(this.subFieldNames)));
     } else {
       getLog().info(arrange("SubFieldNames: <will be computed>"));
+    }
+
+    if (isParameterSet(this.namingStrategyConstants)) {
+      getLog().info(arrange("NamingStrategy Constants set to: " + Arrays.toString(this.namingStrategyConstants)));
+    } else {
+      getLog().info(arrange("NamingStrategy Constants: <default>"));
+    }
+    if (isParameterSet(this.namingStrategyFieldNames)) {
+      getLog().info(arrange("NamingStrategy FieldNames set to: " + Arrays.toString(this.namingStrategyFieldNames)));
+    } else {
+      getLog().info(arrange("NamingStrategy FieldNames: <default>"));
     }
 
     if (isParameterSet(this.javadocClassLevel)) {
