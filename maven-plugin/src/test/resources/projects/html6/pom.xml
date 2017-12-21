@@ -15,9 +15,9 @@
         -css selector points directly to the first table found
         -using first column for the enum constant values
         -we want two additional subfield from column 3 and 5
-        -we define the name of the subfield statically as 'capital' and 'population'
-        -we want to apply two naming strategies for our constant column
-        -we want to apply four naming strategies for the subfield columns
+        -we do not define the name of the subfield statically - instead we use a naming strategy for the field names in our enum
+        -we want to apply three naming strategies for our constant column
+        -we want to apply one naming strategy for the subfield column
         -restriction seems to be that we can only define one subfield strategy for all subfield columns :(
     </description>
     
@@ -37,20 +37,12 @@
                         <value>3</value>
                         <value>5</value>
                     </subDataColumns>
-                    <subFieldNames>
-                        <value>capital</value>
-                        <value>population</value>
-                    </subFieldNames>
                     <namingStrategyConstants>
                         <value>removeProhibitedSpecials</value> <!-- name can be written in any case (upper/lower/strict) -->
                         <value>space2underline</value>
                         <value>upperCase</value>
                     </namingStrategyConstants>
                     <namingStrategyFieldNames>
-                        <value>extractParenthesis</value>
-                        <value>removeProhibitedSpecials</value>
-                        <value>camelStrict</value>
-                        <value>harmonize</value>
                         <value>lowerCaseFirstLetter</value>
                     </namingStrategyFieldNames>
                 </configuration>
