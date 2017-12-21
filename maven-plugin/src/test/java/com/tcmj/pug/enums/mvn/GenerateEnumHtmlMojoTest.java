@@ -85,4 +85,20 @@ public class GenerateEnumHtmlMojoTest {
     mojo.execute();
     
   }
+
+  @Test
+  public void staticHtmlFile6() throws Exception {
+    //Just ensure that our static html file is available
+    File html = new File(this.resources.getBasedir("html6"), "eu.html");
+    assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
+
+    URL myUrl = html.toURI().toURL();
+    System.out.println("myUrl="+myUrl);
+
+    //..continue with regular test...
+    GenerateEnumMojo mojo = getMojo("html6");
+    mojo.execute();
+
+  }
+
 }
