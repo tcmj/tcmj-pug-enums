@@ -42,7 +42,8 @@
                         <value>population</value>
                     </subFieldNames>
                     <namingStrategyConstants>
-                        <value>removeProhibitedSpecials</value>
+                        <value>removeProhibitedSpecials</value> <!-- name can be written in any case (upper/lower/strict) -->
+                        <value>space2underline</value>
                         <value>upperCase</value>
                     </namingStrategyConstants>
                     <namingStrategyFieldNames>

@@ -17,14 +17,16 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.tcmj.pug.enums.mvn.LogFormatter.*;
 
-/** 
- * Main Mojo which extracts data from a URL and creates a java enum source file. 
+/**
+ * Main Mojo which extracts data from a URL and creates a java enum source file.
  * @since 2017
  */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
@@ -94,12 +96,12 @@ public class GenerateEnumMojo extends AbstractMojo {
     }
 
     if (isParameterSet(this.namingStrategyConstants)) {
-      getLog().info(arrange("NamingStrategy Constants set to: " + Arrays.toString(this.namingStrategyConstants)));
+      getLog().info(arrange("NamingStrategy Constants: " + Arrays.toString(this.namingStrategyConstants)));
     } else {
       getLog().info(arrange("NamingStrategy Constants: <default>"));
     }
     if (isParameterSet(this.namingStrategyFieldNames)) {
-      getLog().info(arrange("NamingStrategy FieldNames set to: " + Arrays.toString(this.namingStrategyFieldNames)));
+      getLog().info(arrange("NamingStrategy FieldNames: " + Arrays.toString(this.namingStrategyFieldNames)));
     } else {
       getLog().info(arrange("NamingStrategy FieldNames: <default>"));
     }
@@ -130,11 +132,44 @@ public class GenerateEnumMojo extends AbstractMojo {
     );
   }
 
-  protected NamingStrategy getDefaultNamingStrategyConstantNames() {
+  /**
+   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
+   */
+  protected NamingStrategy getNamingStrategyConstantNames() {
+    if (isParameterSet(this.namingStrategyConstants)) {
+      NamingStrategy namingStrategy = resolveNamingStrategies(this.namingStrategyConstants);
+      return namingStrategy;
+    }
     return Fluent.getDefaultNamingStrategyConstantNames();
   }
 
-  protected NamingStrategy getDefaultNamingStrategyFieldNames() {
+  protected static NamingStrategy invokeMethod(String methodName) throws InvocationTargetException, IllegalAccessException {
+    for (Method method : NamingStrategyFactory.class.getMethods()) {
+      if(methodName.equalsIgnoreCase(method.getName())){ //don't be strict
+          return (NamingStrategy) method.invoke(null);
+      }
+    }
+    throw new IllegalStateException("Cannot find a NamingStrategy "+methodName);
+  }
+
+  protected NamingStrategy resolveNamingStrategies(String[] namingStrategyConstants) {
+    NamingStrategy strategy = value -> value;
+    for (String namingStrategy : namingStrategyConstants) {
+      try {
+        NamingStrategy ns = invokeMethod(namingStrategy);
+        getLog().debug("ReflectionResult: " + namingStrategy + "--->" + ns);
+        strategy = strategy.and(ns);
+      } catch (Exception e) {
+        getLog().error("Skipping! " + e.getMessage());
+      }
+    }
+    return strategy;
+  }
+
+  /**
+   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
+   */
+  protected NamingStrategy getNamingStrategyFieldNames() {
     NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
     NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
     NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
@@ -168,8 +203,8 @@ public class GenerateEnumMojo extends AbstractMojo {
         data.setFieldNames(this.subFieldNames);
       }
 
-      data.setNamingStrategyConstants(getDefaultNamingStrategyConstantNames());
-      data.setNamingStrategyFields(getDefaultNamingStrategyFieldNames());
+      data.setNamingStrategyConstants(getNamingStrategyConstantNames());
+      data.setNamingStrategyFields(getNamingStrategyFieldNames());
 
       if (isParameterSet(this.javadocClassLevel)) {
         Stream.of(this.javadocClassLevel).map(LogFormatter::encloseJavaDoc).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
