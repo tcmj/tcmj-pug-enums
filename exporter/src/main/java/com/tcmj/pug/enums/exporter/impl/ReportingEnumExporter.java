@@ -1,10 +1,11 @@
 package com.tcmj.pug.enums.exporter.impl;
 
-import java.util.function.BiConsumer;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.EnumResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiConsumer;
 
 /**
  * Reports the exporter calls.
@@ -35,7 +36,7 @@ public class ReportingEnumExporter implements EnumExporter {
   private static final Logger LOG = LoggerFactory.getLogger(ReportingEnumExporter.class);
   public static final String OPTION_LOG_LEVEL = "com.tcmj.pug.enums.exporter.ReportingEnumExporter.loglevel";
 
-  public static enum LogLevel {
+  public enum LogLevel {
     DEBUG(LOG::debug),
     INFO(LOG::info),
     WARN(LOG::warn),

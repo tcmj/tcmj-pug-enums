@@ -1,16 +1,14 @@
 package com.tcmj.pug.enums.api;
 
-import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.anything;
-import static org.hamcrest.CoreMatchers.hasItem;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /** Test of DataProvider. */
@@ -32,7 +30,7 @@ public class DataProviderTest {
           EnumDataHelper.addConstantWithoutSubfield(enumData, "DREI");
           return enumData;
         };
-    List<String> data = provider.load().getData().stream().map((t) ->  t.getConstantName()).collect(Collectors.toList());
+    List<String> data = provider.load().getData().stream().map(NameTypeValue::getConstantName).collect(Collectors.toList());
     assertThat(data, hasItem(anything()));
     assertThat("provider", data, hasItems("ZWEI", "EINS", "DREI"));
     assertThat("provider.size", data.size(), is(3));
@@ -62,15 +60,15 @@ public class DataProviderTest {
         };
 
     DataProvider provider = provider1.and(provider2);
-    List<String> data = provider.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
+    List<String> data = provider.load().getData().stream().map(NameTypeValue::getConstantName).collect(Collectors.toList());
     assertThat(data, hasItem("A"));
 
-    List<String> data1 = provider1.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
+    List<String> data1 = provider1.load().getData().stream().map(NameTypeValue::getConstantName).collect(Collectors.toList());
     assertThat("provider1 == A,B,C", data1, hasItems("A", "B", "C"));
     assertThat("provider1 <> D,E,F", data1, not(hasItems("D", "E", "F")));
     assertThat("provider1.size", data1.size(), is(3));
 
-    List<String> data2 = provider2.load().getData().stream().map((t) -> t.getConstantName()).collect(Collectors.toList());
+    List<String> data2 = provider2.load().getData().stream().map(NameTypeValue::getConstantName).collect(Collectors.toList());
     assertThat("provider2 == A,B,C", data2, hasItems("D", "E", "F"));
     assertThat("provider2 <> A,B,C", data2, not(hasItems("A", "B", "C")));
     assertThat("provider2.size", data2.size(), is(3));

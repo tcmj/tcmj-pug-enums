@@ -15,8 +15,7 @@ public class InMemoryCompilingExporterTest {
   private EnumResult getTestEnumResult(String fullClassName, String enumDataContent) {
     EnumData fakeData = new EnumData();
     fakeData.setClassName(fullClassName);
-    EnumResult enumResult = EnumResult.of(fakeData, enumDataContent);
-    return enumResult;
+    return EnumResult.of(fakeData, enumDataContent);
   }
 
   @Test

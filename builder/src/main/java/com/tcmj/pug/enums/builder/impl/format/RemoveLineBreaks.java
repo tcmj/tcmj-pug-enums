@@ -18,6 +18,6 @@ public class RemoveLineBreaks implements SourceFormatter {
       result = result.replace(LINE, SPACE);
       return result;
     }
-    return source;
+    return null;
   }
 }

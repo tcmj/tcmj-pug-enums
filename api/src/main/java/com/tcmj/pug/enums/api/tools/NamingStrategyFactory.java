@@ -1,10 +1,11 @@
 package com.tcmj.pug.enums.api.tools;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides several NamingStrategy objects which can be chained together.
@@ -141,20 +142,20 @@ public class NamingStrategyFactory {
         int codePoint = value.codePointAt(i);
         if (current < 32) {
           LOG.debug("Removing control character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
-        } else if (current >= 32 && current <= 47) {
+        } else if (current <= 47) {
           LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
-        } else if (current >= 48 && current <= 57) {
+        } else if (current <= 57) {
           LOG.trace("Leaving digit '{}'({}): {}", current, codePoint, Character.getName(codePoint));
           buffer.append(current);
-        } else if (current >= 58 && current <= 64) {
+        } else if (current <= 64) {
           LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
-        } else if (current >= 65 && current <= 90) { //A-Z
+        } else if (current <= 90) { //A-Z
           buffer.append(current);
-        } else if (current >= 91 && current <= 96) { //[\]^_`
+        } else if (current <= 96) { //[\]^_`
           LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
-        } else if (current >= 97 && current <= 122) { //a-z
+        } else if (current <= 122) { //a-z
           buffer.append(current);
-        } else if (current >= 123 && current <= 191) {
+        } else if (current <= 191) {
           LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
         } else if (current == 215 || current == 247 || current == 451 || current == 760) {
           LOG.debug("Removing very special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
@@ -256,8 +257,7 @@ public class NamingStrategyFactory {
       for (int i = 0; i < value.length(); i++) {
         char current = value.charAt(i);
         int codePoint = value.codePointAt(i);
-        if (current >= 192
-            && ((current != 215 || current != 247 || current != 451 || current != 760))) {
+        if (current >= 192) {
           String name = Character.getName(value.codePointAt(i));
           Matcher m = pattern.matcher(name);
           if (m.matches()) {

@@ -1,16 +1,17 @@
 package com.tcmj.pug.enums.exporter.impl;
 
+import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
+import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.EnumResult;
-import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Exports your enum source to a .java file. */
 public class JavaSourceFileExporter implements EnumExporter {
@@ -57,7 +58,7 @@ public class JavaSourceFileExporter implements EnumExporter {
         } else if (someWhatFile instanceof java.io.File) {
           exportPathPrefix = ((java.io.File) someWhatFile).getPath();
         } else if (someWhatFile instanceof Path) {
-          exportPathPrefix = ((Path) someWhatFile).toString();
+          exportPathPrefix = someWhatFile.toString();
         } else {
           exportPathPrefix = String.valueOf(someWhatFile);
         }

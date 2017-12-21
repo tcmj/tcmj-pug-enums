@@ -2,6 +2,7 @@ package com.tcmj.pug.enums.exporter.tools;
 
 import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.model.EnumData;
+
 import java.util.Objects;
 
 /** Extracts some data from the enum source needed by some exporter. */
@@ -17,7 +18,7 @@ public class MetaDataExtractor {
     int idxSemi = source.indexOf(";");
     if (idxPkg >= 0) {
       boolean invalid = !source.substring(0, idxPkg).trim().equals("");
-      if (idxPkg == -1 || idxSemi == -1 || idxPkg > idxSemi || invalid) {
+      if (idxSemi == -1 || idxPkg > idxSemi || invalid) {
         throw new IllegalStateException("Cannot extract Package!");
       } else {
         return source.substring((idxPkg + 8), idxSemi);
@@ -30,7 +31,7 @@ public class MetaDataExtractor {
   public static String getClassNameSimple(String source) {
     //@todo fix this mess !!!
     String a = getClassNameSimple0(source);
-    if (a != null && a.indexOf(" ") != -1) {
+    if (a.contains(" ")) {
       a = getClassNameSimple1(source);
     }
     return a.trim();

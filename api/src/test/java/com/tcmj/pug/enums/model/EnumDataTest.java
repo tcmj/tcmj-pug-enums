@@ -2,12 +2,11 @@ package com.tcmj.pug.enums.model;
 
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import org.hamcrest.CoreMatchers;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test of class EnumData.
@@ -59,7 +58,7 @@ public class EnumDataTest {
     EnumDataHelper.addConstantWithoutSubfield(cut, "GREEN");
     EnumDataHelper.addConstantWithoutSubfield(cut, "BLUE");
     //when
-    cut.getData().stream().map(t -> t.getConstantName()).forEach(a -> assertThat(a, CoreMatchers.anyOf(equalTo("BLUE"), equalTo("RED"), equalTo("GREEN"))));
+    cut.getData().stream().map(NameTypeValue::getConstantName).forEach(a -> assertThat(a, CoreMatchers.anyOf(equalTo("BLUE"), equalTo("RED"), equalTo("GREEN"))));
   }
   
   @Test

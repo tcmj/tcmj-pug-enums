@@ -1,14 +1,14 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import java.io.Reader;
-import java.util.Arrays;
-import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.datasources.tools.ReaderHelper;
+import com.tcmj.pug.enums.model.EnumData;
+import com.tcmj.pug.enums.model.NameTypeValue;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import java.io.Reader;
+import java.util.Arrays;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
@@ -29,7 +29,7 @@ public class JsonDataProviderTest {
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(false));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(2));
     assertThat("getSubFieldsAmount", data.getSubFieldsAmount(), is(0));
-    assertThat("getKey", Arrays.toString(data.getData().stream().map(e -> e.getConstantName()).toArray()), equalTo("[Africa, Antarctica]"));
+    assertThat("getKey", Arrays.toString(data.getData().stream().map(NameTypeValue::getConstantName).toArray()), equalTo("[Africa, Antarctica]"));
   }
 
   @Test

@@ -8,7 +8,7 @@ public class LogFormatter {
 
   public static String arrange(String text) {
     String posedText = StringUtils.rightPad("  " + text, 143);
-    return StringUtils.join("* *".intern(), posedText, "* *".intern());
+    return StringUtils.join("* *", posedText, "* *");
   }
   
   public static String encloseJavaDoc(String text) {

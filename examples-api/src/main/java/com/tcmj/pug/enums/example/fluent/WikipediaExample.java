@@ -4,8 +4,8 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.fluent.Fluent;
-import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
@@ -24,7 +24,7 @@ public class WikipediaExample {
           .className("com.tcmj.iso3166.Countries")
           .dataProvider(getMyDataProvider())
           .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
-          .useFixedFieldNames(new String[]{"alpha2", "alpha3", "numeric"})
+          .useFixedFieldNames("alpha2", "alpha3", "numeric")
           .convertConstantNames(getNamingStrategyForConstantNames())
           .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
           .enumExporter(getMyEnumExporter())

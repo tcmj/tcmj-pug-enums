@@ -1,29 +1,17 @@
 package com.tcmj.pug.enums.api.fluent;
 
-import com.tcmj.pug.enums.api.ClassBuilder;
-import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.EnumResult;
-import com.tcmj.pug.enums.api.NamingStrategy;
-import com.tcmj.pug.enums.api.SourceFormatter;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camelStrict;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthesis;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.flattenGermanUmlauts;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.minus2underline;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeDots;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.upperCase;
+import com.tcmj.pug.enums.api.*;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.*;
 
 /**
  * Fluent API.
@@ -108,7 +96,7 @@ public class Fluent {
 
   public Fluent javaDocClassLevel(String... lines) {
     final ClassBuilder localClassBuilder = Objects.requireNonNull(getClassBuilder(), "classBuilder(ClassBuilder) must set before calling javaDocClassLevel(String...)!");
-    Stream.of(lines).forEach((line) -> localClassBuilder.addClassJavadoc(line));
+    Stream.of(lines).forEach(localClassBuilder::addClassJavadoc);
     return this;
   }
 
@@ -191,7 +179,8 @@ public class Fluent {
     NamingStrategy ns2 = removeProhibitedSpecials();
     NamingStrategy ns3 = camelStrict();
     NamingStrategy ns4 = harmonize();
-    return ns1.and(ns2).and(ns3).and(ns4);
+    NamingStrategy ns5 = lowerCaseFirstLetter();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
 }

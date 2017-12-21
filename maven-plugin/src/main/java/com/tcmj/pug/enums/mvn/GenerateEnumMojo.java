@@ -1,11 +1,6 @@
 package com.tcmj.pug.enums.mvn;
 
-import com.tcmj.pug.enums.api.ClassBuilder;
-import com.tcmj.pug.enums.api.DataProvider;
-import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.EnumResult;
-import com.tcmj.pug.enums.api.NamingStrategy;
-import com.tcmj.pug.enums.api.SourceFormatter;
+import com.tcmj.pug.enums.api.*;
 import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
@@ -13,13 +8,6 @@ import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.impl.JavaSourceFileExporter;
 import com.tcmj.pug.enums.model.EnumData;
-import static com.tcmj.pug.enums.mvn.LogFormatter.arrange;
-import static com.tcmj.pug.enums.mvn.LogFormatter.encloseJavaDoc;
-import static com.tcmj.pug.enums.mvn.LogFormatter.getLine;
-import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,8 +16,17 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-/** 
- * Main Mojo which extracts data from a URL and creates a java enum source file. 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static com.tcmj.pug.enums.mvn.LogFormatter.*;
+
+/**
+ * Main Mojo which extracts data from a URL and creates a java enum source file.
  * @since 2017
  */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_SOURCES)
@@ -71,6 +68,15 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.subdatacolumns", required = false)
   private Integer[] subDataColumns;
 
+  /** Optional Property NamingStrategy Constants. */
+  @Parameter(property = "com.tcmj.pug.enums.namingstrategy.constants", required = false)
+  protected String[] namingStrategyConstants;
+
+  /** Optional Property NamingStrategy FieldNames. */
+  @Parameter(property = "com.tcmj.pug.enums.namingstrategy.fields", required = false)
+  protected String[] namingStrategyFieldNames;
+
+
   protected static <T> boolean isParameterSet(T[] param) {
     return param != null && param.length > 0;
   }
@@ -87,6 +93,17 @@ public class GenerateEnumMojo extends AbstractMojo {
       getLog().info(arrange("SubFieldNames fixed to: " + Arrays.toString(this.subFieldNames)));
     } else {
       getLog().info(arrange("SubFieldNames: <will be computed>"));
+    }
+
+    if (isParameterSet(this.namingStrategyConstants)) {
+      getLog().info(arrange("NamingStrategy Constants: " + Arrays.toString(this.namingStrategyConstants)));
+    } else {
+      getLog().info(arrange("NamingStrategy Constants: <default>"));
+    }
+    if (isParameterSet(this.namingStrategyFieldNames)) {
+      getLog().info(arrange("NamingStrategy FieldNames: " + Arrays.toString(this.namingStrategyFieldNames)));
+    } else {
+      getLog().info(arrange("NamingStrategy FieldNames: <default>"));
     }
 
     if (isParameterSet(this.javadocClassLevel)) {
@@ -115,18 +132,50 @@ public class GenerateEnumMojo extends AbstractMojo {
     );
   }
 
-  protected NamingStrategy getDefaultNamingStrategyConstantNames() {
+  /**
+   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
+   */
+  protected NamingStrategy getNamingStrategyConstantNames() {
+    if (isParameterSet(this.namingStrategyConstants)) {
+      NamingStrategy namingStrategy = resolveNamingStrategies(this.namingStrategyConstants);
+      return namingStrategy;
+    }
     return Fluent.getDefaultNamingStrategyConstantNames();
   }
 
-  protected NamingStrategy getDefaultNamingStrategyFieldNames() {
-    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
-    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
-    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
-    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-    NamingStrategy ns5 = NamingStrategyFactory.lowerCaseFirstLetter();
-    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
+  /**
+   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
+   */
+  protected NamingStrategy getNamingStrategyFieldNames() {
+    if (isParameterSet(this.namingStrategyFieldNames)) {
+        return resolveNamingStrategies(this.namingStrategyFieldNames);
+    }
+    return Fluent.getDefaultNamingStrategyFieldNames();
   }
+
+  protected static NamingStrategy invokeMethod(String methodName) throws InvocationTargetException, IllegalAccessException {
+    for (Method method : NamingStrategyFactory.class.getMethods()) {
+      if(methodName.equalsIgnoreCase(method.getName())){ //don't be strict
+          return (NamingStrategy) method.invoke(null);
+      }
+    }
+    throw new IllegalStateException("Cannot find a NamingStrategy "+methodName);
+  }
+
+  protected NamingStrategy resolveNamingStrategies(String[] namingStrategyConstants) {
+    NamingStrategy strategy = value -> value;
+    for (String namingStrategy : namingStrategyConstants) {
+      try {
+        NamingStrategy ns = invokeMethod(namingStrategy);
+        getLog().debug("ReflectionResult: " + namingStrategy + "--->" + ns);
+        strategy = strategy.and(ns);
+      } catch (Exception e) {
+        getLog().error("Skipping! " + e.getMessage());
+      }
+    }
+    return strategy;
+  }
+
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -153,11 +202,11 @@ public class GenerateEnumMojo extends AbstractMojo {
         data.setFieldNames(this.subFieldNames);
       }
 
-      data.setNamingStrategyConstants(getDefaultNamingStrategyConstantNames());
-      data.setNamingStrategyFields(getDefaultNamingStrategyFieldNames());
+      data.setNamingStrategyConstants(getNamingStrategyConstantNames());
+      data.setNamingStrategyFields(getNamingStrategyFieldNames());
 
       if (isParameterSet(this.javadocClassLevel)) {
-        Stream.of(this.javadocClassLevel).map((v) -> encloseJavaDoc(v)).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
+        Stream.of(this.javadocClassLevel).map(LogFormatter::encloseJavaDoc).forEach(text -> data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), text));
       } else {
         data.addJavaDoc(EnumData.JDocKeys.CLASS.name(), encloseJavaDoc("Data has been fetched from '" + this.url + "'."));
       }
