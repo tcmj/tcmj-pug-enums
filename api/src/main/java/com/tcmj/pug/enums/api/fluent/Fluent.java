@@ -179,7 +179,8 @@ public class Fluent {
     NamingStrategy ns2 = removeProhibitedSpecials();
     NamingStrategy ns3 = camelStrict();
     NamingStrategy ns4 = harmonize();
-    return ns1.and(ns2).and(ns3).and(ns4);
+    NamingStrategy ns5 = lowerCaseFirstLetter();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
   }
 
 }

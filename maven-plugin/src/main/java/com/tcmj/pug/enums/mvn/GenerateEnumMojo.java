@@ -143,6 +143,16 @@ public class GenerateEnumMojo extends AbstractMojo {
     return Fluent.getDefaultNamingStrategyConstantNames();
   }
 
+  /**
+   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
+   */
+  protected NamingStrategy getNamingStrategyFieldNames() {
+    if (isParameterSet(this.namingStrategyFieldNames)) {
+        return resolveNamingStrategies(this.namingStrategyFieldNames);
+    }
+    return Fluent.getDefaultNamingStrategyFieldNames();
+  }
+
   protected static NamingStrategy invokeMethod(String methodName) throws InvocationTargetException, IllegalAccessException {
     for (Method method : NamingStrategyFactory.class.getMethods()) {
       if(methodName.equalsIgnoreCase(method.getName())){ //don't be strict
@@ -166,17 +176,6 @@ public class GenerateEnumMojo extends AbstractMojo {
     return strategy;
   }
 
-  /**
-   * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
-   */
-  protected NamingStrategy getNamingStrategyFieldNames() {
-    NamingStrategy ns1 = NamingStrategyFactory.extractParenthesis();
-    NamingStrategy ns2 = NamingStrategyFactory.removeProhibitedSpecials();
-    NamingStrategy ns3 = NamingStrategyFactory.camelStrict();
-    NamingStrategy ns4 = NamingStrategyFactory.harmonize();
-    NamingStrategy ns5 = NamingStrategyFactory.lowerCaseFirstLetter();
-    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
-  }
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
