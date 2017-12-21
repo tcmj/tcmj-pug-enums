@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tcmj.plugins.test</groupId>
+    <artifactId>pug-enum-maven-plugin-test06</artifactId>
+    <version>TEST</version>
+    <packaging>jar</packaging>
+    
+    <description>
+        Usage example:
+        -defining the final name of our enum using the 'className' tag
+        -writing the enum as a java source file to a specific directory using the 'sourceDirectory' tag
+        -loading java code names from a static html file using the 'url' tag
+        -css selector points directly to the first table found
+        -using first column for the enum constant values
+        -we want two additional subfield from column 3 and 5
+        -we define the name of the subfield statically as 'capital' and 'population'
+        -we want to apply two naming strategies for our constant column
+        -we want to apply four naming strategies for the subfield columns
+        -restriction seems to be that we can only define one subfield strategy for all subfield columns :(
+    </description>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>LATEST_VERSION</version>
+                <configuration>
+                    <className>com.tcmj.html.test.JavaCodesEnum6</className>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <url>src/test/resources/projects/html6/eu.html</url>
+                    <tableCssSelector>table</tableCssSelector>
+                    <constantColumn>1</constantColumn>
+                    <subDataColumns>
+                        <value>3</value>
+                        <value>5</value>
+                    </subDataColumns>
+                    <subFieldNames>
+                        <value>capital</value>
+                        <value>population</value>
+                    </subFieldNames>
+                    <namingStrategyConstants>
+                        <value>removeProhibitedSpecials</value>
+                        <value>upperCase</value>
+                    </namingStrategyConstants>
+                    <namingStrategyFieldNames>
+                        <value>extractParenthesis</value>
+                        <value>removeProhibitedSpecials</value>
+                        <value>camelStrict</value>
+                        <value>harmonize</value>
+                        <value>lowerCaseFirstLetter</value>
+                    </namingStrategyFieldNames>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
