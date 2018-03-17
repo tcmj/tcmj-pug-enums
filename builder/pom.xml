@@ -25,24 +25,22 @@
             <groupId>com.tcmj.pug</groupId>
             <artifactId>pug-enum-api</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.sun.codemodel/codemodel -->
         <dependency>
+            <!-- https://mvnrepository.com/artifact/com.sun.codemodel/codemodel -->
             <groupId>com.sun.codemodel</groupId>
             <artifactId>codemodel</artifactId>
-            <version>2.6</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <!-- https://github.com/square/javapoet -->
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
-            <version>1.8.0</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.google.googlejavaformat</groupId>
             <artifactId>google-java-format</artifactId>
-            <version>1.3</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

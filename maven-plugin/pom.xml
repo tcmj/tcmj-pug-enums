@@ -55,12 +55,14 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <!-- Optional dependency if you want javapoet as enum builder. -->
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
         </dependency>
         <dependency>
-            <!-- Optional dependency if you want to use url datasources -->
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
         </dependency>
