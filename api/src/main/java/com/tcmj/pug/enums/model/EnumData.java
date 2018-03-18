@@ -141,7 +141,7 @@ public class EnumData {
 
   public Class<?> getFieldClass(int no) {
     if (this.fieldClasses == null || this.fieldClasses.length == 0 || no < 0) {
-      return null;
+      throw new IllegalStateException("No class types set at all! Cannot get class for field on position " + no);
     }
     if (no >= 0 && no < this.fieldClasses.length) {
       return fieldClasses[no];
