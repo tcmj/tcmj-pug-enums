@@ -32,19 +32,20 @@
             <groupId>com.tcmj.pug</groupId>
             <artifactId>pug-enum-datasources</artifactId>
         </dependency>
-        
         <dependency>
             <!-- Optional dependency - one of the possible classbuilders. -->
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
          </dependency>
-
         <dependency>
             <!-- Optional dependency - one of the possible classbuilders. -->
             <groupId>com.sun.codemodel</groupId>
             <artifactId>codemodel</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.googlejavaformat</groupId>
+            <artifactId>google-java-format</artifactId>
+        </dependency>
         <dependency>
             <!-- Optional dependency if you want to use url datasources -->
             <groupId>org.jsoup</groupId>
