@@ -35,7 +35,7 @@ public class FluentSimpleURLHtmlDataExample {
           .javaDocClassLevel("This is a java enum.", "Source is from xyz")
           .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
           .enumExporter(EnumExporterFactory.getReportingEnumExporter())
-          .className("com.tcmj.StatesOfGermany")
+        //         .className("com.tcmj.StatesOfGermany")
           .build();
       
       enumResult.getResult();

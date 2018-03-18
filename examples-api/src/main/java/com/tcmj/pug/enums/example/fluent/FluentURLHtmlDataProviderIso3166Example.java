@@ -4,18 +4,16 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.fluent.Fluent;
-import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.minus2underline;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.*;
 
 /** Usage Example : Fluently load a Wikipedia table and transform it to a Java enum class. */
 public class FluentURLHtmlDataProviderIso3166Example {
@@ -24,15 +22,13 @@ public class FluentURLHtmlDataProviderIso3166Example {
   public static void main(String[] args) {
     try {
       Fluent.builder()
-          .className("com.tcmj.test.MyWikipediaEnum")
           .dataProvider(getMyDataProvider())
-          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
+        .classBuilder(ClassBuilderFactory.getBestEnumBuilder().withName("com.tcmj.test.MyWikipediaEnum"))
           .convertConstantNames(getConstantsNamingStrategy())
           .convertFieldNames(getFieldsNamingStrategy())
           .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
           .enumExporter(getMyEnumExporter())
           .build();
-
     } catch (Exception e) {
       LOG.error("Exception!", e);    }
   }
