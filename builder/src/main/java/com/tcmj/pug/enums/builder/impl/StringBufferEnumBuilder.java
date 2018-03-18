@@ -1,15 +1,16 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
 import com.tcmj.pug.enums.tools.CamelCase;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * A simple Java source code builder to create enum objects. This implementation of {@link
@@ -110,7 +111,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
       int size = this.model.getSubFieldsAmount();
       for (int i = 0; i < size; i++) {
         String field = this.model.getFieldName(i);
-        Class type = this.model.getFieldClasses()[i];
+        Class type = this.model.getFieldClass(i);
         temp.append(type.getSimpleName());
         temp.append(SPACE);
         temp.append(field);
@@ -193,7 +194,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
     for (int i = 0; i < size; i++) {
       String nme = this.model.getFieldName(i);
-      Class cls = this.model.getFieldClasses()[i];
+      Class cls = this.model.getFieldClass(i);
       
       String jdoc = mapJavadocs.get(nme);
       if (StringUtils.isNotBlank(jdoc)) {
@@ -350,7 +351,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
         int size = this.model.getSubFieldsAmount();
 
         for (int i = 0; i < size; i++) {
-          Class type =  this.model.getFieldClasses()[i];
+          Class type = this.model.getFieldClass(i);
           Object value = entry.getValue()[i];
           temp.append(format(value, type));
           temp.append(COMMA);
@@ -369,7 +370,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
 
       for (int i = 0; i < size; i++) {
         String name = this.model.getFieldName(i);
-        Class type = this.model.getFieldClasses()[i];
+        Class type = this.model.getFieldClass(i);
 
         temp.append(LINE);
         temp.append(TAB4);

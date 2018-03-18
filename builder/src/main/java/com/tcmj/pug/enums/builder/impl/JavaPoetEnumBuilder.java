@@ -95,7 +95,7 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     if (this.model.getSubFieldsAmount() > 0) {
       for (int i = 0; i < this.model.getSubFieldsAmount(); i++) {
         String fieldName = this.model.getFieldName(i);
-        Class fieldClass = this.model.getFieldClasses()[i];
+        Class fieldClass = this.model.getFieldClass(i);
         //the (final) field needed to hold the value of the enum subfield
         builder.addField(fieldClass, fieldName, Modifier.PRIVATE, Modifier.FINAL);
         //create each constructor field (but only each field once)

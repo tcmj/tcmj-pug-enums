@@ -1,12 +1,9 @@
 package com.tcmj.pug.enums.model;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Stream;
 import com.tcmj.pug.enums.api.NamingStrategy;
+
+import java.util.*;
+import java.util.stream.Stream;
 
 /** Model class which holds all data used to produce a java enum class. */
 public class EnumData {
@@ -140,6 +137,13 @@ public class EnumData {
 
   public Class[] getFieldClasses() {
     return fieldClasses;
+  }
+
+  public Class<?> getFieldClass(int no) {
+    if (this.fieldClasses != null && no >= 0 && no < this.fieldClasses.length) {
+      return fieldClasses[no];
+    }
+    throw new IllegalStateException("No class type set for field on position " + no);
   }
 
   public void setFieldClasses(Class... values) {

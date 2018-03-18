@@ -1,19 +1,20 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Objects;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Objects;
 
 /** GSON - Json Data Provider needs com.google.code.gson:gson as runtime dependency */
 public class JsonDataProvider implements DataProvider {
@@ -57,7 +58,7 @@ public class JsonDataProvider implements DataProvider {
           Object[] values = new Object[model.getFieldNames().length];
           for (int i = 0; i < model.getFieldNames().length; i++) {
             String expectedField = model.getFieldNames()[i];
-            Class fieldType = model.getFieldClasses()[i];
+            Class fieldType = model.getFieldClass(i);
             JsonElement jsonElement = Objects.requireNonNull( jsonObjectRecord.get(expectedField), "SubFieldName not found: " + expectedField);
             LOG.debug("Subfield successfully found: '{}'='{}'", expectedField, jsonElement);
             Object value = toType(jsonElement, fieldType);
