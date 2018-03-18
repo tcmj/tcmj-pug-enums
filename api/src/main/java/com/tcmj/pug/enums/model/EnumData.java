@@ -140,7 +140,10 @@ public class EnumData {
   }
 
   public Class<?> getFieldClass(int no) {
-    if (this.fieldClasses != null && no >= 0 && no < this.fieldClasses.length) {
+    if (this.fieldClasses == null || this.fieldClasses.length == 0 || no < 0) {
+      return null;
+    }
+    if (no >= 0 && no < this.fieldClasses.length) {
       return fieldClasses[no];
     }
     throw new IllegalStateException("No class type set for field on position " + no);

@@ -91,9 +91,43 @@ public class EnumDataTest {
     cut.setFieldClasses(String.class, Integer.class, Boolean.class);
     assertThat("1", cut.getFieldClass(-1), nullValue());
     assertThat("2", cut.getFieldClass(0), equalTo(String.class));
-    assertThat("3", cut.getFieldClass(100), nullValue());
+
     assertThat("4", cut.getFieldClass(1), equalTo(Integer.class));
     assertThat("5", cut.getFieldClass(2), equalTo(Boolean.class));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassInvalidCalls() {
+    //when nothing (null) set
+    assertThat("3 Null", cut.getFieldClass(100), nullValue());
+    //given
+    cut.setFieldClasses(String.class, Integer.class, Boolean.class);
+    assertThat("1", cut.getFieldClass(-1), nullValue());
+    assertThat("2", cut.getFieldClass(0), equalTo(String.class));
+    assertThat("3", cut.getFieldClass(100), nullValue());
     assertThat("6", cut.getFieldClass(3), nullValue());
+  }
+
+  @Test
+  public void getFieldClassShouldReturnNullWhenNothingSet() {
+    //when nothing set we get no exception but null
+    assertThat("1", cut.getFieldClass(-1), nullValue());
+    assertThat("2", cut.getFieldClass(0), nullValue());
+    assertThat("3", cut.getFieldClass(1), nullValue());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassExceedsUpperBound() {
+    //when one is set
+    cut.setFieldClasses(String.class);
+    cut.getFieldClass(1);
+  }
+
+  @Test
+  public void getFielddClassInvalidCalls() {
+    cut.setFieldClasses(String.class, Integer.class, Boolean.class);
+    assertThat("1", cut.getFieldClass(-1), nullValue());
+    assertThat("2", cut.getFieldClass(0), equalTo(String.class));
+    assertThat("3", cut.getFieldClass(2), equalTo(Boolean.class));
   }
 }
