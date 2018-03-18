@@ -31,7 +31,7 @@ public class Fluent {
   private NamingStrategy namingStrategyFieldNames;
 
   private Fluent() {
-    //not allowed to be instantiated  
+    //not allowed to be instantiated
   }
 
   public static Fluent builder() {
@@ -93,50 +93,50 @@ public class Fluent {
     return this;
   }
 
-    /**
-     * A default set of several chained NamingStrategy objects used for the enum names.
-     */
-    public static NamingStrategy getDefaultNamingStrategyConstantNames() {
-        return minus2underline()
-            .and(flattenGermanUmlauts())
-            .and(space2underline())
-            .and(replaceAtoZ())
-            .and(removeProhibitedSpecials())
-            .and(removeDots())
-            .and(upperCase());
-    }
+  /**
+   * A default set of several chained NamingStrategy objects used for the enum names.
+   */
+  public static NamingStrategy getDefaultNamingStrategyConstantNames() {
+    return minus2underline()
+      .and(flattenGermanUmlauts())
+      .and(space2underline())
+      .and(replaceAtoZ())
+      .and(removeProhibitedSpecials())
+      .and(removeDots())
+      .and(upperCase());
+  }
 
-    /**
-     * A default set of several chained NamingStrategy objects used for the enum field names.
-     */
-    public static NamingStrategy getDefaultNamingStrategyFieldNames() {
-        NamingStrategy ns1 = extractParenthesis();
-        NamingStrategy ns2 = removeProhibitedSpecials();
-        NamingStrategy ns3 = camelStrict();
-        NamingStrategy ns4 = harmonize();
-        NamingStrategy ns5 = lowerCaseFirstLetter();
-        return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
-    }
+  /**
+   * A default set of several chained NamingStrategy objects used for the enum field names.
+   */
+  public static NamingStrategy getDefaultNamingStrategyFieldNames() {
+    NamingStrategy ns1 = extractParenthesis();
+    NamingStrategy ns2 = removeProhibitedSpecials();
+    NamingStrategy ns3 = camelStrict();
+    NamingStrategy ns4 = harmonize();
+    NamingStrategy ns5 = lowerCaseFirstLetter();
+    return ns1.and(ns2).and(ns3).and(ns4).and(ns5);
+  }
 
   public EnumResult build() {
-      LOG.debug("Fluent.build()...");
+    LOG.debug("Fluent.build()...");
 
-      Objects.requireNonNull(getDataProvider(), "DataProvider implementation necessary! E.g. URLHtmlDataProvider, CSVDataProvider,...");
-      Objects.requireNonNull(getClassBuilder(), "ClassBuilder implementation necessary needed! You can easily use 'ClassBuilderFactory.getBestEnumBuilder()'!");
-      Objects.requireNonNull(getEnumExporter(), "Please set a EnumExporter! You can try 'ReportingEnumExporter' or have a look at 'EnumExporterFactory'");
+    Objects.requireNonNull(getDataProvider(), "DataProvider implementation necessary! E.g. URLHtmlDataProvider, CSVDataProvider,...");
+    Objects.requireNonNull(getClassBuilder(), "ClassBuilder implementation necessary needed! You can easily use 'ClassBuilderFactory.getBestEnumBuilder()'!");
+    Objects.requireNonNull(getEnumExporter(), "Please set a EnumExporter! You can try 'ReportingEnumExporter' or have a look at 'EnumExporterFactory'");
 
-      LOG.debug("DataProvider: {}, ClassBuilder: {}, SourceFormatter: {}, EnumExporter: {}", getDataProvider(), getClassBuilder(), getSourceFormatter(), getEnumExporter());
+    LOG.debug("DataProvider: {}, ClassBuilder: {}, SourceFormatter: {}, EnumExporter: {}", getDataProvider(), getClassBuilder(), getSourceFormatter(), getEnumExporter());
 
-      final EnumData enumData =
-          Objects.requireNonNull(getDataProvider().load(), "DataProvider.load() returns a null EnumData object!");
+    final EnumData enumData =
+      Objects.requireNonNull(getDataProvider().load(), "DataProvider.load() returns a null EnumData object!");
 
-      //Transfer the mandatory classname into the classbuilder
-      getClassBuilder().withName(enumData.getClassName());
+    //Exchange classname into the classbuilder and EnumData
+    transferClassName(enumData);
 
-      //Add Class-Level JavaDoc if available
-      String jDocClassLevel = enumData.getJavaDoc(EnumData.JDocKeys.CLASS.name());
-      if (jDocClassLevel != null && jDocClassLevel.length() > 0) {
-          getClassBuilder().addClassJavadoc(jDocClassLevel);
+    //Add Class-Level JavaDoc if available
+    String jDocClassLevel = enumData.getJavaDoc(EnumData.JDocKeys.CLASS.name());
+    if (jDocClassLevel != null && jDocClassLevel.length() > 0) {
+      getClassBuilder().addClassJavadoc(jDocClassLevel);
     }
 
     if (this.fixedFieldNames != null) {
@@ -146,20 +146,20 @@ public class Fluent {
     }
 
     if (this.namingStrategyFieldNames != null) {
-        getClassBuilder().convertFieldNames(Objects.requireNonNull(this.namingStrategyFieldNames, "NamingStrategy for field names is null!"));
+      getClassBuilder().convertFieldNames(Objects.requireNonNull(this.namingStrategyFieldNames, "NamingStrategy for field names is null!"));
     }
 
     if (this.namingStrategyConstantNames != null) {
-        getClassBuilder().convertConstantNames(Objects.requireNonNull(this.namingStrategyConstantNames, "NamingStrategy for constant names is null!"));
+      getClassBuilder().convertConstantNames(Objects.requireNonNull(this.namingStrategyConstantNames, "NamingStrategy for constant names is null!"));
     }
 
     //note that we use the fieldnames which are possibly been overriden!
-      getClassBuilder().setFields(enumData.getFieldNames(), enumData.getFieldClasses());
+    getClassBuilder().setFields(enumData.getFieldNames(), enumData.getFieldClasses());
 
     final List<NameTypeValue> mapData = Objects.requireNonNull(enumData.getData(), "EnumData has no records loaded! It's empty!");
 
     //add each data record to the classbuilder
-      mapData.forEach((nameTypeValue) -> getClassBuilder().addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
+    mapData.forEach((nameTypeValue) -> getClassBuilder().addField(nameTypeValue.getConstantName(), nameTypeValue.getValue()));
 
     String myEnum = getClassBuilder().build();
 
@@ -168,32 +168,54 @@ public class Fluent {
     return getEnumExporter().export(enumResult);
   }
 
-    /**
-     * The DataProvider which is used to load the enum data usually from html, json, cvs ...
+  /**
+   * Little helper method to set the classname in all needed instances.
+   */
+  private void transferClassName(final EnumData enumData) {
+    //if the classname has been set on the classbuilder object:
+    if (enumData != null && enumData.getClassNameSimple() == null) {
+      String cbCName = getClassBuilder().getModel().getClassName();
+      if (cbCName != null && cbCName.length() > 0) {
+        LOG.trace("Transfer '{}' from ClassBuilder's model into DataProvider's model", cbCName);
+        enumData.setClassName(getClassBuilder().getModel().getClassName());
+      }
+    }
+    //if classbuilder hasn't the classname set (but the DataProvider#EnumModel)
+    if (getClassBuilder().getModel() != null
+      && getClassBuilder().getModel().getClassNameSimple() == null
+      && enumData != null && enumData.getClassNameSimple() != null) {
+      LOG.trace("Transfer '{}' from DataProvider's model into ClassBuilder's model", enumData.getClassName());
+      getClassBuilder().withName(enumData.getClassName());
+    }
+
+  }
+
+  /**
+   * The DataProvider which is used to load the enum data usually from html, json, cvs ...
    */
   public DataProvider getDataProvider() {
     return dataProvider;
   }
 
-    /**
-     * The ClassBuilder object is a code creating object optimized for enums.
-     */
-    public ClassBuilder getClassBuilder() {
-        return classBuilder;
-    }
+  /**
+   * The ClassBuilder object is a code creating object optimized for enums.
+   */
+  public ClassBuilder getClassBuilder() {
+    return classBuilder;
+  }
 
-    /**
-     * Optional formatting object.
-     */
-    public SourceFormatter getSourceFormatter() {
-        return sourceFormatter;
-    }
+  /**
+   * Optional formatting object.
+   */
+  public SourceFormatter getSourceFormatter() {
+    return sourceFormatter;
+  }
 
-    /**
-     * The object to create files or report the enum at the log or something.
-     */
-    public EnumExporter getEnumExporter() {
-        return enumExporter;
-    }
+  /**
+   * The object to create files or report the enum at the log or something.
+   */
+  public EnumExporter getEnumExporter() {
+    return enumExporter;
+  }
 
 }
