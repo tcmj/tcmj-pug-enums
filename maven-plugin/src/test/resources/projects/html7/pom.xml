@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tcmj.plugins.test</groupId>
+    <artifactId>pug-enum-maven-plugin-test07</artifactId>
+    <version>TEST</version>
+    <packaging>jar</packaging>
+
+    <description>
+        Just another html usage example.
+        the table has no title row.
+        Here we don't want to skip the first row
+        We use a new property to avoid skipping the first row.
+        We want to use most/all features available
+        Result can be found here: ..\target\generated-test-sources\project-to-test\com\tcmj\html
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>LATEST_VERSION</version>
+                <configuration>
+                    <className>com.tcmj.html.test.ColorEnum7</className>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <url>src/test/resources/projects/html7/example.html</url>
+                    <tableCssSelector>#colortable</tableCssSelector>
+                    <constantColumn>2</constantColumn>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
