@@ -38,6 +38,15 @@ public class URLHtmlDataProvider implements DataProvider {
   final int[] columnPos;
   final String cssSelector;
 
+  Boolean keepFirstRow = Boolean.FALSE;
+
+  /**
+   * Option to disable skipping of the first row of a table which is usually the description/header.
+   */
+  public void setKeepFirstRow(Boolean keepFirstRow) {
+    this.keepFirstRow = keepFirstRow;
+  }
+
   public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
     if (tableSelector == null) {
@@ -139,8 +148,8 @@ public class URLHtmlDataProvider implements DataProvider {
     int curPos = 0;
     for (Element tr : trs) {
       curPos++;
-      if (curPos == 1) {
-        LOG.debug("Skipping header record...");
+      if (curPos == 1 && this.keepFirstRow == Boolean.FALSE) {
+        LOG.debug("Skipping first (header) record: {}...", tr);
         continue;
       }
 

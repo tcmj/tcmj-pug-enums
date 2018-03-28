@@ -12,7 +12,6 @@
         the table has no title row.
         Here we don't want to skip the first row
         We use a new property to avoid skipping the first row.
-        We want to use most/all features available
         Result can be found here: ..\target\generated-test-sources\project-to-test\com\tcmj\html
     </description>
 
@@ -28,6 +27,7 @@
                     <url>src/test/resources/projects/html7/example.html</url>
                     <tableCssSelector>#colortable</tableCssSelector>
                     <constantColumn>2</constantColumn>
+                    <keepFirstRow>true</keepFirstRow>
                 </configuration>
             </plugin>
         </plugins>

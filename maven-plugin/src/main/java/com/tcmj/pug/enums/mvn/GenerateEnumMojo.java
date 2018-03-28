@@ -76,6 +76,9 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.namingstrategy.fields", required = false)
   protected String[] namingStrategyFieldNames;
 
+  /** Optional Property to keep the first row of html tables. */
+  @Parameter(property = "com.tcmj.pug.enums.keepfirstrow", required = false)
+  protected Boolean keepFirstRow = Boolean.FALSE;
 
   protected static <T> boolean isParameterSet(T[] param) {
     return param != null && param.length > 0;
@@ -114,6 +117,7 @@ public class GenerateEnumMojo extends AbstractMojo {
     getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
     getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
     getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
+    getLog().info(arrange("KeepFirstRow: " + this.keepFirstRow));
 
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
@@ -124,12 +128,14 @@ public class GenerateEnumMojo extends AbstractMojo {
     if (this.dataProvider != null && !StringUtils.equals(this.dataProvider, "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")) {
       throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: " + this.dataProvider);
     }
-    return new URLHtmlDataProvider(
-        this.url,
-        this.tableCssSelector, //xpath to a record to further (also to a table possible)
-        this.constantColumn, //enum constant column
-        this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray() //convert to int[]
+    URLHtmlDataProvider urlHtmlDataProvider = new URLHtmlDataProvider(
+      this.url,
+      this.tableCssSelector, //xpath to a record to further (also to a table possible)
+      this.constantColumn, //enum constant column
+      this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray() //convert to int[]
     );
+    urlHtmlDataProvider.setKeepFirstRow(this.keepFirstRow);
+    return urlHtmlDataProvider;
   }
 
   /**
