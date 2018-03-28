@@ -29,7 +29,7 @@ public class FluentSimpleURLHtmlDataExample {
       EnumResult enumResult =
       com.tcmj.pug.enums.api.fluent.Fluent.builder()
           .dataProvider(new URLHtmlDataProvider("https://en.wikipedia.org/wiki/States_of_Germany", "[title=Hanover]", 3, null))
-          .classBuilder(new JavaPoetEnumBuilder())
+        .classBuilder(new JavaPoetEnumBuilder().withName("com.tcmj.StatesOfGermany"))
           .usingDefaultConstantNameConversion()
 //          .convertConstantNames(getMyNamingStrategy())
           .javaDocClassLevel("This is a java enum.", "Source is from xyz")
