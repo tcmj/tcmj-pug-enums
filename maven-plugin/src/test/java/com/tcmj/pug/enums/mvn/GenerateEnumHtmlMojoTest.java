@@ -101,4 +101,17 @@ public class GenerateEnumHtmlMojoTest {
 
   }
 
+  @Test
+  public void staticHtmlFile7() throws Exception {
+    File html = new File(this.resources.getBasedir("html7"), "example.html");
+    assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
+    URL myUrl = html.toURI().toURL();
+    System.out.println("myUrl=" + myUrl);
+    GenerateEnumMojo mojo = getMojo("html7");
+    mojo.execute();
+  }
+
+
+
+
 }
