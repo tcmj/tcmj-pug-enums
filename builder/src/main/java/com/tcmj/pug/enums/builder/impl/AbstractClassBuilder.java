@@ -1,6 +1,5 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import java.util.Objects;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.SourceFormatter;
@@ -9,6 +8,8 @@ import com.tcmj.pug.enums.model.EnumData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 /**
  * A skeletal implementation of a {@link ClassBuilder} basically to fill all data into the data
@@ -127,7 +128,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
 
   protected void validate() {
     if (this.model.getData().isEmpty()) {
-      throw new ClassCreationException("No Fields set! Use one of the addField methods!");
+      throw new ClassCreationException("No data fields found! Try another <constantColumn> value or call ClassBuilder#addField in the API");
     }
     if (StringUtils.isBlank(this.model.getClassNameSimple())) {
       throw new ClassCreationException("No ClassName is set! Use the withName(String) method!");
