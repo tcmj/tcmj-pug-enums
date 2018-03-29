@@ -26,10 +26,11 @@ public class URLHtmlDataProviderTest {
 
   private URLHtmlDataProvider getDataProvider() {
     return new URLHtmlDataProvider(
-        "https://en.wikipedia.org/wiki/States_of_Germany",
-        "table.sortable",
-        1, //enum constant column
-        new int[]{1, 2, 3} //sub columns
+      "https://en.wikipedia.org/wiki/States_of_Germany",
+      "table.sortable",
+      1, //enum constant column
+      new int[]{1, 2, 3}, //sub columns
+      true
     );
   }
 
@@ -65,7 +66,7 @@ public class URLHtmlDataProviderTest {
         "mockedunittest",
         "[title=Afghanistan]",
         3,
-        null));
+      null, true));
 
     doReturn(getMockHtmlFile("country.html")).when(dataProvider).getDocument("mockedunittest");
 
@@ -87,7 +88,7 @@ public class URLHtmlDataProviderTest {
         "https://ttt.wikipedia.org/wiki/ISO_3166-1",
         "[title=Afghanistan]",
         1,
-        new int[]{2, 3, 4}));
+      new int[]{2, 3, 4}, true));
 
     doReturn(getMockHtmlFile("country.html")).when(dataProvider).getDocument("https://ttt.wikipedia.org/wiki/ISO_3166-1");
 
@@ -103,7 +104,7 @@ public class URLHtmlDataProviderTest {
 
   @Test
   public void testGetValueSpecialCase() throws Exception {
-    URLHtmlDataProvider cut = spy(new URLHtmlDataProvider("States_of_Germany", "table.sortable", 3, new int[]{2, 3, 4}));//"a.b.c.MyEnum", 
+    URLHtmlDataProvider cut = spy(new URLHtmlDataProvider("States_of_Germany", "table.sortable", 3, new int[]{2, 3, 4}, true));//"a.b.c.MyEnum",
     doReturn(getMockHtmlFile("states.html")).when(cut).getDocument("States_of_Germany");
 
     EnumData data = cut.load();
@@ -166,7 +167,7 @@ public class URLHtmlDataProviderTest {
     String myURL = url.toString();
     String mySelector = null;
     assertThat("HtmlTestFile must be available", Files.isRegularFile(Paths.get(URI.create(myURL))), is(true));
-    URLHtmlDataProvider dataProvider =  new URLHtmlDataProvider( myURL, mySelector, 1, new int[]{2, 3} );
+    URLHtmlDataProvider dataProvider = new URLHtmlDataProvider(myURL, mySelector, 1, new int[]{2, 3}, true);
     EnumData data = dataProvider.load();
     assertThat("isEnumWithSubfields", data.isEnumWithSubfields(), is(true));
     assertThat("getEnumConstantsAmount", data.getEnumConstantsAmount(), is(3));

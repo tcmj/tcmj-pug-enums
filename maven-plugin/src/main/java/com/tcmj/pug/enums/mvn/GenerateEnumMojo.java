@@ -19,7 +19,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -64,7 +66,7 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.constantcolumn", defaultValue = "1", required = true)
   private Integer constantColumn;
 
-  /** Optional possibiity to extract further columns and use it as fields in the enum. */
+  /** Optional possibility to extract further columns and use it as fields in the enum. */
   @Parameter(property = "com.tcmj.pug.enums.subdatacolumns", required = false)
   private Integer[] subDataColumns;
 
@@ -80,8 +82,22 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.keepfirstrow", required = false)
   protected Boolean keepFirstRow = Boolean.FALSE;
 
+  /** Optional possibility to skip specific records. */
+  @Parameter(property = "com.tcmj.pug.enums.skip.values", required = false)
+  private String[] valuesToSkip;
+  private List<String> lstValuesToSkip = new ArrayList<>();
+
   protected static <T> boolean isParameterSet(T[] param) {
     return param != null && param.length > 0;
+  }
+
+  protected static NamingStrategy invokeMethod(String methodName) throws InvocationTargetException, IllegalAccessException {
+    for (Method method : NamingStrategyFactory.class.getMethods()) {
+      if (methodName.equalsIgnoreCase(method.getName())) { //don't be strict
+        return (NamingStrategy) method.invoke(null);
+      }
+    }
+    throw new IllegalStateException("Cannot find a NamingStrategy " + methodName);
   }
 
   private void displayYoureWelcome() {  //attach some more logging..
@@ -122,20 +138,17 @@ public class GenerateEnumMojo extends AbstractMojo {
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
     }
-  }
 
-  protected DataProvider getDataProvider() {
-    if (this.dataProvider != null && !StringUtils.equals(this.dataProvider, "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")) {
-      throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: " + this.dataProvider);
+    if (this.keepFirstRow == Boolean.FALSE) {
+      this.lstValuesToSkip.add("#1");
     }
-    URLHtmlDataProvider urlHtmlDataProvider = new URLHtmlDataProvider(
-      this.url,
-      this.tableCssSelector, //xpath to a record to further (also to a table possible)
-      this.constantColumn, //enum constant column
-      this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray() //convert to int[]
-    );
-    urlHtmlDataProvider.setKeepFirstRow(this.keepFirstRow);
-    return urlHtmlDataProvider;
+
+    if (isParameterSet(this.valuesToSkip)) {
+      for (String s : this.valuesToSkip) {
+        this.lstValuesToSkip.add(s);
+      }
+      getLog().info(arrange("Input values to skip: " + lstValuesToSkip));
+    }
   }
 
   /**
@@ -149,23 +162,29 @@ public class GenerateEnumMojo extends AbstractMojo {
     return Fluent.getDefaultNamingStrategyConstantNames();
   }
 
+  protected DataProvider getDataProvider() {
+    if (this.dataProvider != null && !StringUtils.equals(this.dataProvider, "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")) {
+      throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: " + this.dataProvider);
+    }
+    URLHtmlDataProvider urlHtmlDataProvider = new URLHtmlDataProvider(
+      this.url,
+      this.tableCssSelector, //xpath to a record to further (also to a table possible)
+      this.constantColumn, //enum constant column
+      this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray(), //convert to int[]
+      false
+    );
+    urlHtmlDataProvider.setValuesToSkip(lstValuesToSkip);
+    return urlHtmlDataProvider;
+  }
+
   /**
    * Depending if a parameter is set (or not) we use the default strategies or the defined ones.
    */
   protected NamingStrategy getNamingStrategyFieldNames() {
     if (isParameterSet(this.namingStrategyFieldNames)) {
-        return resolveNamingStrategies(this.namingStrategyFieldNames);
+      return resolveNamingStrategies(this.namingStrategyFieldNames);
     }
     return Fluent.getDefaultNamingStrategyFieldNames();
-  }
-
-  protected static NamingStrategy invokeMethod(String methodName) throws InvocationTargetException, IllegalAccessException {
-    for (Method method : NamingStrategyFactory.class.getMethods()) {
-      if(methodName.equalsIgnoreCase(method.getName())){ //don't be strict
-          return (NamingStrategy) method.invoke(null);
-      }
-    }
-    throw new IllegalStateException("Cannot find a NamingStrategy "+methodName);
   }
 
   protected NamingStrategy resolveNamingStrategies(String[] namingStrategyConstants) {
