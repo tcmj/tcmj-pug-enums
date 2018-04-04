@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CodeModelEnumBuilderTest extends ParentClassBuilderTest {
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     result = null;
     classBuilder = ClassBuilderFactory.getCodeModelEnumBuilder();
     classBuilder.usingCustomFormatter(sourceFormatter);

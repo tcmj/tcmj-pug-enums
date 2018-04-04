@@ -15,8 +15,8 @@ import static com.sun.codemodel.JExpr._this;
 import static com.tcmj.pug.enums.tools.CamelCase.toGetter;
 
 /**
- * EnumBuilder. Generator used to create the enum: com.sun.codemodel Sun codemodel, part of the
- * GlassFish project
+ * Implementation of a {@link com.tcmj.pug.enums.api.ClassBuilder}
+ * using {@link com.sun.codemodel} which is part of the GlassFish project.
  */
 public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
@@ -25,9 +25,6 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
   /** Modifier for enum fields. */
   private static final int PRIVATE_FINAL = JMod.PRIVATE + JMod.FINAL;
-
-  /** com.sun.codemodel: Package object. */
-  private JPackage jpackage;
 
   /** com.sun.codemodel: Class object. */
   private JDefinedClass jclass;
@@ -38,31 +35,13 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
   /** com.sun.codemodel: holds all fields of the enum. */
   private Map<String, JFieldVar> jfields = new HashMap<>();
 
-  /** holds all javadocs of the fields of the enum. */
-  Map<String, String> mapJavadocs = new HashMap<>();
+  /** Holds all javadocs of the fields of the enum. */
+  private Map<String, String> mapJavadocs = new HashMap<>();
 
-  /** holds custom code according to fields. Signatur,Code. */
-  Map<String, String> mapCustomCode = new HashMap<>();
-
-  Map<String, String> mapCustomCodeJavaDoc = new HashMap<>();
+  /** Holds all javadocs for custom code. */
+  private Map<String, String> mapCustomCodeJavaDoc = new HashMap<>();
 
   public CodeModelEnumBuilder() {
-  }
-
-  private CodeModelEnumBuilder(String className) {
-    this.model.setClassName(className);
-
-    try {
-      String pkgName = this.model.getPackageName();
-      if (pkgName == null) {
-        this.jclass = codeModel.rootPackage()._class(JMod.PUBLIC, className, ClassType.ENUM);
-      } else {
-        this.jpackage = codeModel._package(pkgName);
-        this.jclass = this.jpackage._enum(this.model.getClassNameSimple());
-      }
-    } catch (Exception e) {
-      throw new ClassCreationException(e);
-    }
   }
 
   @Override
@@ -75,8 +54,9 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
                 .rootPackage()
                 ._class(JMod.PUBLIC, this.model.getPackageName(), ClassType.ENUM);
       } else {
-        this.jpackage = codeModel._package(this.model.getPackageName());
-        this.jclass = this.jpackage._enum(this.model.getClassNameSimple());
+        /* com.sun.codemodel: Package object. */
+        JPackage jpackage = codeModel._package(this.model.getPackageName());
+        this.jclass = jpackage._enum(this.model.getClassNameSimple());
       }
     } catch (Exception e) {
       throw new ClassCreationException(e);
@@ -96,10 +76,6 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
   public ClassBuilder addJavadoc(String fieldName, String javaDoc) {
     this.mapJavadocs.put(fieldName, javaDoc);
     return this;
-  }
-
-  public JDefinedClass getJClass() {
-    return this.jclass;
   }
 
   @Override
@@ -220,7 +196,7 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
     return StringUtils.join(result, LINE);
   }
 
-  private int getLengthOfHeadline(String myEnum) throws Exception {
+  private int getLengthOfHeadline(String myEnum) {
     int cutPos;
     if (this.model.getPackageName() != null) {
       cutPos = myEnum.indexOf("package");
