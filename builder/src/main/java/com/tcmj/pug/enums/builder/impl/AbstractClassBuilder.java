@@ -95,8 +95,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
     this.model.addConstant(constantName);
     return this;  
   }
-  
-  
+
   @Override
   public ClassBuilder addCustomStaticGetterMethod(
       String methodName, String paramType, String paramName, String code, String javaDoc) {
@@ -118,7 +117,7 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
     return this.model;
   }
 
-  protected String insertLineBreakAfterCodeValues(String myEnum) throws Exception {
+  protected String insertLineBreakAfterCodeValues(String myEnum) {
     StringBuilder builder = new StringBuilder(myEnum);
     int posA = builder.indexOf("public enum");
     int posB = builder.indexOf(";", posA);

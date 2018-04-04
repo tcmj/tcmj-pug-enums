@@ -79,7 +79,7 @@ public class JsonDataProvider implements DataProvider {
     return model;
   }
 
-  private static Object toType(JsonElement jsonElement, Class type) throws Exception {
+  private static Object toType(JsonElement jsonElement, Class type) {
     if (type == Integer.class) {
       return jsonElement.getAsInt();
     } else if (type == Long.class) {

@@ -1,19 +1,20 @@
 package com.tcmj.pug.enums.datasources.impl;
 
-import java.io.Reader;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.pug.enums.api.tools.EnumDataHelper;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Reader;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 /** Dataprovider which parses a comma separated value document to a EnumModel object. */
 public class CSVDataProvider implements DataProvider {
@@ -33,7 +34,7 @@ public class CSVDataProvider implements DataProvider {
     LOG.info("CSVFieldNameConstants={}, FieldNames={}, FieldClasses={}", fieldNameConstant, model.getFieldNames(), model.getFieldClasses());
   }
 
-  private Set<String> getHeaders(Map<String, Integer> map) throws Exception {
+  private Set<String> getHeaders(Map<String, Integer> map) {
     Set<String> headers = new LinkedHashSet<>();
     if (model.isEnumWithSubfields()) {
       Set<String> keyMaps = map.keySet();

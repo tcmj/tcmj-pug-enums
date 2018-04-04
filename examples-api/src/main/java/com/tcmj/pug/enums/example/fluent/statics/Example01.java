@@ -23,7 +23,7 @@ import static com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter.LogLevel.SY
  */
 public class Example01 {
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
 
     Fluent.builder()
       .dataProvider(() -> {
