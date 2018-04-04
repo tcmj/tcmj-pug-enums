@@ -14,6 +14,15 @@
     <name>tcmj-pug-enum-api</name>
     <description>
         Contains the API of the tcmj pug enum project with all interfaces and model classes.
+        +---------------------+
+        | DataProvider |
+        +---------------------+
+        | ClassBuilder |
+        +---------------------+
+        | SourceCodeFormatter |
+        +---------------------+
+        | EnumExporter |
+        +---------------------+
     </description>
     <dependencies>
         <dependency>
