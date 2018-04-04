@@ -8,10 +8,7 @@ import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -32,7 +29,6 @@ import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.upperCase;
  * Fluent API.
  */
 public class Fluent {
-  private static final Logger LOG = LoggerFactory.getLogger(Fluent.class);
   private static final Fluent INSTANCE = new Fluent();
 
   private DataProvider dataProvider;
@@ -55,25 +51,21 @@ public class Fluent {
 
   public Fluent dataProvider(DataProvider value) {
     dataProvider = Objects.requireNonNull(value, "DataProvider may not be null!");
-    LOG.debug("dataProvider {}..", getDataProvider());
     return INSTANCE;
   }
 
   public Fluent classBuilder(ClassBuilder value) {
     classBuilder = Objects.requireNonNull(value, "ClassBuilder may not be null!");
-    LOG.debug("classBuilder {}..", getClassBuilder());
     return INSTANCE;
   }
 
   public Fluent sourceFormatter(SourceFormatter value) {
     sourceFormatter = Objects.requireNonNull(value, "SourceFormatter may not be null!");
-    LOG.debug("sourceFormatter {}..", getSourceFormatter());
     return INSTANCE;
   }
 
   public Fluent enumExporter(EnumExporter value) {
     enumExporter = Objects.requireNonNull(value, "EnumExporter may not be null!");
-    LOG.debug("enumExporter {}..", getEnumExporter());
     return INSTANCE;
   }
 
@@ -137,13 +129,9 @@ public class Fluent {
   }
 
   public EnumResult build() {
-    LOG.debug("Fluent.build()...");
-
     Objects.requireNonNull(getDataProvider(), "DataProvider implementation necessary! E.g. URLHtmlDataProvider, CSVDataProvider,...");
     Objects.requireNonNull(getClassBuilder(), "ClassBuilder implementation necessary needed! You can easily use 'ClassBuilderFactory.getBestEnumBuilder()'!");
     Objects.requireNonNull(getEnumExporter(), "Please set a EnumExporter! You can try 'ReportingEnumExporter' or have a look at 'EnumExporterFactory'");
-
-    LOG.debug("DataProvider: {}, ClassBuilder: {}, SourceFormatter: {}, EnumExporter: {}", getDataProvider(), getClassBuilder(), getSourceFormatter(), getEnumExporter());
 
     final EnumData enumData =
       Objects.requireNonNull(getDataProvider().load(), "DataProvider.load() returns a null EnumData object!");
@@ -160,7 +148,6 @@ public class Fluent {
     if (this.fixedFieldNames != null) {
       //Overriding the field names usually fetched by the data provider implementation!
       enumData.setFieldNames(this.fixedFieldNames);
-      LOG.debug("UsingFixedFieldNames: {}", Arrays.toString(enumData.getFieldNames()));
     }
 
     if (this.namingStrategyFieldNames != null) {
@@ -194,7 +181,6 @@ public class Fluent {
     if (enumData != null && enumData.getClassNameSimple() == null) {
       String cbCName = getClassBuilder().getModel().getClassName();
       if (cbCName != null && cbCName.length() > 0) {
-        LOG.trace("Transfer '{}' from ClassBuilder's model into DataProvider's model", cbCName);
         enumData.setClassName(getClassBuilder().getModel().getClassName());
       }
     }
@@ -202,7 +188,6 @@ public class Fluent {
     if (getClassBuilder().getModel() != null
       && getClassBuilder().getModel().getClassNameSimple() == null
       && enumData != null && enumData.getClassNameSimple() != null) {
-      LOG.trace("Transfer '{}' from DataProvider's model into ClassBuilder's model", enumData.getClassName());
       getClassBuilder().withName(enumData.getClassName());
     }
 

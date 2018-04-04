@@ -22,25 +22,25 @@ public class NamingStrategyFactoryTest {
   
   
   @Test
-  public void testLowerCase() throws Exception {
+  public void testLowerCase() {
     assertThat("lowerCase()", lowerCase().convert("PLEASE BE QUIET!"), equalTo("please be quiet!"));
     assertThat("lowerCase().nullsafe", lowerCase().convert(null), nullValue());
   }
 
   @Test
-  public void testTrim() throws Exception {
+  public void testTrim() {
     assertThat("trim()", trim().convert("   aaa   "), equalTo("aaa"));
     assertThat("trim().nullsafe", trim().convert(null), nullValue());
   }
 
   @Test
-  public void testUpperCase() throws Exception {
+  public void testUpperCase() {
     assertThat("upperCase()", upperCase().convert("aaa"), equalTo("AAA"));
     assertThat("upperCase().nullsafe", upperCase().convert(null), nullValue());
   }
 
   @Test
-  public void testSpace2underline() throws Exception {
+  public void testSpace2underline() {
     assertThat("1", space2underline().convert("hallo welt"), equalTo("hallo_welt"));
     assertThat("2", space2underline().convert("hallo  welt"), equalTo("hallo_welt"));
     assertThat("3", space2underline().convert("hallo   welt"), equalTo("hallo_welt"));
@@ -49,13 +49,13 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testRemoveSpaces() throws Exception {
+  public void testRemoveSpaces() {
     assertThat("trim()", removeSpaces().convert("hallo welt"), equalTo("hallowelt"));
     assertThat("trim().nullsafe", removeSpaces().convert(null), nullValue());
   }
 
   @Test
-  public void testCamel() throws Exception {
+  public void testCamel() {
     //simplified camel case handling
     assertThat("1", camel().convert("hallo welt"), equalTo("HalloWelt"));
     assertThat("2", camel().convert("hallo_welt"), equalTo("HalloWelt"));
@@ -65,7 +65,7 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testCamelStrict() throws Exception {
+  public void testCamelStrict() {
     //strict camel case handling
     assertThat("1", camelStrict().convert("hallo welt"), equalTo("HalloWelt"));
     assertThat("2", camelStrict().convert("hallo_welt"), equalTo("HalloWelt"));
@@ -77,7 +77,7 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testHarmonize() throws Exception {
+  public void testHarmonize() {
     //replace everything you can to get java conform - including replacement of special version of a-Z with plain versions
     assertThat("1.ABC", harmonize().convert("ABC"), equalTo("ABC"));
     assertThat("2.XYZ", harmonize().convert("XYZ"), equalTo("XYZ"));
@@ -99,7 +99,7 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testReplaceAtoZ() throws Exception {
+  public void testReplaceAtoZ() {
     //leave everything as it is but replace special version of a-Z with plain versions
     assertThat("1.ABC", replaceAtoZ().convert("ABC"), equalTo("ABC"));
     assertThat("2.XYZ", replaceAtoZ().convert("XYZ"), equalTo("XYZ"));
@@ -114,7 +114,7 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testRemoveProhibitedSpecials() throws Exception {
+  public void testRemoveProhibitedSpecials() {
     assertThat("null", removeProhibitedSpecials().convert(null), nullValue());
     //leave everything as it is but replace special version of a-Z with plain versions
     assertThat("1", removeProhibitedSpecials().convert("AbCZz4"), equalTo("AbCZz4"));
@@ -127,7 +127,7 @@ public class NamingStrategyFactoryTest {
   }
 
   @Test
-  public void testExtractParenthesis() throws Exception {
+  public void testExtractParenthesis() {
     assertThat("null", extractParenthesis().convert(null), nullValue());
     assertThat( "1", extractParenthesis().convert("Bolivia (Plurinational State of)"),
         equalTo("Plurinational State of Bolivia"));
@@ -138,12 +138,21 @@ public class NamingStrategyFactoryTest {
   }
   
   @Test
-  public void testFlattenGermanUmlauts() throws Exception {
+  public void testFlattenGermanUmlauts() {
     assertThat("1", flattenGermanUmlauts().convert("Mühle"), equalTo("Muehle"));
     assertThat("2", flattenGermanUmlauts().convert("Ärger"), equalTo("Aerger"));
     assertThat("3", flattenGermanUmlauts().convert("Hallö meine großen lüneburger Ösen"), equalTo("Halloe meine grossen lueneburger Oesen"));
     assertThat("4", flattenGermanUmlauts().convert("xxöxx xxÖxx xxäxx xxÄxx xxüxx xxÜxx"), equalTo("xxoexx xxOexx xxaexx xxAexx xxuexx xxUexx"));
     assertThat("nullsafe", flattenGermanUmlauts().convert(null), nullValue());
   }
-  
+
+  @Test
+  public void testcamel() {
+    assertThat("1", camel().convert("mühle"), equalTo("Mühle"));
+    assertThat("2", camel().convert("ärger"), equalTo("Ärger"));
+    assertThat("3", camel().convert("Hallö meine großen lüneburger Ösen"), equalTo("HallöMeineGroßenLüneburgerÖsen"));
+    assertThat("4", camel().convert("xxöxx xxÖxx xxäxx xxÄxx xxüxx xxÜxx"), equalTo("XxöxxXxÖxxXxäxxXxÄxxXxüxxXxÜxx"));
+    assertThat("nullsafe", camel().convert(null), nullValue());
+  }
+
 }
