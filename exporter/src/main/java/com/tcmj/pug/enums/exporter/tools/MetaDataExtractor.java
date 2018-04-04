@@ -9,17 +9,17 @@ import java.util.Objects;
 public class MetaDataExtractor {
 
   /**
-   * Extract java package name.
-   *
-   * @todo use regex
+   * Extract the java package name from a java source class.
+   * @return null if no package found
    */
   public static String getPackageName(String source) {
-    int idxPkg = source.indexOf("package");
+    //todo use regex
+    int idxPkg = Objects.requireNonNull(source, "source").indexOf("package");
     int idxSemi = source.indexOf(";");
     if (idxPkg >= 0) {
       boolean invalid = !source.substring(0, idxPkg).trim().equals("");
       if (idxSemi == -1 || idxPkg > idxSemi || invalid) {
-        throw new IllegalStateException("Cannot extract Package!");
+        return null;
       } else {
         return source.substring((idxPkg + 8), idxSemi);
       }
@@ -87,7 +87,8 @@ public class MetaDataExtractor {
   }
 
   public static String getPackageDirectories(String source) {
-    return getPackageName(source).replace('.', '/').trim();
+    String packageName = getPackageName(source);
+    return packageName == null ? null : packageName.replace('.', '/').trim();
   }
 
   /** Package Directories eg.: com/tcmj/iso */

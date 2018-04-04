@@ -4,15 +4,16 @@ import com.tcmj.pug.enums.exporter.impl.TestDataProvider;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/** pugproductions - 2017-05-01 - tcmj. */
+/** Unit tests of {@link MetaDataExtractor} */
 public class MetaDataExtractorTest {
 
-  TestDataProvider data = new TestDataProvider();
+  private TestDataProvider data = new TestDataProvider();
 
   @Test
-  public void testGetPackageName() throws Exception {
+  public void testGetPackageName() {
     System.out.println(data.getEnumNamed("com.tcmj.iso", "MyEnum"));
 
     assertThat(
@@ -30,17 +31,28 @@ public class MetaDataExtractorTest {
   }
 
   @Test(expected = NullPointerException.class)
-  public void testGetPackageNameNullPointer() throws Exception {
+  public void testGetPackageNameNullPointer() {
     MetaDataExtractor.getPackageName(null);
   }
 
-  @Test(expected = IllegalStateException.class)
-  public void testGetPackageNameNotAvailable() throws Exception {
-    MetaDataExtractor.getPackageName("public enum without package but a ;");
+  @Test
+  public void testGetPackageDirectoriesNull() {
+    assertThat(MetaDataExtractor.getPackageDirectories("there is no package"), nullValue());
   }
 
   @Test
-  public void testGetClassNameSimple() throws Exception {
+  public void testGetgetPackageDirectories() {
+    String source = "package org.foo.bar; class Money{...}";
+    assertThat(MetaDataExtractor.getPackageDirectories(source), equalTo("org/foo/bar"));
+  }
+
+  @Test
+  public void testGetPackageNameNotAvailable() {
+    assertThat(MetaDataExtractor.getPackageDirectories("public enum without package but a ;"), nullValue());
+  }
+
+  @Test
+  public void testGetClassNameSimple() {
     assertThat(
         "1",
         MetaDataExtractor.getClassNameSimple(data.getEnumNamed("com.tcmj.iso", "MyEnum")),
@@ -56,7 +68,7 @@ public class MetaDataExtractorTest {
   }
 
   @Test
-  public void testGetClassNameSimpleFromEnumWithJavadoc() throws Exception {
+  public void testGetClassNameSimpleFromEnumWithJavadoc() {
     //given
     String tstenum = "package com.tcmj.html;\n"
         + "/**\n"
@@ -76,7 +88,7 @@ public class MetaDataExtractorTest {
   }
 
   @Test
-  public void testGetClassNameUnformated() throws Exception {
+  public void testGetClassNameUnformated() {
     String source = " package   com.tcmj.iso ;  import java.util.Date;   public   enum   UnFormat  { A, B ,C  }";
     assertThat(MetaDataExtractor.getClassNameSimple(source), equalTo("UnFormat"));
     assertThat(MetaDataExtractor.getPackageDirectories(source), equalTo("com/tcmj/iso"));
@@ -85,7 +97,7 @@ public class MetaDataExtractorTest {
   }
 
   @Test
-  public void testGetFileNameFull() throws Exception {
+  public void testGetFileNameFull() {
     assertThat("1", MetaDataExtractor.getFileNameFull(data.getEnumNamed("com.tcmj.iso", "MyEnum")),
         equalTo("com/tcmj/iso/MyEnum.java"));
     assertThat("2", MetaDataExtractor.getFileNameFull(data.getEnumNamed("java.util.foo", "MyEnum")),
