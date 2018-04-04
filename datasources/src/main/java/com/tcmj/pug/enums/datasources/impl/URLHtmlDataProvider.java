@@ -64,8 +64,7 @@ public class URLHtmlDataProvider implements DataProvider {
       this.cssSelector = tableSelector;
     }
     this.columnPosConstant = columnPosConstant;
-    this.columnPos = columnPos; //column indexes to take
-
+    this.columnPos = columnPos == null ? null : Arrays.copyOf(columnPos, columnPos.length);
     if (skipFirstRow) {
       List<String> lst = new ArrayList<>();
       lst.add("#1");
