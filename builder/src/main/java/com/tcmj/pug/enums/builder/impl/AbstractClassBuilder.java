@@ -97,8 +97,8 @@ public abstract class AbstractClassBuilder implements ClassBuilder {
   }
 
   @Override
-  public ClassBuilder addCustomStaticGetterMethod(
-      String methodName, String paramType, String paramName, String code, String javaDoc) {
+  public ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc) {
     return this;
   }
 

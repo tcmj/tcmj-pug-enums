@@ -53,9 +53,11 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
   }
 
   @Override
-  public ClassBuilder addCustomStaticGetterMethod(
-      String methodName, String paramType, String paramName, String code, String javaDoc) {
-    //todo not yet tested
+  public ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc) {
+
+    methodName = StringUtils.prependIfMissing(methodName, "public static " + getModel().getClassNameSimple() + " ");
+    methodName = StringUtils.join(methodName, "(", paramType.getSimpleName(), " ", paramName, ")");
     addCustomCode(methodName, code);
     this.mapCustomCodeJavaDoc.put(methodName, javaDoc);
     return this;

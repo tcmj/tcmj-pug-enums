@@ -12,7 +12,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
-import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
 import com.tcmj.pug.enums.api.ClassBuilder;
@@ -96,23 +95,15 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
   }
 
   @Override
-  public ClassBuilder addCustomStaticGetterMethod(
-      String methodName, String paramType, String paramName, String code, String javaDoc) {
+  public ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc) {
     try {
       JMethod method = this.jclass.method(JMod.PUBLIC | JMod.STATIC, this.jclass, methodName);
-      try {
-        JType paramTypeType = JType.parse(this.codeModel, paramType); //void or primitive datatype
-        method.param(paramTypeType, paramName);
 
-      } catch (Exception e) {
-
-        method.param(Class.forName(paramType), paramName);
-      }
-
+      method.param(paramType, paramName);
       method.javadoc().add(javaDoc);
 
       JBlock block = method.body();
-
       block.add(f -> f.p(code).nl());
 
     } catch (Exception e) {

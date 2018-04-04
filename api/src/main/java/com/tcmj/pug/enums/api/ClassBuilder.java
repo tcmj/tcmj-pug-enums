@@ -38,9 +38,9 @@ public interface ClassBuilder {
   /** [Conditional] Add a enum constant without any sub fields. */
   ClassBuilder addField(String constantName);
 
-  /** [Optional] Add a custom static getter method to your enum. */
-  ClassBuilder addCustomStaticGetterMethod(
-    String methodName, String paramType, String paramName, String code, String javaDoc);
+  /** [Optional] Add a custom static factory method which returns a specific instance of your enum. */
+  ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc);
 
   /** [Optional] Override one of the getter methods of your enum. */
   ClassBuilder overrideGetter(String fieldName, String code, String... javaDoc);

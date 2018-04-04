@@ -1,5 +1,6 @@
 package com.tcmj.pug.enums.builder.impl;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -47,7 +48,7 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
       if (this.model.getSubFieldsAmount() > 0) {
         addSubFields();
         addConstructor();
-        addGetters();
+        writeGetters();
       }
 
       //Start: Class-JavaDoc
@@ -81,7 +82,7 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     }
   }
 
-  private void addGetters() {
+  private void writeGetters() {
 
     builder.addMethod(MethodSpec.methodBuilder("beep").addModifiers(Modifier.PUBLIC).build());
   }
@@ -201,5 +202,31 @@ public class JavaPoetEnumBuilder extends AbstractClassBuilder {
     buffer.deleteCharAt(buffer.length() - 1);
     return new ImmutablePair<>(buffer.toString(), obj);
   }
- 
+
+  @Override
+  public ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc) {
+    try {
+
+      if (StringUtils.equals(StringUtils.right(code, 1), ";")) {
+        code = StringUtils.left(code, StringUtils.length(code) - 1);
+      }
+
+      ClassName myClass = ClassName.get(getModel().getPackageName(), getModel().getClassNameSimple());
+
+      MethodSpec method = MethodSpec.methodBuilder(methodName)
+        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+        .returns(myClass)
+        .addParameter(paramType, paramName)
+        .addStatement(code)
+        .build();
+
+      builder.addMethod(method);
+    } catch (Exception e) {
+      throw new ClassCreationException(e);
+    }
+    return this;
+  }
+
+
 }
