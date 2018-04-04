@@ -55,6 +55,10 @@ public class ReportingEnumExporter implements EnumExporter {
     }
   }
 
+  public LogLevel getCurrentLogLevel() {
+    return currentLogLevel;
+  }
+
   private LogLevel currentLogLevel;
 
   public void setCurrentLogLevel(LogLevel currentLogLevel) {

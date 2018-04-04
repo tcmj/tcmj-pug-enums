@@ -4,6 +4,8 @@ import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.impl.StringBufferEnumBuilder;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter.LogLevel.SYSTEM_OUT;
 
@@ -35,6 +37,8 @@ import static com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter.LogLevel.SY
  * <pre/>
  */
 public class Example01 {
+  private static final transient Logger LOG = LoggerFactory.getLogger(Example01.class);
+
 
   public static void main(String[] args) {
     try {
@@ -50,7 +54,7 @@ public class Example01 {
         .build();
 
     } catch (Exception ex) {
-      ex.printStackTrace();
+      LOG.error("Whoop", ex);
     }
 
   }

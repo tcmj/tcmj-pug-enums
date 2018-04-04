@@ -6,11 +6,23 @@ import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.*;
+import javax.tools.FileObject;
+import javax.tools.ForwardingJavaFileManager;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Compiles and loads your given source enum at runtime. The compiled object will be loaded using
@@ -155,7 +167,7 @@ public class InMemoryCompilingExporter implements EnumExporter {
     }
   }
 
-  public class MemJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
+  public static class MemJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
     private final MemClassLoader classLoader;
 
     MemJavaFileManager(JavaCompiler compiler, MemClassLoader classLoader) {
@@ -172,7 +184,7 @@ public class InMemoryCompilingExporter implements EnumExporter {
     }
   }
 
-  public class StringJavaFileObject extends SimpleJavaFileObject {
+  public static class StringJavaFileObject extends SimpleJavaFileObject {
     private final CharSequence code;
 
     StringJavaFileObject(String name, CharSequence code) {

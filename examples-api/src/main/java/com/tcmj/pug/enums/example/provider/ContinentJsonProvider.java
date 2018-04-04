@@ -8,7 +8,6 @@ import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
-import com.tcmj.pug.enums.example.fluent.WikipediaExample;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
 import com.tcmj.pug.enums.model.EnumData;
 import org.slf4j.Logger;
@@ -28,7 +27,7 @@ import java.util.Map;
  * TODO: not ready!
  */
 public class ContinentJsonProvider implements DataProvider {
-  private static final transient Logger LOG = LoggerFactory.getLogger(WikipediaExample.class);
+  private static final transient Logger LOG = LoggerFactory.getLogger(ContinentJsonProvider.class);
 
   public static void main(String[] args) {
     try {
@@ -42,7 +41,7 @@ public class ContinentJsonProvider implements DataProvider {
         .build();
 
     } catch (Exception ex) {
-      ex.printStackTrace();
+      LOG.error("Whoop", ex);
     }
   }
 

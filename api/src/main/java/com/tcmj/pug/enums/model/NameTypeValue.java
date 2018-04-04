@@ -54,8 +54,12 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (!(o instanceof NameTypeValue)) return false;
+    if (this == o) {
+      return true;
+    }
+    if (!(o instanceof NameTypeValue)) {
+      return false;
+    }
     NameTypeValue that = (NameTypeValue) o;
     return Objects.equals(getConstantName(), that.getConstantName()) &&
       Arrays.equals(this.values, that.values);
