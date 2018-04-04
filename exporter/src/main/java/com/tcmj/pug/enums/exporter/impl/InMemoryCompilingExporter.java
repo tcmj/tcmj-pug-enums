@@ -1,45 +1,43 @@
 package com.tcmj.pug.enums.exporter.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
-import javax.tools.FileObject;
-import javax.tools.ForwardingJavaFileManager;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.EnumResult;
 import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
-import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.tools.*;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.net.URI;
+import java.util.*;
 
 /**
  * Compiles and loads your given source enum at runtime. The compiled object will be loaded using
  * the current class loader.
  */
 public class InMemoryCompilingExporter implements EnumExporter {
+
   /** slf4j Logging framework. */
   private static final Logger LOG = LoggerFactory.getLogger(InMemoryCompilingExporter.class);
 
+  /** Gets the Java programming language compiler provided with this platform. */
   private JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
   private EnumSet<? extends Enum> enumConstants;
+
   private Class<? extends Enum> enumClass;
 
+  /**
+   * Enum value objects in form of a EnumSet.
+   */
   public EnumSet<? extends Enum> getEnumConstants() {
     return enumConstants;
   }
 
+  /**
+   * Class object of the in memory compiled enum instance.
+   */
   public Class<? extends Enum> getEnumClass() {
     return enumClass;
   }
@@ -100,24 +98,7 @@ public class InMemoryCompilingExporter implements EnumExporter {
     }
   }
 
-  public class MemJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
-    private final MemClassLoader classLoader;
-
-    public MemJavaFileManager(JavaCompiler compiler, MemClassLoader classLoader) {
-      super(compiler.getStandardFileManager(null, null, null));
-      this.classLoader = classLoader;
-    }
-
-    @Override
-    public JavaFileObject getJavaFileForOutput(
-        Location location, String className, JavaFileObject.Kind kind, FileObject sibling) {
-      MemJavaFileObject fileObject = new MemJavaFileObject(className);
-      classLoader.addClassFile(fileObject);
-      return fileObject;
-    }
-  }
-
-  class MemJavaFileObject extends SimpleJavaFileObject {
+  static class MemJavaFileObject extends SimpleJavaFileObject {
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8192);
     private final String className;
 
@@ -142,10 +123,10 @@ public class InMemoryCompilingExporter implements EnumExporter {
     }
   }
 
-  public class MemClassLoader extends ClassLoader {
+  public static class MemClassLoader extends ClassLoader {
     private final Map<String, MemJavaFileObject> classFiles = new HashMap<>();
 
-    public MemClassLoader() {
+    MemClassLoader() {
       super(ClassLoader.getSystemClassLoader());
     }
 
@@ -164,10 +145,37 @@ public class InMemoryCompilingExporter implements EnumExporter {
     }
   }
 
+  public static class ClassNotCompileAndLoadException extends RuntimeException {
+    ClassNotCompileAndLoadException(Throwable cause) {
+      super(cause);
+    }
+
+    ClassNotCompileAndLoadException(String text) {
+      super(text);
+    }
+  }
+
+  public class MemJavaFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
+    private final MemClassLoader classLoader;
+
+    MemJavaFileManager(JavaCompiler compiler, MemClassLoader classLoader) {
+      super(compiler.getStandardFileManager(null, null, null));
+      this.classLoader = classLoader;
+    }
+
+    @Override
+    public JavaFileObject getJavaFileForOutput(
+      Location location, String className, JavaFileObject.Kind kind, FileObject sibling) {
+      MemJavaFileObject fileObject = new MemJavaFileObject(className);
+      classLoader.addClassFile(fileObject);
+      return fileObject;
+    }
+  }
+
   public class StringJavaFileObject extends SimpleJavaFileObject {
     private final CharSequence code;
 
-    public StringJavaFileObject(String name, CharSequence code) {
+    StringJavaFileObject(String name, CharSequence code) {
       super(URI.create("string:///" + name.replace('.', '/') + Kind.SOURCE.extension), Kind.SOURCE);
       this.code = code;
     }
@@ -175,16 +183,6 @@ public class InMemoryCompilingExporter implements EnumExporter {
     @Override
     public CharSequence getCharContent(boolean ignoreEncodingErrors) {
       return code;
-    }
-  }
-
-  public static class ClassNotCompileAndLoadException extends RuntimeException {
-    public ClassNotCompileAndLoadException(Throwable cause) {
-      super(cause);
-    }
-
-    public ClassNotCompileAndLoadException(String text) {
-      super(text);
     }
   }
 }
