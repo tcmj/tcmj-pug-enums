@@ -20,14 +20,14 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
     return constantName;
   }
 
-  /** Value of sub element. */
-  public Object[] getValue() {
-    return values;
-  }
-
   private NameTypeValue(final String constantName, final Object[] value) {
     this.constantName = constantName;
-    this.values = value;
+    this.values = value == null ? null : Arrays.copyOf(value, value.length);
+  }
+
+  /** Value of sub element. */
+  public Object[] getValue() {
+    return this.values == null ? null : Arrays.copyOf(this.values, this.values.length);
   }
 
   /** Create a immutable instance of NameTypeValue used to hold field values of enums. */
@@ -44,7 +44,7 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
   }
 
   public int getSubFieldsAmount() {
-    return values == null ? 0 : values.length;
+    return this.values == null ? 0 : this.values.length;
   }
 
   @Override
@@ -58,13 +58,13 @@ public class NameTypeValue implements Comparable<NameTypeValue>, Serializable {
     if (!(o instanceof NameTypeValue)) return false;
     NameTypeValue that = (NameTypeValue) o;
     return Objects.equals(getConstantName(), that.getConstantName()) &&
-      Arrays.equals(values, that.values);
+      Arrays.equals(this.values, that.values);
   }
 
   @Override
   public int hashCode() {
     int result = Objects.hash(getConstantName());
-    result = 31 * result + Arrays.hashCode(values);
+    result = 31 * result + Arrays.hashCode(this.values);
     return result;
   }
 

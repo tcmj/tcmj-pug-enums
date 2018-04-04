@@ -1,6 +1,19 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import com.sun.codemodel.*;
+import com.sun.codemodel.ClassType;
+import com.sun.codemodel.JBlock;
+import com.sun.codemodel.JClass;
+import com.sun.codemodel.JCodeModel;
+import com.sun.codemodel.JDefinedClass;
+import com.sun.codemodel.JEnumConstant;
+import com.sun.codemodel.JExpr;
+import com.sun.codemodel.JFieldVar;
+import com.sun.codemodel.JInvocation;
+import com.sun.codemodel.JMethod;
+import com.sun.codemodel.JMod;
+import com.sun.codemodel.JPackage;
+import com.sun.codemodel.JType;
+import com.sun.codemodel.JVar;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.model.ClassCreationException;
@@ -9,7 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.sun.codemodel.JExpr._this;
 import static com.tcmj.pug.enums.tools.CamelCase.toGetter;
@@ -222,8 +239,9 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
       //New enum value
       JEnumConstant enumField = this.jclass.enumConstant(constantName);
 
-      if (this.model.getFieldNames() != null) {
-        int size = this.model.getFieldNames().length;
+      final String[] locFieldNames = this.model.getFieldNames();
+      if (locFieldNames != null) {
+        int size = locFieldNames.length;
         for (int i = 0; i < size; i++) {
           String name = this.model.getFieldName(i);
           Class type = this.model.getFieldClass(i);

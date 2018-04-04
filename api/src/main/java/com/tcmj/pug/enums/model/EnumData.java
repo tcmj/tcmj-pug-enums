@@ -2,7 +2,12 @@ package com.tcmj.pug.enums.model;
 
 import com.tcmj.pug.enums.api.NamingStrategy;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 /** Model class which holds all data used to produce a java enum class. */
@@ -117,7 +122,7 @@ public class EnumData {
   }
 
   public String[] getFieldNames() {
-    return fieldNames;
+    return fieldNames == null ? null : Arrays.copyOf(fieldNames, fieldNames.length);
   }
 
   /** Get sub field name at given position with allready applied naming strategy. */
@@ -136,7 +141,7 @@ public class EnumData {
   }
 
   public Class[] getFieldClasses() {
-    return fieldClasses;
+    return fieldClasses == null ? null : Arrays.copyOf(fieldClasses, fieldClasses.length);
   }
 
   public Class<?> getFieldClass(int no) {
@@ -157,7 +162,7 @@ public class EnumData {
   }
 
   public void addCustomCode(String fieldName, String code) {
-    if (Stream.of(getFieldNames()).filter(s -> s.equals(fieldName)).count() != 1) {
+    if (Stream.of(this.fieldNames).filter(s -> s.equals(fieldName)).count() != 1) {
       throw new ClassCreationException(
           "Cannot add custom code to a non existing field: " + fieldName);
     }
