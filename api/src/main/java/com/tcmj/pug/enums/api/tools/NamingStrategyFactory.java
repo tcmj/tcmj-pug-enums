@@ -1,32 +1,18 @@
 package com.tcmj.pug.enums.api.tools;
 
 import com.tcmj.pug.enums.api.NamingStrategy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Provides several NamingStrategy objects which can be chained together.
- *
- * @todo NamingStrategyConversion of constantName from='Bolivia (Plurinational State of)'
- * to='Boliviaplurinationalstateof'
- * @todo NamingStrategyConversion of constantName from='Bonaire, Sint Eustatius and Saba'
- * to='Bonairesinteustatiusandsaba'
- * @todo NamingStrategyConversion of constantName from='Bosnia and Herzegovina'
- * to='Bosniaandherzegovina'
- * @todo bei .harmonize darf das Space nicht weggenommen werden! Nur so kann ein weiterer NS
- * eingereiht werden!
- * <p>
- * pugproductions - 2017-05-22 - tcmj.
  */
 public class NamingStrategyFactory {
 
-  private static final transient Logger LOG = LoggerFactory.getLogger(NamingStrategyFactory.class);
   private static final NamingStrategy NO_RENAMING = value -> value;
 
-  public static NamingStrategy getNoNamingStrategy() {
+  public static NamingStrategy nothing() {
     return NO_RENAMING;
   }
 
@@ -136,29 +122,28 @@ public class NamingStrategyFactory {
         return null;
       }
       StringBuilder buffer = new StringBuilder();
-      Pattern pattern = Pattern.compile("(.*?)(\\bSMALL|CAPITAL)( LETTER )([A-Z]{1})(.*)");
+      Pattern pattern = Pattern.compile("(.*?)(\\bSMALL|CAPITAL)( LETTER )([A-Z])(.*)");
       for (int i = 0; i < value.length(); i++) {
         char current = value.charAt(i);
-        int codePoint = value.codePointAt(i);
         if (current < 32) {
-          LOG.debug("Removing control character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing control character
         } else if (current <= 47) {
-          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing special character
         } else if (current <= 57) {
-          LOG.trace("Leaving digit '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //" digit
           buffer.append(current);
         } else if (current <= 64) {
-          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing special character
         } else if (current <= 90) { //A-Z
           buffer.append(current);
         } else if (current <= 96) { //[\]^_`
-          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing special character
         } else if (current <= 122) { //a-z
           buffer.append(current);
         } else if (current <= 191) {
-          LOG.debug("Removing special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing special character
         } else if (current == 215 || current == 247 || current == 451 || current == 760) {
-          LOG.debug("Removing very special character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Removing very special character
         } else {
           String name = Character.getName(value.codePointAt(i));
           Matcher m = pattern.matcher(name);
@@ -172,9 +157,9 @@ public class NamingStrategyFactory {
               ourChar = letter.toLowerCase();
             }
             buffer.append(ourChar);
-            LOG.debug("Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), ourChar);
+            //"Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), ourChar);
           } else {
-            LOG.debug("Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+            //"Leaving special
             buffer.append(current);
           }
         }
@@ -189,8 +174,6 @@ public class NamingStrategyFactory {
    * <pre>Ö -> OE</pre>
    * <pre>ä -> ae</pre>
    * <pre>ß -> ss</pre>
-   *
-   * @return
    */
   public static NamingStrategy flattenGermanUmlauts() {
     return value -> {
@@ -253,10 +236,9 @@ public class NamingStrategyFactory {
         return null;
       }
       StringBuilder buffer = new StringBuilder();
-      Pattern pattern = Pattern.compile("(.*?)(\\bSMALL|CAPITAL)( LETTER )([A-Z]{1})(.*)");
+      Pattern pattern = Pattern.compile("(.*?)(\\bSMALL|CAPITAL)( LETTER )([A-Z])(.*)");
       for (int i = 0; i < value.length(); i++) {
         char current = value.charAt(i);
-        int codePoint = value.codePointAt(i);
         if (current >= 192) {
           String name = Character.getName(value.codePointAt(i));
           Matcher m = pattern.matcher(name);
@@ -270,13 +252,13 @@ public class NamingStrategyFactory {
               replacementChar = letter.toLowerCase();
             }
             buffer.append(replacementChar);
-            LOG.debug("Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), replacementChar);
+            //"Conversion of '{}'({}): {} to '{}'", current, codePoint, Character.getName(codePoint), replacementChar);
           } else {
-            LOG.debug("Leaving special '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+            //"Leaving special
             buffer.append(current);
           }
         } else {
-          LOG.debug("Leave of '{}'({}): {} ", current, codePoint, Character.getName(codePoint));
+          //"Leave of '{}'({}): {} ", current, codePoint, Character.getName(codePoint));
           buffer.append(current);
         }
       }
@@ -293,9 +275,8 @@ public class NamingStrategyFactory {
       StringBuilder buffer = new StringBuilder();
       for (int i = 0; i < value.length(); i++) {
         char current = value.charAt(i);
-        int codePoint = value.codePointAt(i);
         if (current == 32 || current == 45 || current == 46 || current == 95) {
-          LOG.debug("Leave character '{}'({}): {}", current, codePoint, Character.getName(codePoint));
+          //"Leave character
           buffer.append(current);
         } else if ((current >= 48 && current <= 57)
             || (current >= 65 && current <= 90)
@@ -326,18 +307,17 @@ public class NamingStrategyFactory {
         String inner = m.group(4);
 
         for (int i = 0; i <= m.groupCount(); i++) {
-          LOG.debug("{}='{}'", i, m.group(i));
+          //"{}='{}'", i, m.group(i));
         }
         buffer.append(inner);
         buffer.append(" ");
         buffer.append(pre);
         //
-        //                    LOG.debug("1='{}'",   b);
-        //                    LOG.debug("2='{}'", c);
-        //                    LOG.debug("2='{}'", c);
-        //                    LOG.debug("3='{}'   4='{}'    5='{}'", m.group(3), m.group(4), m.group(4));
+        //                     //"1='{}'",   b);
+        //                     //"2='{}'", c);
+        //                     //"2='{}'", c);
+        //                     //"3='{}'   4='{}'    5='{}'", m.group(3), m.group(4), m.group(4));
 
-        LOG.debug("=======");
         return buffer.toString();
       } else {
         return value;

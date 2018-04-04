@@ -21,9 +21,8 @@ public class WikipediaExample {
   public static void main(String[] args) {
     try {
       Fluent.builder()
-          .className("com.tcmj.iso3166.Countries")
           .dataProvider(getMyDataProvider())
-          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
+        .classBuilder(ClassBuilderFactory.getBestEnumBuilder().withName("com.tcmj.iso3166.Countries"))
           .useFixedFieldNames("alpha2", "alpha3", "numeric")
           .convertConstantNames(getNamingStrategyForConstantNames())
           .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())

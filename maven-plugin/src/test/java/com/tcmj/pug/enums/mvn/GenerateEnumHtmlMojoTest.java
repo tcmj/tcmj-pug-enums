@@ -8,9 +8,10 @@ import org.junit.Test;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -23,6 +24,8 @@ public class GenerateEnumHtmlMojoTest {
 
   @Rule
   public TestResources resources = new TestResources("src/test/resources/projects", "target/test-projects");
+
+  static final Path outputPath = Paths.get("target/generated-test-sources/project-to-test/com/tcmj/html/test");
 
   private GenerateEnumMojo getMojo(String projectDir) throws Exception {
     File pom = new File(this.resources.getBasedir(projectDir), "pom.xml");
@@ -99,6 +102,48 @@ public class GenerateEnumHtmlMojoTest {
     GenerateEnumMojo mojo = getMojo("html6");
     mojo.execute();
 
+  }
+
+  /**
+   * Per default the first row of a html table will be skipped. This test case
+   * must not skip the first row because there are no header/title and we want
+   * all data (including the first row). This 'first row' has the value 'BLACK'
+   * so we can test against it.
+   */
+  @Test
+  public void staticHtmlFileIncludingFirstRow() throws Exception {
+    assertThat("Html file is not available", Files.isRegularFile(new File(this.resources.getBasedir("html7"), "example.html").toPath()), is(true));
+
+    getMojo("html7").execute();
+
+    Path result = outputPath.resolve(Paths.get("ColorEnum7.java"));
+    assertThat("Result file hasn't been created!", Files.isRegularFile(result), is(true));
+    String content = String.join("", Files.readAllLines(result));
+
+    assertThat("Must contain BLACK", content, containsString("BLACK"));
+  }
+
+
+  /**
+   * Per default the first row of a html table will be skipped. This test case
+   * must not skip the first row because there are no header/title and we want
+   * all data (including the first row). This 'first row' has the value 'BLACK'
+   * so we can test against it.
+   */
+  @Test
+  public void staticHtmlFile8DeleteRows() throws Exception {
+    assertThat("Html file is not available", Files.isRegularFile(new File(this.resources.getBasedir("html8"), "example.html").toPath()), is(true));
+
+    getMojo("html8").execute();
+
+    Path result = outputPath.resolve(Paths.get("Revenues8.java"));
+    assertThat("Result file hasn't been created!", Files.isRegularFile(result), is(true));
+    String content = String.join("", Files.readAllLines(result));
+
+    assertThat("1", content, not(containsString("WE_DONT_WANT_THIS_PRODUCT")));
+    assertThat("2", content, not(containsString("NAME")));
+    assertThat("3", content, not(containsString("SUM")));
+    assertThat("4", content, containsString("PRODUCT_A"));
   }
 
 }

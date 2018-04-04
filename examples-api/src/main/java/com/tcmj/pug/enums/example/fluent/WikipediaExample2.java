@@ -3,8 +3,8 @@ package com.tcmj.pug.enums.example.fluent;
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.NamingStrategy;
 import com.tcmj.pug.enums.api.fluent.Fluent;
-import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.api.tools.NamingStrategyFactory;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.builder.SourceFormatterFactory;
 import com.tcmj.pug.enums.datasources.impl.URLHtmlDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
@@ -19,14 +19,12 @@ public class WikipediaExample2 {
   public static void main(String[] args) {
     try {
       Fluent.builder()
-          .className("com.tcmj.test.MTI")
           .dataProvider(getMyDataProvider())
-          .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
+        .classBuilder(ClassBuilderFactory.getBestEnumBuilder().withName("com.tcmj.test.MTI"))
           .convertConstantNames(getMyNamingStrategy())
           .sourceFormatter(SourceFormatterFactory.getBestSourceCodeFormatter())
           .enumExporter(EnumExporterFactory.getReportingEnumExporter(ReportingEnumExporter.LogLevel.SYSTEM_OUT))
           .build();
-
     } catch (Exception e) {
       LOG.error("Exception!", e);
     }

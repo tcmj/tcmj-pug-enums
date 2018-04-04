@@ -1,11 +1,10 @@
 package com.tcmj.pug.enums.tools;
 
+import java.util.Objects;
+
 /**
  * Converts strings to camel case conform strings and also java properties to setter or getter
  * methods.
- *
- * @author Thomas Deutsch
- * @version $Revision: $
  */
 public class CamelCase {
 
@@ -31,7 +30,7 @@ public class CamelCase {
    * @return capitalised String, {@code null} if null String input
    */
   public static CharSequence toCamelCase(CharSequence input) {
-    if ("".equals(input) || input == null) {
+    if (input == null || "".contentEquals(input)) {
       return input;
     }
     StringBuilder sb = new StringBuilder();
@@ -48,7 +47,7 @@ public class CamelCase {
         continue;
       }
 
-      if (c.toUpperCase().equals(c)) {
+      if (Objects.equals(c.toUpperCase(), c)) {
         if (lastDecapitalized && !lastCapital) {
           capitalize = true;
         }

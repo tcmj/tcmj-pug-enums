@@ -4,9 +4,9 @@ import com.tcmj.pug.enums.api.EnumExporter;
 import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.api.fluent.Fluent;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
+import com.tcmj.pug.enums.example.provider.ContinentDataProvider;
 import com.tcmj.pug.enums.exporter.EnumExporterFactory;
 import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
-import com.tcmj.pug.enums.example.provider.ContinentDataProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,6 @@ public class FluentStaticDataExample {
 
       /* Main call */
       Fluent.builder()
-          .className("com.tcmj.iso.world.Continent")
           .dataProvider(new ContinentDataProvider())
           .classBuilder(ClassBuilderFactory.getBestEnumBuilder())
           .sourceFormatter(sourceFormatter)

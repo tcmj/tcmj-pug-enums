@@ -20,8 +20,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * DataProvider which loads a given URL, applies a css select expression to obtain a html table and parse
@@ -32,13 +38,24 @@ import java.util.stream.IntStream;
  */
 public class URLHtmlDataProvider implements DataProvider {
   private static final transient Logger LOG = LoggerFactory.getLogger(URLHtmlDataProvider.class);
-  EnumData model = new EnumData();
-  final String url;
-  final int columnPosConstant;
-  final int[] columnPos;
-  final String cssSelector;
+  private final String url;
+  private final int columnPosConstant;
+  private final int[] columnPos;
+  private final String cssSelector;
+  private EnumData model = new EnumData();
+  private List<Integer> rowNumbersToSkip;
+  private List<String> enumValueNamesToSkip;
 
-  public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
+  /**
+   * Constructs a dataprovider from html.
+   *
+   * @param url               can be a online http url or also a file url
+   * @param tableSelector     use a css selector to locate your data
+   * @param columnPosConstant column no of the main enum values
+   * @param columnPos         additional columns which goes into subfields
+   * @param skipFirstRow      usually the first row contains labels and you want to skip it
+   */
+  public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos, boolean skipFirstRow) {
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
     if (tableSelector == null) {
       LOG.debug("No CSS selection set! Defaulting to the first '<table>' found!");
@@ -46,8 +63,25 @@ public class URLHtmlDataProvider implements DataProvider {
     } else {
       this.cssSelector = tableSelector;
     }
-    this.columnPosConstant = Objects.requireNonNull(columnPosConstant, "Column pos constant cannot be null!");
-    this.columnPos = columnPos; //column indexes to take
+    this.columnPosConstant = columnPosConstant;
+    this.columnPos = columnPos == null ? null : Arrays.copyOf(columnPos, columnPos.length);
+    if (skipFirstRow) {
+      List<String> lst = new ArrayList<>();
+      lst.add("#1");
+      setValuesToSkip(lst);
+    }
+  }
+
+  /**
+   * Constructs a dataprovider from html.
+   * Please note that the first row will be treated as labels and so be skipped.
+   * @param url can be a online http url or also a file url
+   * @param tableSelector use a css selector to locate your data
+   * @param columnPosConstant column no of the main enum values
+   * @param columnPos additional columns which goes into subfields
+   */
+  public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
+    this(url, tableSelector, columnPosConstant, columnPos, true);
   }
 
   /** Parse a html document either from a http url or a file. */
@@ -81,7 +115,7 @@ public class URLHtmlDataProvider implements DataProvider {
     return null;
   }
 
-  Element locateTable(Document doc) throws Exception {
+  private Element locateTable(Document doc) {
 
     Elements cssSelection = Objects.requireNonNull(doc, "No Document loaded!").select(this.cssSelector);
 
@@ -102,7 +136,7 @@ public class URLHtmlDataProvider implements DataProvider {
         try {
           table = table.parent();
         } catch (Exception e) {
-          throw new ClassCreationException("Cannot locate table by going upwards!");
+          throw new ClassCreationException("Cannot locate table by going upwards!", e);
         }
       }
     }
@@ -134,18 +168,25 @@ public class URLHtmlDataProvider implements DataProvider {
     return model;
   }
 
-  private void getRecordData(Element table) throws Exception {
+  private void getRecordData(Element table) {
     Elements trs = table.select("tr");
     int curPos = 0;
     for (Element tr : trs) {
       curPos++;
-      if (curPos == 1) {
-        LOG.debug("Skipping header record...");
+
+      if (rowNumbersToSkip != null && rowNumbersToSkip.contains(curPos)) {
+        LOG.info("Skipping row number {}", curPos);
+        continue;
+      }
+      Element tdConstant = tr.child(this.columnPosConstant - 1);
+      final String constantName = getValue(tdConstant);
+
+      if (enumValueNamesToSkip != null && enumValueNamesToSkip.stream()
+        .anyMatch(s -> StringUtils.equalsIgnoreCase(s, constantName))) {
+        LOG.info("Skipping row no {} with value '{}'", curPos, constantName);
         continue;
       }
 
-      Element tdConstant = tr.child(this.columnPosConstant - 1);
-      String constantName = getValue(tdConstant);
       LOG.trace("Record {} constant-column: '{}' using '{}'", curPos, tdConstant, constantName);
 
       if (StringUtils.isBlank(constantName)) {
@@ -177,7 +218,7 @@ public class URLHtmlDataProvider implements DataProvider {
    * @param element <th> Jsoup Element Object which can be contain everything (eg. links)
    * @return hopefully the value you want to extract.
    */
-  String getValue(Element element) throws Exception {
+  String getValue(Element element) {
     String value = null;
     //get all text nodes and take the first found
     Optional<TextNode> first = element.textNodes().stream().findFirst();
@@ -185,7 +226,7 @@ public class URLHtmlDataProvider implements DataProvider {
       String text = first.get().text();
       String alpha = text.replaceAll("[^a-zA-Z0-9]", "");
       boolean moreThanOneChars = StringUtils.trim(alpha).length() >= 1;
-      if(moreThanOneChars){
+      if (moreThanOneChars) {
         return text;
       }
     }
@@ -196,8 +237,8 @@ public class URLHtmlDataProvider implements DataProvider {
         for (Element child : element.children()) {
           String valueC = child.text();
           if (valueC != null
-              && valueC.length() > 0
-              && (value == null || value.length() < valueC.length())) {
+            && valueC.length() > 0
+            && (value == null || value.length() < valueC.length())) {
             value = valueC;
           }
         }
@@ -217,7 +258,7 @@ public class URLHtmlDataProvider implements DataProvider {
     return value;
   }
 
-  String[] getColumnNames(Element table) throws Exception {
+  String[] getColumnNames(Element table) {
     if (isNoSubFieldsDefined()) {
       return null;
     }
@@ -247,14 +288,34 @@ public class URLHtmlDataProvider implements DataProvider {
     return IntStream.of(array).filter(elem -> elem == value).findAny().isPresent();
   }
 
-  private Class[] getColumnClasses(String[] fields) throws Exception {
+  private Class[] getColumnClasses(String[] fields) {
     if (isNoSubFieldsDefined()) {
       return null;
     }
     List<Class> temp = new LinkedList<>();
-    for (String field : fields) {
-      temp.add(String.class);
-    }
+    Stream.of(fields).forEach((s) -> temp.add(String.class));
     return temp.toArray(new Class[0]);
+  }
+
+  public final void setValuesToSkip(List<String> valuesToSkip) {
+    if (valuesToSkip == null || valuesToSkip.isEmpty()) {
+      return;
+    }
+    List<Integer> lstRowNumbers = new ArrayList<>();
+    List<String> lstEnumValueNames = new ArrayList<>();
+    for (String value : valuesToSkip) {
+      if (StringUtils.startsWith(value, "#")) {
+        try {
+          Integer rowNo = Integer.parseInt(value.substring(1));
+          lstRowNumbers.add(rowNo);
+        } catch (Exception ex) {
+          LOG.error("Invalid rownumber specified to skip: '{}'! Write '#3' to skip row number 3!", value, ex);
+        }
+      } else {
+        lstEnumValueNames.add(value);
+      }
+    }
+    this.enumValueNamesToSkip = lstEnumValueNames;
+    this.rowNumbersToSkip = lstRowNumbers;
   }
 }

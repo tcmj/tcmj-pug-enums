@@ -57,4 +57,5 @@ public class JavaPoetEnumBuilderTest extends ParentClassBuilderTest {
         "constructor", result, containsString("TimeUnit(Long factor) { this.factor = factor; }"));
     assertThat("getter", result, containsString("public Long getFactor() { return this.factor; }"));
   }
+
 }

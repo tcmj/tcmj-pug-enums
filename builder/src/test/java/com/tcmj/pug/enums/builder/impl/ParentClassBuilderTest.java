@@ -1,14 +1,15 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import java.util.Date;
-import java.util.regex.Pattern;
 import com.tcmj.pug.enums.api.ClassBuilder;
 import com.tcmj.pug.enums.api.SourceFormatter;
+import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
-import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import org.junit.After;
 import org.junit.Test;
+
+import java.util.Date;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -214,4 +215,33 @@ public abstract class ParentClassBuilderTest {
     //        assertThat("enu", StringUtils.countMatches(result, "public enfum AnyName"), is(1));
 
   }
+
+  @Test
+  public void shouldHandleCustomStaticGetterMethod() {
+    result =
+      classBuilder
+        .withName("org.a.Currency")
+        .addField(
+          "EUR",
+          new String[]{"name", "exponent"},
+          new Class[]{String.class, Integer.class},
+          new Object[]{"Euro", 2})
+        .addField(
+          "USD",
+          new String[]{"name", "exponent"},
+          new Class[]{String.class, Integer.class},
+          new Object[]{"US Dollar", 2})
+        .addCustomStaticGetMethod(
+          "get",
+          String.class,
+          "value",
+          "return java.util.stream.Stream.of(values()).filter(code -> code.name.equalsIgnoreCase(value)).findFirst().get();",
+          "convert to amount")
+        .build();
+
+    assertThat(
+      result,
+      containsString("public static Currency get(String value) { return java.util.stream.Stream.of(values()).filter(code -> code.name.equalsIgnoreCase(value)).findFirst().get(); }"));
+  }
+
 }

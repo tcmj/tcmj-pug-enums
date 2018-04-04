@@ -55,6 +55,10 @@ public class ReportingEnumExporter implements EnumExporter {
     }
   }
 
+  public LogLevel getCurrentLogLevel() {
+    return currentLogLevel;
+  }
+
   private LogLevel currentLogLevel;
 
   public void setCurrentLogLevel(LogLevel currentLogLevel) {
@@ -87,7 +91,7 @@ public class ReportingEnumExporter implements EnumExporter {
     }
 
     //call to the chosen logging method:
-    currentLogLevel.getLogMethod().accept("{}", new Object[]{data.getResultFormatted()});
+    currentLogLevel.getLogMethod().accept("Start>>>\n{}\n<<<End", new Object[]{data.getResultFormatted()});
 
     return data; //if chaining is needed
   }

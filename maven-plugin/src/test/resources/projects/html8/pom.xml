@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tcmj.plugins.test</groupId>
+    <artifactId>pug-enum-maven-plugin-test08</artifactId>
+    <version>TEST</version>
+    <packaging>jar</packaging>
+
+    <description>
+        Html usage example where we want to skip specific rows
+        We can skip a row defining its row number. This can be done like so '#4'.
+        Or we can skip by defining the value directly.
+        There is also a third thing which always skips row 1 by default (see example 7)
+        Result can be found here: ..\target\generated-test-sources\project-to-test\com\tcmj\html
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>LATEST_VERSION</version>
+                <configuration>
+                    <className>com.tcmj.html.test.Revenues8</className>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <url>src/test/resources/projects/html8/example.html</url>
+                    <tableCssSelector>table</tableCssSelector>
+                    <constantColumn>1</constantColumn>
+                    <subDataColumns>
+                        <value>2</value>
+                    </subDataColumns>
+                    <subFieldNames>
+                        <value>amount</value>
+                    </subFieldNames>
+                    <valuesToSkip>
+                        <value>NamE</value>
+                        <value>#7</value>
+                        <value>Sum</value>
+                    </valuesToSkip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

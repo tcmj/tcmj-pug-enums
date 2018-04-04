@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.tcmj.pug</groupId>
         <artifactId>tcmj-pug-enums</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.1</version>
     </parent>
 
     <groupId>com.tcmj.pug</groupId>
@@ -14,12 +14,17 @@
     <name>tcmj-pug-enum-api</name>
     <description>
         Contains the API of the tcmj pug enum project with all interfaces and model classes.
+        +---------------------+
+        | DataProvider |
+        +---------------------+
+        | ClassBuilder |
+        +---------------------+
+        | SourceCodeFormatter |
+        +---------------------+
+        | EnumExporter |
+        +---------------------+
     </description>
     <dependencies>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

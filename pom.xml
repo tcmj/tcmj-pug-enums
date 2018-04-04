@@ -5,10 +5,17 @@
 
     <groupId>com.tcmj.pug</groupId>
     <artifactId>tcmj-pug-enums</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.1</version>
 
     <name>tcmj-pug-enums</name>
     <description>
+        _ __ _ _ __ _ ___ _ __ _ _ _ __ ___ ___
+        | '_ \| | | |/ _` | / _ \ '_ \| | | | '_ ` _ \/ __|
+        | |_) | |_| | (_| | | __/ | | | |_| | | | | | \__ \
+        | .__/ \__,_|\__, | \___|_| |_|\__,_|_| |_| |_|___/
+        | | __/ |
+        |_| |___/
+
         Toolkit to load data from different sources in order to create java enum classes.
         Contains all elements to create them on the fly.
         All modules were separated by an official API.
@@ -20,6 +27,8 @@
         a EnumExporter to write your enum to a file or compile it directly onto a classloader
         To further simplify this process you can use a Fluent builder pattern which directs you step by step
         And do not hesitate to make use of our maven plugin
+
+
     </description>
 
     <inceptionYear>2017</inceptionYear>
@@ -125,10 +134,23 @@
                 <version>1.8.0</version>
             </dependency>
             <dependency>
+                <!-- Optional dependency if you want codemodel as enum class builder.
+                     https://mvnrepository.com/artifact/com.sun.codemodel/codemodel   -->
+                <groupId>com.sun.codemodel</groupId>
+                <artifactId>codemodel</artifactId>
+                <version>2.6</version>
+            </dependency>
+            <dependency>
                 <!-- Optional dependency if you want to use url datasources -->
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>1.10.2</version>
+            </dependency>
+            <dependency>
+                <!-- Optional dependency if you want to use google as formatting framework -->
+                <groupId>com.google.googlejavaformat</groupId>
+                <artifactId>google-java-format</artifactId>
+                <version>1.3</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -158,7 +180,6 @@
         <module>datasources</module>
         <module>exporter</module>
         <module>maven-plugin</module>
-        
         <module>examples-api</module>
     </modules>
 </project>

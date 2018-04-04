@@ -13,7 +13,7 @@ public interface ClassBuilder {
 
   /** [Optional] Change constant names in the enum. */
   ClassBuilder convertConstantNames(NamingStrategy instance);
-  
+
   /** [Optional] Change variable/field names in the enum. */
   ClassBuilder convertFieldNames(NamingStrategy instance);
 
@@ -38,9 +38,9 @@ public interface ClassBuilder {
   /** [Conditional] Add a enum constant without any sub fields. */
   ClassBuilder addField(String constantName);
 
-  /** [Optional] Add a custom static getter method to your enum. */
-  ClassBuilder addCustomStaticGetterMethod(
-      String methodName, String paramType, String paramName, String code, String javaDoc);
+  /** [Optional] Add a custom static factory method which returns a specific instance of your enum. */
+  ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc);
 
   /** [Optional] Override one of the getter methods of your enum. */
   ClassBuilder overrideGetter(String fieldName, String code, String... javaDoc);
@@ -56,7 +56,7 @@ public interface ClassBuilder {
 
   /** Access to the values backing the object. */
   EnumData getModel();
-  
+
   /** [Optional] Import an EnumData object. */
   ClassBuilder importData(EnumData data);
 

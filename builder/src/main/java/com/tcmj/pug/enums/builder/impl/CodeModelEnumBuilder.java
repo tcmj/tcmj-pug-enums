@@ -1,12 +1,5 @@
 package com.tcmj.pug.enums.builder.impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import com.sun.codemodel.ClassType;
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -19,7 +12,6 @@ import com.sun.codemodel.JInvocation;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
 import com.sun.codemodel.JPackage;
-import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.sun.codemodel.writer.SingleStreamCodeWriter;
 import com.tcmj.pug.enums.api.ClassBuilder;
@@ -27,12 +19,20 @@ import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.NameTypeValue;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import static com.sun.codemodel.JExpr._this;
 import static com.tcmj.pug.enums.tools.CamelCase.toGetter;
 
 /**
- * EnumBuilder. Generator used to create the enum: com.sun.codemodel Sun codemodel, part of the
- * GlassFish project
+ * Implementation of a {@link com.tcmj.pug.enums.api.ClassBuilder}
+ * using {@link com.sun.codemodel} which is part of the GlassFish project.
  */
 public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
@@ -41,9 +41,6 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
 
   /** Modifier for enum fields. */
   private static final int PRIVATE_FINAL = JMod.PRIVATE + JMod.FINAL;
-
-  /** com.sun.codemodel: Package object. */
-  private JPackage jpackage;
 
   /** com.sun.codemodel: Class object. */
   private JDefinedClass jclass;
@@ -54,31 +51,13 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
   /** com.sun.codemodel: holds all fields of the enum. */
   private Map<String, JFieldVar> jfields = new HashMap<>();
 
-  /** holds all javadocs of the fields of the enum. */
-  Map<String, String> mapJavadocs = new HashMap<>();
+  /** Holds all javadocs of the fields of the enum. */
+  private Map<String, String> mapJavadocs = new HashMap<>();
 
-  /** holds custom code according to fields. Signatur,Code. */
-  Map<String, String> mapCustomCode = new HashMap<>();
-
-  Map<String, String> mapCustomCodeJavaDoc = new HashMap<>();
+  /** Holds all javadocs for custom code. */
+  private Map<String, String> mapCustomCodeJavaDoc = new HashMap<>();
 
   public CodeModelEnumBuilder() {
-  }
-
-  private CodeModelEnumBuilder(String className) {
-    this.model.setClassName(className);
-
-    try {
-      String pkgName = this.model.getPackageName();
-      if (pkgName == null) {
-        this.jclass = codeModel.rootPackage()._class(JMod.PUBLIC, className, ClassType.ENUM);
-      } else {
-        this.jpackage = codeModel._package(pkgName);
-        this.jclass = this.jpackage._enum(this.model.getClassNameSimple());
-      }
-    } catch (Exception e) {
-      throw new ClassCreationException(e);
-    }
   }
 
   @Override
@@ -91,8 +70,9 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
                 .rootPackage()
                 ._class(JMod.PUBLIC, this.model.getPackageName(), ClassType.ENUM);
       } else {
-        this.jpackage = codeModel._package(this.model.getPackageName());
-        this.jclass = this.jpackage._enum(this.model.getClassNameSimple());
+        /* com.sun.codemodel: Package object. */
+        JPackage jpackage = codeModel._package(this.model.getPackageName());
+        this.jclass = jpackage._enum(this.model.getClassNameSimple());
       }
     } catch (Exception e) {
       throw new ClassCreationException(e);
@@ -114,28 +94,16 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
     return this;
   }
 
-  public JDefinedClass getJClass() {
-    return this.jclass;
-  }
-
   @Override
-  public ClassBuilder addCustomStaticGetterMethod(
-      String methodName, String paramType, String paramName, String code, String javaDoc) {
+  public ClassBuilder addCustomStaticGetMethod(
+    String methodName, Class paramType, String paramName, String code, String javaDoc) {
     try {
       JMethod method = this.jclass.method(JMod.PUBLIC | JMod.STATIC, this.jclass, methodName);
-      try {
-        JType paramTypeType = JType.parse(this.codeModel, paramType); //void or primitive datatype
-        method.param(paramTypeType, paramName);
 
-      } catch (Exception e) {
-
-        method.param(Class.forName(paramType), paramName);
-      }
-
+      method.param(paramType, paramName);
       method.javadoc().add(javaDoc);
 
       JBlock block = method.body();
-
       block.add(f -> f.p(code).nl());
 
     } catch (Exception e) {
@@ -236,7 +204,7 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
     return StringUtils.join(result, LINE);
   }
 
-  private int getLengthOfHeadline(String myEnum) throws Exception {
+  private int getLengthOfHeadline(String myEnum) {
     int cutPos;
     if (this.model.getPackageName() != null) {
       cutPos = myEnum.indexOf("package");
@@ -262,11 +230,12 @@ public class CodeModelEnumBuilder extends AbstractClassBuilder {
       //New enum value
       JEnumConstant enumField = this.jclass.enumConstant(constantName);
 
-      if (this.model.getFieldNames() != null) {
-        int size = this.model.getFieldNames().length;
+      final String[] locFieldNames = this.model.getFieldNames();
+      if (locFieldNames != null) {
+        int size = locFieldNames.length;
         for (int i = 0; i < size; i++) {
           String name = this.model.getFieldName(i);
-          Class type = this.model.getFieldClasses()[i];
+          Class type = this.model.getFieldClass(i);
           Object value = entry.getValue()[i];
 
           //new enum constructor value

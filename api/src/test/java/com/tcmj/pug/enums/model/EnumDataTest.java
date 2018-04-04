@@ -38,19 +38,19 @@ public class EnumDataTest {
     EnumDataHelper.addConstantValue(cut, "RED", "#FF0000");
     assertThat(cut.isEnumWithSubfields(), is(true));
   }
-  
+
   @Test
   public void isEnumWithSubfieldsShouldReturnTrueHavingAConstantNameWithSubfieldRecordButNoFieldNames() {
     cut.getData().add(NameTypeValue.of("RED", new Object[]{"#FF0000"}));
     assertThat(cut.isEnumWithSubfields(), is(true));
   }
-  
+
   @Test
   public void isEnumWithSubfieldsShouldReturnTrueIfEmptyButAlreadyFieldNamesSet() {
     cut.setFieldNames("color");
     assertThat(cut.isEnumWithSubfields(), is(true));
   }
-  
+
   @Test
   public void getDataForEachInCaseOfNoSubfields() {
     //given
@@ -60,7 +60,7 @@ public class EnumDataTest {
     //when
     cut.getData().stream().map(NameTypeValue::getConstantName).forEach(a -> assertThat(a, CoreMatchers.anyOf(equalTo("BLUE"), equalTo("RED"), equalTo("GREEN"))));
   }
-  
+
   @Test
   public void testSetClassNameWithPackage() {
     //when
@@ -70,7 +70,7 @@ public class EnumDataTest {
     assertThat("getClassNameSimple", cut.getClassNameSimple(), equalTo("AnotherClass"));
     assertThat("getPackageName", cut.getPackageName(), equalTo("pa.ck.age"));
   }
-  
+
   @Test
   public void testSetClassNameWithoutPackage() {
     //when
@@ -80,5 +80,36 @@ public class EnumDataTest {
     assertThat("getClassNameSimple", cut.getClassNameSimple(), equalTo("ClassOnly"));
     assertThat("getPackageName", cut.getPackageName(), nullValue());
   }
-  
+
+  @Test
+  public void getFieldClass() {
+    //given
+    cut.setFieldClasses(String.class, Integer.class, Boolean.class);
+    assertThat("1", cut.getFieldClass(0), equalTo(String.class));
+    assertThat("2", cut.getFieldClass(1), equalTo(Integer.class));
+    assertThat("3", cut.getFieldClass(2), equalTo(Boolean.class));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassShouldReturnExceptionWhenNothingSet1() {
+    cut.getFieldClass(-1);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassShouldReturnExceptionWhenNothingSet2() {
+    cut.getFieldClass(0);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassShouldReturnExceptionWhenNothingSet3() {
+    cut.getFieldClass(1);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void getFieldClassExceedsUpperBound() {
+    //when one is set
+    cut.setFieldClasses(String.class);
+    cut.getFieldClass(1);
+  }
+
 }

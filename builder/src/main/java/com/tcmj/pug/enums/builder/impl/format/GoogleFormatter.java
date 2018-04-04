@@ -9,12 +9,12 @@ import org.slf4j.LoggerFactory;
 /** Wrapper for the Google source code formatter. */
 public class GoogleFormatter implements SourceFormatter {
   private static final transient Logger LOG = LoggerFactory.getLogger(GoogleFormatter.class);
-  private static Formatter googleFormatter;
+  private static final Formatter googleFormatter = new Formatter();
+  ;
 
   @Override
   public String format(String rawSource) {
     try {
-      lazyInitialize();
       LOG.trace("SourceFormatter.format: {}", googleFormatter);
       String formattedSource = googleFormatter.formatSource(rawSource);
       formattedSource = StringUtils.replace(formattedSource, "\n\n", "\n");
@@ -23,15 +23,5 @@ public class GoogleFormatter implements SourceFormatter {
       LOG.error("Skipping Google Formatter!", e);
     }
     return rawSource;
-  }
-
-  private void lazyInitialize() {
-    if (googleFormatter == null) {
-      synchronized (GoogleFormatter.class) {
-        if (googleFormatter == null) {
-          googleFormatter = new Formatter();
-        }
-      }
-    }
   }
 }
