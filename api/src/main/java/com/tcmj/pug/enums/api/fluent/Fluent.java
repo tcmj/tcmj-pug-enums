@@ -1,6 +1,11 @@
 package com.tcmj.pug.enums.api.fluent;
 
-import com.tcmj.pug.enums.api.*;
+import com.tcmj.pug.enums.api.ClassBuilder;
+import com.tcmj.pug.enums.api.DataProvider;
+import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
+import com.tcmj.pug.enums.api.NamingStrategy;
+import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
 import org.slf4j.Logger;
@@ -11,7 +16,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.*;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camelStrict;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthesis;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.flattenGermanUmlauts;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.lowerCaseFirstLetter;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.minus2underline;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeDots;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.space2underline;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.upperCase;
 
 /**
  * Fluent API.
@@ -77,6 +92,9 @@ public class Fluent {
     return INSTANCE;
   }
 
+  /**
+   * Strategy how to convert the names of the fields (variables) - not the content!
+   */
   public Fluent convertFieldNames(NamingStrategy ns) {
     this.namingStrategyFieldNames = Objects.requireNonNull(ns, "NamingStrategy for field names may not be null!");
     return INSTANCE;
