@@ -9,24 +9,13 @@ import java.util.regex.Pattern;
 
 /**
  * Provides several NamingStrategy objects which can be chained together.
- *
- * @todo NamingStrategyConversion of constantName from='Bolivia (Plurinational State of)'
- * to='Boliviaplurinationalstateof'
- * @todo NamingStrategyConversion of constantName from='Bonaire, Sint Eustatius and Saba'
- * to='Bonairesinteustatiusandsaba'
- * @todo NamingStrategyConversion of constantName from='Bosnia and Herzegovina'
- * to='Bosniaandherzegovina'
- * @todo bei .harmonize darf das Space nicht weggenommen werden! Nur so kann ein weiterer NS
- * eingereiht werden!
- * <p>
- * pugproductions - 2017-05-22 - tcmj.
  */
 public class NamingStrategyFactory {
 
   private static final transient Logger LOG = LoggerFactory.getLogger(NamingStrategyFactory.class);
   private static final NamingStrategy NO_RENAMING = value -> value;
 
-  public static NamingStrategy getNoNamingStrategy() {
+  public static NamingStrategy nothing() {
     return NO_RENAMING;
   }
 
@@ -189,8 +178,6 @@ public class NamingStrategyFactory {
    * <pre>Ö -> OE</pre>
    * <pre>ä -> ae</pre>
    * <pre>ß -> ss</pre>
-   *
-   * @return
    */
   public static NamingStrategy flattenGermanUmlauts() {
     return value -> {
@@ -337,7 +324,6 @@ public class NamingStrategyFactory {
         //                    LOG.debug("2='{}'", c);
         //                    LOG.debug("3='{}'   4='{}'    5='{}'", m.group(3), m.group(4), m.group(4));
 
-        LOG.debug("=======");
         return buffer.toString();
       } else {
         return value;

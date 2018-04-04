@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CSVDataProviderTest {
 
   @Test
-  public void overallTestWithoutSubfields() throws Exception {
+  public void overallTestWithoutSubfields() {
     Reader reader = ReaderHelper.getResource(CSVDataProviderTest.class, "continents.csv");
     String fieldNameConstant = "nameUS";
     String[] fieldNames = null;
@@ -32,7 +32,7 @@ public class CSVDataProviderTest {
   }
 
   @Test
-  public void overallTestWithSubfields() throws Exception {
+  public void overallTestWithSubfields() {
     Reader reader = ReaderHelper.getResource(JsonDataProviderTest.class, "continents.csv");
     String fieldNameConstant = "nameUS";
     String[] fieldNames = new String[]{"areaKM2", "areaPct", "name"};
