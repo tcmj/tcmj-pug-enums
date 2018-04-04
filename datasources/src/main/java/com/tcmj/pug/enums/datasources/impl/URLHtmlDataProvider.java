@@ -298,7 +298,7 @@ public class URLHtmlDataProvider implements DataProvider {
     return temp.toArray(new Class[0]);
   }
 
-  public void setValuesToSkip(List<String> valuesToSkip) {
+  public final void setValuesToSkip(List<String> valuesToSkip) {
     if (valuesToSkip == null || valuesToSkip.isEmpty()) {
       return;
     }
