@@ -401,7 +401,7 @@ public class StringBufferEnumBuilder extends AbstractClassBuilder {
     String packageName = this.model.getPackageName();
     String pName = appendCharacterIfMissing(packageName, ";");
 
-    int found = insertIfNotAlreadyDone("[PACKAGE]", "package " + pName + LINE + LINE, true);
+    insertIfNotAlreadyDone("[PACKAGE]", "package " + pName + LINE + LINE, true);
   }
 
   @Override

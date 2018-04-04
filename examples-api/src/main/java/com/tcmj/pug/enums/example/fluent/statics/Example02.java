@@ -7,7 +7,7 @@ import com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter;
 import com.tcmj.pug.enums.model.EnumData;
 import com.tcmj.pug.enums.model.NameTypeValue;
 
-import static com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter.LogLevel.SYSTEM_OUT;
+import static com.tcmj.pug.enums.exporter.impl.ReportingEnumExporter.LogLevel.SYSTEM_ERR;
 
 /**
  * Fluent example with subfields using a anonymous static data provider.
@@ -56,7 +56,7 @@ public class Example02 {
       })
       .classBuilder(new StringBufferEnumBuilder().withName("org.my.data.Colors"))
       .classBuilder(ClassBuilderFactory.getEnumClassBuilder().withName("org.my.data.Colors"))
-      .enumExporter(new ReportingEnumExporter(SYSTEM_OUT))
+      .enumExporter(new ReportingEnumExporter(SYSTEM_ERR))
       .build();
 
   }

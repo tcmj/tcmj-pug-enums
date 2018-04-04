@@ -64,7 +64,6 @@ public class JavaSourceFileExporter implements EnumExporter {
         }
       } else {
         exportPathPrefix = this.baseDirectory;
-        exportPathPrefix = exportPathPrefix == null ? "." : exportPathPrefix;
       }
       LOG.debug("Exporting file={} to package-directories={}, using output-directory={}", fileName, directories, exportPathPrefix);
 
