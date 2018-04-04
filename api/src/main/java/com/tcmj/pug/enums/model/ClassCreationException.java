@@ -9,4 +9,8 @@ public class ClassCreationException extends RuntimeException {
   public ClassCreationException(String text) {
     super(text);
   }
+
+  public ClassCreationException(String msg, Exception exc) {
+    super(msg, exc);
+  }
 }

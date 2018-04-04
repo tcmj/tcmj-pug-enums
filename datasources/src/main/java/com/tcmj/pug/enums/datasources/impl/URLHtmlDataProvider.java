@@ -20,7 +20,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -41,6 +46,15 @@ public class URLHtmlDataProvider implements DataProvider {
   private List<Integer> rowNumbersToSkip;
   private List<String> enumValueNamesToSkip;
 
+  /**
+   * Constructs a dataprovider from html.
+   *
+   * @param url               can be a online http url or also a file url
+   * @param tableSelector     use a css selector to locate your data
+   * @param columnPosConstant column no of the main enum values
+   * @param columnPos         additional columns which goes into subfields
+   * @param skipFirstRow      usually the first row contains labels and you want to skip it
+   */
   public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos, boolean skipFirstRow) {
     this.url = Objects.requireNonNull(url, "URL cannot be null!");
     if (tableSelector == null) {
@@ -59,6 +73,14 @@ public class URLHtmlDataProvider implements DataProvider {
     }
   }
 
+  /**
+   * Constructs a dataprovider from html.
+   * Please note that the first row will be treated as labels and so be skipped.
+   * @param url can be a online http url or also a file url
+   * @param tableSelector use a css selector to locate your data
+   * @param columnPosConstant column no of the main enum values
+   * @param columnPos additional columns which goes into subfields
+   */
   public URLHtmlDataProvider(String url, String tableSelector, int columnPosConstant, int[] columnPos) {
     this(url, tableSelector, columnPosConstant, columnPos, true);
   }
@@ -115,7 +137,7 @@ public class URLHtmlDataProvider implements DataProvider {
         try {
           table = table.parent();
         } catch (Exception e) {
-          throw new ClassCreationException("Cannot locate table by going upwards!");
+          throw new ClassCreationException("Cannot locate table by going upwards!", e);
         }
       }
     }
@@ -205,7 +227,7 @@ public class URLHtmlDataProvider implements DataProvider {
       String text = first.get().text();
       String alpha = text.replaceAll("[^a-zA-Z0-9]", "");
       boolean moreThanOneChars = StringUtils.trim(alpha).length() >= 1;
-      if(moreThanOneChars){
+      if (moreThanOneChars) {
         return text;
       }
     }
@@ -216,8 +238,8 @@ public class URLHtmlDataProvider implements DataProvider {
         for (Element child : element.children()) {
           String valueC = child.text();
           if (valueC != null
-              && valueC.length() > 0
-              && (value == null || value.length() < valueC.length())) {
+            && valueC.length() > 0
+            && (value == null || value.length() < valueC.length())) {
             value = valueC;
           }
         }
