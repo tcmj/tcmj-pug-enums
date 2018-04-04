@@ -15,7 +15,7 @@ public class MetaDataExtractor {
   public static String getPackageName(String source) {
     //todo use regex
     int idxPkg = Objects.requireNonNull(source, "source").indexOf("package");
-    int idxSemi = source.indexOf(";");
+    int idxSemi = source.indexOf(';');
     if (idxPkg >= 0) {
       boolean invalid = !source.substring(0, idxPkg).trim().equals("");
       if (idxSemi == -1 || idxPkg > idxSemi || invalid) {
@@ -42,7 +42,7 @@ public class MetaDataExtractor {
     if (idxPkg == -1) {
       throw new IllegalStateException("Cannot extract ClassName!");
     } else {
-      int idxSemi = source.indexOf("{");
+      int idxSemi = source.indexOf('{');
       return source.substring((idxPkg + 5), idxSemi).trim();
     }
   }
@@ -52,7 +52,7 @@ public class MetaDataExtractor {
     if (idxPkg == -1) {
       throw new IllegalStateException("Cannot extract ClassName!");
     } else {
-      int idxSemi = source.indexOf("{");
+      int idxSemi = source.indexOf('{');
       return source.substring((idxPkg + 7 + 5), idxSemi).trim();
     }
   }
