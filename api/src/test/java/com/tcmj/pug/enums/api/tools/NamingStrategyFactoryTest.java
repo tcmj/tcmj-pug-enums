@@ -2,12 +2,14 @@ package com.tcmj.pug.enums.api.tools;
 
 import org.junit.Test;
 
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.aToZandNumbersOnly;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camel;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.camelStrict;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.extractParenthesis;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.flattenGermanUmlauts;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.harmonize;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.lowerCase;
+import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeCommas;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeProhibitedSpecials;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.removeSpaces;
 import static com.tcmj.pug.enums.api.tools.NamingStrategyFactory.replaceAtoZ;
@@ -153,6 +155,19 @@ public class NamingStrategyFactoryTest {
     assertThat("3", camel().convert("Hallö meine großen lüneburger Ösen"), equalTo("HallöMeineGroßenLüneburgerÖsen"));
     assertThat("4", camel().convert("xxöxx xxÖxx xxäxx xxÄxx xxüxx xxÜxx"), equalTo("XxöxxXxÖxxXxäxxXxÄxxXxüxxXxÜxx"));
     assertThat("nullsafe", camel().convert(null), nullValue());
+  }
+
+  @Test
+  public void testRemoveCommas() {
+    assertThat("removeCommas()", removeCommas().convert("Dampf, Hans"), equalTo("Dampf Hans"));
+    assertThat("nullsafe", removeCommas().convert(null), nullValue());
+  }
+
+  @Test
+  public void testAToZandNumbersOnly() {
+    assertThat("aToZandNumbersOnly()", aToZandNumbersOnly().convert("H$e§l?lo%W)o/r(l!d"), equalTo("HelloWorld"));
+    assertThat("aToZandNumbersOnly()", aToZandNumbersOnly().convert("H$e§l?lo %W)o/r(l!d"), equalTo("Hello World"));
+    assertThat("nullsafe", aToZandNumbersOnly().convert(null), nullValue());
   }
 
 }
