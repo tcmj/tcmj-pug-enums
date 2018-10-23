@@ -74,5 +74,79 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>1.3.2-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>my-country-enum</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-enum</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <className>com.tcmj.Planets</className>
+                    <sourceDirectory>src/main/generated</sourceDirectory>
+                    <url>src/main/resources/example.html</url>
+                    <tableCssSelector>html>body>table</tableCssSelector>
+                    <constantColumn>2</constantColumn>
+                    <subDataColumns>
+                        <value>3</value>
+                        <value>4</value>
+                        <value>5</value>
+                    </subDataColumns>
+                    <subFieldNames>
+                        <value>Alpha2Code</value>
+                        <value>Alpha3-Code</value>
+                        <value>UN-Code</value>
+                    </subFieldNames>
+                    <namingStrategyConstants>
+                        <!--<value>removeProhibitedSpecials</value>-->
+                        <!-- name can be written in any case (upper/lower/strict) -->
+                        <value>space2underline</value>
+                        <value>upperCase</value>
+                        <value>minus2underline</value>
+                        <value>replaceAtoZ</value>
+                        <value>extractParenthesis</value>
+                        <value>removeCommas</value>
+                        <value>removeProhibitedSpecials</value>
+                    </namingStrategyConstants>
+                    <valuesToSkip>
+                        <value>B</value>
+                        <value>C</value>
+                        <value>D</value>
+                        <value>E</value>
+                        <value>F</value>
+                        <value>G</value>
+                        <value>H</value>
+                        <value>I</value>
+                        <value>J</value>
+                        <value>K</value>
+                        <value>L</value>
+                        <value>M</value>
+                        <value>N</value>
+                        <value>O</value>
+                        <value>P</value>
+                        <value>Q</value>
+                        <value>R</value>
+                        <value>S</value>
+                        <value>T</value>
+                        <value>U</value>
+                        <value>V</value>
+                        <value>W</value>
+                        <value>Y-Z</value>
+                    </valuesToSkip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
 
