@@ -14,17 +14,21 @@
         -writing the enum as a java source file to a specific directory
         -note that we want no subfields, just the plain constants
     </description>
-    
+
     <build>
         <plugins>
             <plugin>
                 <groupId>com.tcmj.plugins</groupId>
                 <artifactId>pug-enum-maven-plugin</artifactId>
-                <version>LATEST_VERSION</version>
+                <version>1.3.2-SNAPSHOT</version>
                 <configuration>
                     <className>com.tcmj.html.test.MyCountriesEnum1</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
-                    <url>http://www.nationsonline.org/oneworld/country_code_list.htm</url>
+                    <!--Live URL can be:
+                      <url>http://www.nationsonline.org/oneworld/country_code_list.htm</url>
+                    -->
+                    <url>src/test/resources/projects/html1/copyoflive.html</url>
+
                     <tableCssSelector>table#codelist</tableCssSelector>
                     <constantColumn>2</constantColumn>
                 </configuration>

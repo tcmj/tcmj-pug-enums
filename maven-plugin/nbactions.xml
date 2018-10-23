@@ -4,7 +4,7 @@
             <actionName>CUSTOM-generate_enum</actionName>
             <displayName>generate_enum</displayName>
             <goals>
-                <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.2.9.15:generate-enum</goal>
+                <goal>com.tcmj.plugins:pug-enum-maven-plugin:1.3.2:generate-enum</goal>
             </goals>
             <properties>
                 <com.tcmj.pug.enums.classname>com.tcmj.html.ClassNameHtmlEnum</com.tcmj.pug.enums.classname>
