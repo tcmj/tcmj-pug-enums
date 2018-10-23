@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.tcmj.pug.enums.mvn.LogFormatter.arrange;
-import static com.tcmj.pug.enums.mvn.LogFormatter.encloseJavaDoc;
-import static com.tcmj.pug.enums.mvn.LogFormatter.getLine;
+import static com.tcmj.plugins.LogFormatter.arrange;
+import static com.tcmj.plugins.LogFormatter.encloseJavaDoc;
+import static com.tcmj.plugins.LogFormatter.getLine;
 
 /**
  * Main Mojo which extracts data from a URL and creates a java enum source file.
@@ -207,7 +207,9 @@ public class GenerateEnumMojo extends AbstractMojo {
 
 
   @Override
-  public void execute() throws MojoExecutionException {
+  public void execute() throws MojoExecutionException, MojoFailureException {
+    StaticLoggerBinder.getSingleton().setMavenLog(getLog());
+
     try {
       displayYoureWelcome();
 
