@@ -17,15 +17,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.ReaderFactory;
 import org.slf4j.impl.StaticLoggerBinder;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,13 +45,17 @@ import static com.tcmj.plugins.LogFormatter.getLine;
 
 /**
  * Main Mojo which extracts data from a URL and creates a java enum source file.
+ *
  * @since 2017
  */
-@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true, threadSafe = true)
+@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true, threadSafe = true, aggregator = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
   private String encoding;
+
+  @Component
+  private MavenProject project;
 
   /** Mandatory Property which data provider should be used. This class name should be created in the {@link #getDataProvider()} method. */
   @Parameter(property = "com.tcmj.pug.enums.dataprovider", defaultValue = "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")
@@ -58,6 +68,10 @@ public class GenerateEnumMojo extends AbstractMojo {
   /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to mavens 'project.build.sourceDirectory'. */
   @Parameter(property = "com.tcmj.pug.enums.sourcedirectory", defaultValue = "${project.build.sourceDirectory}", required = true)
   private File sourceDirectory;
+
+  /** Property which defines the path where the pom.xml is located. It defaults to mavens 'baseDir'. */
+  @Parameter(property = "com.tcmj.pug.enums.basedir", defaultValue = "${basedir}", required = true)
+  private File baseDirectory;
 
   /** Mandatory Property which defines the location (url) where to load the input data. */
   @Parameter(property = "com.tcmj.pug.enums.url", required = true)
@@ -177,7 +191,7 @@ public class GenerateEnumMojo extends AbstractMojo {
       throw new UnsupportedOperationException("NotYetImplemented ! Cannot change data provider class to: " + this.dataProvider);
     }
     URLHtmlDataProvider urlHtmlDataProvider = new URLHtmlDataProvider(
-      this.url,
+      getInputUrl(),
       this.tableCssSelector, //xpath to a record to further (also to a table possible)
       this.constantColumn, //enum constant column
       this.subDataColumns == null ? null : Stream.of(this.subDataColumns).mapToInt(i -> i).toArray(), //convert to int[]
@@ -231,7 +245,9 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       final EnumExporter myEnumExporter = Objects.requireNonNull(getEnumExporter(), "getEnumExporter() delivers a NULL EnumExporter object!");
 
-      final EnumData data = Objects.requireNonNull(myDataProvider.load(), "DataProvider.load() returns a NULL EnumData object!");
+      final EnumData data = Objects.requireNonNull(
+        myDataProvider.load(),
+        "DataProvider.load() returns a NULL EnumData object!");
       Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
       data.setClassName(className);
 
@@ -310,4 +326,68 @@ public class GenerateEnumMojo extends AbstractMojo {
     return sourceDirectory;
   }
 
+  public String getInputUrl() {
+    URI myURL = parseUrl(this.url, this.baseDirectory);
+    if (!StringUtils.equalsIgnoreCase(this.url, myURL.toString())) {
+      getLog().info("Using URL: " + myURL.toString());
+    }
+    return myURL.toString();
+  }
+
+  /**
+   * Validate the url from the configuration part of the pom.xml.
+   * Try to build up a URL object which represents the existing file or the http url
+   *
+   * @param urlToLoad string representation
+   */
+  private URI parseUrl(final String urlToLoad, final File baseDirectory) {
+    try {
+      if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
+        getLog().info("URL seems to be external: " + urlToLoad);
+        return URI.create(urlToLoad);
+      }
+
+      if (StringUtils.startsWith(urlToLoad, "file:")) {
+        getLog().info("Trying 'file:' protocol to load a html: " + urlToLoad);
+        URI baseURI = URI.create("file:/");
+        URI uri = URI.create(urlToLoad);
+        URI resultURI = baseURI.resolve(uri);
+        Path pathFile = Paths.get(resultURI);
+        if (Files.exists(pathFile)) {
+          getLog().info("Successfully found file: " + pathFile);
+          return resultURI;
+        }
+      }
+
+      //if still not found ... we try to use base-directory
+      if (this.baseDirectory != null) {
+        getLog().info(arrange("BaseDirectory: '" + this.baseDirectory));
+        URI mavenBaseDirUri = this.baseDirectory.toURI();
+        URI resultOfMavenBaseUri = mavenBaseDirUri.resolve(urlToLoad);
+        Path resultPath = Paths.get(resultOfMavenBaseUri);
+        if (Files.exists(resultPath)) {
+          getLog().info("Successfully found file in base directory: " + resultPath);
+          return resultPath.toUri();
+        }
+      }
+
+      if (this.project != null) {
+        getLog().info(arrange("MavenProject: " + this.project));
+        return this.project.getBasedir().toURI();
+      }
+
+      Path resultPath = Paths.get(urlToLoad);
+      if (Files.exists(resultPath)) {
+        getLog().info("Successfully found file in base directory: " + resultPath);
+        return resultPath.toAbsolutePath().toUri();
+      }
+
+      if (!StringUtils.startsWith(urlToLoad, "file:///")) {
+        return URI.create("file:///" + urlToLoad);
+      }
+      return URI.create(urlToLoad);
+    } catch (Exception e) {
+      throw new IllegalStateException("Error validating source url!", e);
+    }
+  }
 }

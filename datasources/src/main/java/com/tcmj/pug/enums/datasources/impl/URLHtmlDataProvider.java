@@ -84,35 +84,26 @@ public class URLHtmlDataProvider implements DataProvider {
     this(url, tableSelector, columnPosConstant, columnPos, true);
   }
 
+  private static Path tryToGetAbsolutePath(Path path) {
+    try {
+      return path.toAbsolutePath();
+    } catch (Exception e) {
+      return path;
+    }
+  }
+
   /** Parse a html document either from a http url or a file. */
   Document getDocument(String urlToLoad) throws IOException {
-
     if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
+      LOG.info("Connecting to... '{}'", urlToLoad);
       return Jsoup.connect(urlToLoad).get();
     }
-
-//    URL urls = new URL(new URL("file:"), urlToLoad);
-    if (StringUtils.startsWithAny(urlToLoad, "file:")) {
-
-      URI baseURI = URI.create("file:/");
-      URI uri = URI.create(urlToLoad);
-      URI resultURI = baseURI.resolve(uri);
-
-      Path path = Paths.get(resultURI);
-      try (InputStream inStream = Files.newInputStream(path)) {
-        String encoding = Charset.defaultCharset().name();
-        return Jsoup.parse(inStream, encoding, "");
-      }
+    Path path = Paths.get(URI.create(urlToLoad));
+    LOG.info("Loading... '{}'", tryToGetAbsolutePath(path));
+    try (InputStream inStream = Files.newInputStream(path)) {
+      String encoding = Charset.defaultCharset().name();
+      return Jsoup.parse(inStream, encoding, "");
     }
-
-    final Path patha = Paths.get(urlToLoad);
-    if (Files.isRegularFile(patha)) {
-      try (InputStream inStream = Files.newInputStream(patha)) {
-        String encoding = Charset.defaultCharset().name();
-        return Jsoup.parse(inStream, encoding, "");
-      }
-    }
-    return null;
   }
 
   private Element locateTable(Document doc) {
@@ -154,7 +145,6 @@ public class URLHtmlDataProvider implements DataProvider {
   @Override
   public EnumData load() {
     try {
-      LOG.debug("Connection URL: {}", this.url);
       Document doc = getDocument(this.url);
 
       Element table = locateTable(doc);
