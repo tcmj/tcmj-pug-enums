@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.tcmj.pug</groupId>
         <artifactId>tcmj-pug-enums</artifactId>
-        <version>1.3.2-SNAPSHOT</version>
+        <version>1.3.2</version>
     </parent>
     
     <groupId>com.tcmj.pug</groupId>

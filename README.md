@@ -47,9 +47,9 @@ Output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-Output-Result
 ---
 <br/><br/>
 
-# Current Release Version: `1.3.1`
-# Current Development Snapshot: `1.3.2-SNAPSHOT`
-# Next Release Version: `1.3.2` (not yet available)
+# Current Release Version: `1.3.2`
+# Current Development Snapshot: `1.3.3-SNAPSHOT`
+# Next Release Version: `1.3.3` (not yet available)
 
 Here you can grab the dependency configuration: https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
 
