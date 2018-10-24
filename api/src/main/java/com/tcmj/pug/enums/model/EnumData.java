@@ -164,7 +164,7 @@ public class EnumData {
     if (this.fieldClasses == null || this.fieldClasses.length == 0) {
       throw new IllegalStateException("No fieldClasses available! Therefore no value set on position " + no);
     }
-    if (no < 0 || no > this.fieldClasses.length) {
+    if (no < 0 || no >= this.fieldClasses.length) {
       throw new IllegalStateException("Index out of range! No fieldClasses value on position " + no);
     }
     return fieldClasses[no];
