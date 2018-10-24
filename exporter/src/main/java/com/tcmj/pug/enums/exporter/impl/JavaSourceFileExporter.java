@@ -6,6 +6,7 @@ import com.tcmj.pug.enums.exporter.tools.MetaDataExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ public class JavaSourceFileExporter implements EnumExporter {
   private static final Logger LOG = LoggerFactory.getLogger(JavaSourceFileExporter.class);
 
   public static final String OPTION_EXPORT_PATH_PREFIX = "com.tcmj.iso.exporter.JavaSourceFileExporter.path.prefix";
+  public static final String OPTION_EXPORT_ENCODING = "com.tcmj.iso.exporter.JavaSourceFileExporter.encoding";
 
   /** Directory to store the enum. Of course the package structure will also be built in this folder. */
   private String baseDirectory;
@@ -75,13 +77,28 @@ public class JavaSourceFileExporter implements EnumExporter {
 
       String finalContent = Objects.requireNonNull(enumResult.getResultFormatted(), "EnumResult.ResultFormatted");
 
-      Files.write(exportPath, finalContent.getBytes("UTF-8"));
+      Files.write(exportPath, finalContent.getBytes(getEncoding(enumResult)));
 
+      LOG.info("Finished! Your formatted Enum resists at: '{}'", exportPath.toAbsolutePath());
     } catch (Exception e) {
       LOG.error("Cannot write Enum '{}' to '{}'", fileName, directories, e);
       throw new JavaFileHasNotBeenCreatedException(e);
     }
     return enumResult;
+  }
+
+  private Charset getEncoding(EnumResult enumResult) {
+    Object someEncoding = enumResult.getOption(OPTION_EXPORT_ENCODING);
+    Charset charset;
+    try {
+      String charsetName = (String) someEncoding;
+      charset = Charset.forName(charsetName);
+      LOG.info("Using charset: '{}' to export our enum", charset);
+    } catch (Exception e) {
+      charset = Charset.defaultCharset();
+      LOG.error("Cannot determine output charset from {}! Fallback to the default charset: {}, ErrMsg={}", someEncoding, charset, e.getMessage());
+    }
+    return charset;
   }
 
   public static Map<String, Object> createExportPathOptions(String stringPath) {

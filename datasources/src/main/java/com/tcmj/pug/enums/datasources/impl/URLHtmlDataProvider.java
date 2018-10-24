@@ -2,13 +2,14 @@ package com.tcmj.pug.enums.datasources.impl;
 
 import com.tcmj.pug.enums.api.DataProvider;
 import com.tcmj.pug.enums.api.tools.EnumDataHelper;
+import com.tcmj.pug.enums.api.tools.Strings;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -84,35 +84,26 @@ public class URLHtmlDataProvider implements DataProvider {
     this(url, tableSelector, columnPosConstant, columnPos, true);
   }
 
+  private static Path tryToGetAbsolutePath(Path path) {
+    try {
+      return path.toAbsolutePath();
+    } catch (Exception e) {
+      return path;
+    }
+  }
+
   /** Parse a html document either from a http url or a file. */
   Document getDocument(String urlToLoad) throws IOException {
-
     if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
+      LOG.info("Connecting to... '{}'", urlToLoad);
       return Jsoup.connect(urlToLoad).get();
     }
-
-//    URL urls = new URL(new URL("file:"), urlToLoad);
-    if (StringUtils.startsWithAny(urlToLoad, "file:")) {
-
-      URI baseURI = URI.create("file:/");
-      URI uri = URI.create(urlToLoad);
-      URI resultURI = baseURI.resolve(uri);
-
-      Path path = Paths.get(resultURI);
-      try (InputStream inStream = Files.newInputStream(path)) {
-        String encoding = Charset.defaultCharset().name();
-        return Jsoup.parse(inStream, encoding, "");
-      }
+    Path path = Paths.get(URI.create(urlToLoad));
+    LOG.info("Loading... '{}'", tryToGetAbsolutePath(path));
+    try (InputStream inStream = Files.newInputStream(path)) {
+      String encoding = Charset.defaultCharset().name();
+      return Jsoup.parse(inStream, encoding, "");
     }
-
-    final Path patha = Paths.get(urlToLoad);
-    if (Files.isRegularFile(patha)) {
-      try (InputStream inStream = Files.newInputStream(patha)) {
-        String encoding = Charset.defaultCharset().name();
-        return Jsoup.parse(inStream, encoding, "");
-      }
-    }
-    return null;
   }
 
   private Element locateTable(Document doc) {
@@ -143,22 +134,31 @@ public class URLHtmlDataProvider implements DataProvider {
     return table;
   }
 
+  private boolean noSubFieldsDefined() {
+    return !subfieldsDefined();
+  }
+
+  private boolean subfieldsDefined() {
+    return this.columnPos != null && this.columnPos.length > 0;
+  }
+
   @Override
   public EnumData load() {
     try {
-      LOG.debug("Connection URL: {}", this.url);
       Document doc = getDocument(this.url);
 
       Element table = locateTable(doc);
+      String[] columnNames = getColumnNames(table);
 
-      if (this.columnPos != null) {
-        String[] columnNames = getColumnNames(table);
-        if (columnNames != null && columnNames.length != columnPos.length) {
-          throw new ClassCreationException(String.format("Amount of configured subfield columns (%d) does not match with header columns found (%d)!", columnPos.length, columnNames.length));
-        }
-        model.setFieldNames(columnNames);
-        model.setFieldClasses(getColumnClasses(columnNames));
+      if (columnNames != null && columnNames.length != columnPos.length) {
+        throw new ClassCreationException(String.format(
+          "Amount of configured subfield columns (%d) does not match with header columns found (%d)!",
+          columnPos.length, columnNames.length));
       }
+
+      model.setFieldNames(columnNames);
+      Class[] columnClasses = getColumnClasses(columnNames);
+      model.setFieldClasses(columnClasses);
 
       getRecordData(table);
 
@@ -219,77 +219,74 @@ public class URLHtmlDataProvider implements DataProvider {
    * @return hopefully the value you want to extract.
    */
   String getValue(Element element) {
-    String value = null;
-    //get all text nodes and take the first found
-    Optional<TextNode> first = element.textNodes().stream().findFirst();
-    if (first.isPresent()) {
-      String text = first.get().text();
-      String alpha = text.replaceAll("[^a-zA-Z0-9]", "");
-      boolean moreThanOneChars = StringUtils.trim(alpha).length() >= 1;
-      if (moreThanOneChars) {
-        return text;
-      }
-    }
-    if (element.hasText()) {
-      if (element.children().size() == 1) {
-        value = element.text();
-      } else {
-        for (Element child : element.children()) {
-          String valueC = child.text();
-          if (valueC != null
-            && valueC.length() > 0
-            && (value == null || value.length() < valueC.length())) {
-            value = valueC;
-          }
-        }
-      }
-    } else {
-      Elements link = element.select("a[href]");
-      value = link.text();
-    }
-    if (value == null) {
+    String value = Jsoup.clean(element.html(), Whitelist.none());
+    if (value == null || value.isEmpty()) {
       value = element.text();
     }
-    //replace special whitespaces eg. &nbsp
-    value = value.replace('\u00A0', ' ');
-    value = value.replace('\u2007', ' ');
-    value = value.replace('\u202F', ' ');
-
-    return value;
+    return Strings.replaceAllWhitespace(value);
   }
 
+  /**
+   * Try to parse the column names from the html table used for the subfields (if there are any).
+   * Usually from the `th-tags` but if there are none (we saw this in fancy floating column-name tables) - we
+   * have to work around this problem.
+   * Technically we need the same amount of columns as defined in {@link #columnPos}.
+   *
+   * @param table html table object
+   * @return string array containing table column names
+   */
   String[] getColumnNames(Element table) {
-    if (isNoSubFieldsDefined()) {
-      return null;
+    if (noSubFieldsDefined()) {
+      return null; //we can skip this if we have no subfields
     }
-
     List<String> temp = new LinkedList<>();
+
+    //try to do the job selecting all th columns
     Elements th = table.select("th");
-    int curPos = 0;
-    for (Element element : th) {
-      curPos++;
+    for (int curPos = 0; curPos < th.size(); curPos++) {
+      Element element = th.get(curPos);
       String name = getValue(element);
-      if (isColumnInArray(this.columnPos, curPos)) {
+      if (isColumnInArray(this.columnPos, curPos + 1)) {
         String normalized = StringUtils.lowerCase(name);
         normalized = StringUtils.replace(normalized, "-", "_");
         normalized = StringUtils.replace(normalized, " ", "_");
+        normalized = StringUtils.replace(normalized, "(", "_");
+        normalized = StringUtils.replace(normalized, "[", "_");
+        normalized = StringUtils.replace(normalized, ")", "_");
+        normalized = StringUtils.replace(normalized, "]", "_");
+        normalized = StringUtils.replaceAll(normalized, "__", "_");
+
+        normalized = normalized.replaceAll("[^a-zA-Z0-9_]", "");
+
+        //remove trailing underscores
+        if (normalized.charAt(normalized.length() - 1) == '_') {
+          normalized = normalized.substring(0, normalized.length() - 1);
+        }
+
         LOG.debug("Column Header {} found: '{}'='{}'", curPos, name, normalized);
         temp.add(normalized);
       }
     }
+
+    //fallback-case
+    if (temp.isEmpty()) {
+      //no column headers (th-tags) found! we have to do something else
+      int columnAmount = this.columnPos.length;
+      for (int i = 1; i <= columnAmount; i++) {
+        temp.add("column" + i);
+      }
+    }
+
     return temp.toArray(new String[0]);
   }
 
-  private boolean isNoSubFieldsDefined() {
-    return !(this.columnPos != null && this.columnPos.length > 0);
-  }
 
   static boolean isColumnInArray(int[] array, int value) {
     return IntStream.of(array).filter(elem -> elem == value).findAny().isPresent();
   }
 
   private Class[] getColumnClasses(String[] fields) {
-    if (isNoSubFieldsDefined()) {
+    if (noSubFieldsDefined() || fields == null) {
       return null;
     }
     List<Class> temp = new LinkedList<>();

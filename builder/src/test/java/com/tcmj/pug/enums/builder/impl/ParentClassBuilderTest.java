@@ -5,30 +5,27 @@ import com.tcmj.pug.enums.api.SourceFormatter;
 import com.tcmj.pug.enums.builder.ClassBuilderFactory;
 import com.tcmj.pug.enums.model.ClassCreationException;
 import com.tcmj.pug.enums.model.EnumData;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.After;
 import org.junit.Test;
 
 import java.util.Date;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 /**
  * Parent class for all EnumBuilder implementations. This tests should be proceed with all
  * implementations.
  */
 public abstract class ParentClassBuilderTest {
-  protected ClassBuilder classBuilder;
+  ClassBuilder classBuilder;
   private SourceFormatter formatter1 = rawSource -> rawSource.replace(",", ", ");
   private SourceFormatter formatter2 = ClassBuilderFactory.getNoLineBreaksSourceCodeFormatter();
-  protected SourceFormatter sourceFormatter = formatter1.and(formatter2);
-  protected String result;
+  SourceFormatter sourceFormatter = formatter1.and(formatter2);
+  String result;
 
   @After
-  public void after() throws Exception {
+  public void after() {
     if (result != null) {
       System.out.println(result);
       validateGeneralConstruction();
@@ -62,11 +59,11 @@ public abstract class ParentClassBuilderTest {
   @Test
   public void shouldCreateEnumWithSingleValueWithoutSubfields() {
     result = classBuilder.withName("org.Human").addField("MALE").addField("FEMALE").build();
-    assertThat(
+    MatcherAssert.assertThat(
         result,
-        anyOf(
-            containsString("public enum Human { MALE, FEMALE }"),
-            containsString("public enum Human { MALE, FEMALE; }")));
+      CoreMatchers.anyOf(
+        CoreMatchers.containsString("public enum Human { MALE, FEMALE }"),
+        CoreMatchers.containsString("public enum Human { MALE, FEMALE; }")));
   }
 
   /**
@@ -84,17 +81,17 @@ public abstract class ParentClassBuilderTest {
             .addField("GERMANY", new Object[]{"Deutschland", 200})
             .addField("FRANCE", new Object[]{"Frankreich", 300})
             .build();
-    assertThat("class", result, containsString("public enum Country {"));
-    assertThat("constants", result, containsString("GERMANY(\"Deutschland\", 200), FRANCE"));
-    assertThat(
-        "fields", result, containsString("private final String name; private final Integer size;"));
-    assertThat(
+    MatcherAssert.assertThat("class", result, CoreMatchers.containsString("public enum Country {"));
+    MatcherAssert.assertThat("constants", result, CoreMatchers.containsString("GERMANY(\"Deutschland\", 200), FRANCE"));
+    MatcherAssert.assertThat(
+      "fields", result, CoreMatchers.containsString("private final String name; private final Integer size;"));
+    MatcherAssert.assertThat(
         "constructor",
         result,
-        containsString(
+      CoreMatchers.containsString(
             "Country(String name, Integer size) { this.name = name; this.size = size; }"));
-    assertThat("getter.getSize", result, containsString("public Integer getSize() { "));
-    assertThat("getter.getName", result, containsString("public String getName() { "));
+    MatcherAssert.assertThat("getter.getSize", result, CoreMatchers.containsString("public Integer getSize() { "));
+    MatcherAssert.assertThat("getter.getName", result, CoreMatchers.containsString("public String getName() { "));
   }
 
   /**
@@ -105,7 +102,7 @@ public abstract class ParentClassBuilderTest {
   @Test
   public void shouldOverrideAGetterWithFixedValue() {
     result = createVersionSubfieldEnum().overrideGetter("version", "return \"5\";").build();
-    assertThat(result, containsString("public String getVersion() { return \"5\"; }"));
+    MatcherAssert.assertThat(result, CoreMatchers.containsString("public String getVersion() { return \"5\"; }"));
   }
 
   /**
@@ -119,9 +116,9 @@ public abstract class ParentClassBuilderTest {
         createVersionSubfieldEnum()
             .overrideGetter("version", "return this.version.toLowerCase();")
             .build();
-    assertThat(
+    MatcherAssert.assertThat(
         result,
-        containsString("public String getVersion() { return this.version.toLowerCase(); }"));
+      CoreMatchers.containsString("public String getVersion() { return this.version.toLowerCase(); }"));
   }
 
   /**
@@ -145,11 +142,11 @@ public abstract class ParentClassBuilderTest {
             .overrideGetter("two", "return String.valueOf(one);")
             .overrideGetter("one", "return this.one + 50;")
             .build();
-    assertThat("MUNICH", result, containsString("MUNICH(8000, \"Fleischpflanzerl\", new Date())"));
-    assertThat("BERLIN", result, containsString("BERLIN(2000, \"Frikadelle\", new Date())"));
-    assertThat("getOne", result, containsString("public int getOne() { return this.one + 50; }"));
-    assertThat(
-        "getTwo", result, containsString("public String getTwo() { return String.valueOf(one); }"));
+    MatcherAssert.assertThat("MUNICH", result, CoreMatchers.containsString("MUNICH(8000, \"Fleischpflanzerl\", new Date())"));
+    MatcherAssert.assertThat("BERLIN", result, CoreMatchers.containsString("BERLIN(2000, \"Frikadelle\", new Date())"));
+    MatcherAssert.assertThat("getOne", result, CoreMatchers.containsString("public int getOne() { return this.one + 50; }"));
+    MatcherAssert.assertThat(
+      "getTwo", result, CoreMatchers.containsString("public String getTwo() { return String.valueOf(one); }"));
   }
 
   /**
@@ -165,11 +162,11 @@ public abstract class ParentClassBuilderTest {
             .overrideGetter("version", "return StringUtils.reverse(this.version);")
             .addImport("org.apache.commons.lang3.StringUtils")
             .build();
-    assertThat(
+    MatcherAssert.assertThat(
         "overrideGetter",
         result,
-        containsString("public String getVersion() { return StringUtils.reverse(this.version); }"));
-    assertThat("import", result, containsString("import org.apache.commons.lang3.StringUtils;"));
+      CoreMatchers.containsString("public String getVersion() { return StringUtils.reverse(this.version); }"));
+    MatcherAssert.assertThat("import", result, CoreMatchers.containsString("import org.apache.commons.lang3.StringUtils;"));
   }
 
   @Test
@@ -178,38 +175,38 @@ public abstract class ParentClassBuilderTest {
 
     //        assertThat("enu", StringUtils.countMatches(result,"public enum AnyName"), is(1));
     final String regex = "/\\*(?:.|[\\n\\r])*?\\*/";
-    assertThat(
+    MatcherAssert.assertThat(
         "Cannot validdfdfdate: ClassJavaDoc",
         Pattern.compile(regex).matcher(result).find(),
-        is(true));
+      CoreMatchers.is(true));
 
     //Regex-Replace:
     //System.out.println(Pattern.compile(regex).matcher(result).replaceAll("xxxxx"));
 
     System.out.println(Pattern.compile(regex).matcher(result).replaceAll("xxxxx"));
 
-    assertThat(
-        "Cannot validate: ClassJavaDoc", Pattern.compile(regex).matcher(result).find(), is(true));
+    MatcherAssert.assertThat(
+      "Cannot validate: ClassJavaDoc", Pattern.compile(regex).matcher(result).find(), CoreMatchers.is(true));
 
-    assertThat("jDocStart", result, containsString("/**"));
-    assertThat(
+    MatcherAssert.assertThat("jDocStart", result, CoreMatchers.containsString("/**"));
+    MatcherAssert.assertThat(
         "jDoc",
         result,
-        anyOf(containsString("/** Hello World */"), containsString("/** * Hello World */")));
-    assertThat("jDocEnd", result, containsString("*/"));
+      CoreMatchers.anyOf(CoreMatchers.containsString("/** Hello World */"), CoreMatchers.containsString("/** * Hello World */")));
+    MatcherAssert.assertThat("jDocEnd", result, CoreMatchers.containsString("*/"));
   }
 
   private void validateGeneralConstruction() {
-    assertThat(
+    MatcherAssert.assertThat(
         "Cannot validate: Package",
         result.matches(String.format("^package %s;.*", classBuilder.getModel().getPackageName())),
-        is(true));
+      CoreMatchers.is(true));
 
     //        if(classBuilder.getModel().getJavaDocLines(EnumData.JDocKeys.CLASS.name())!=null){
     if (classBuilder.getModel().isJavaDoc(EnumData.JDocKeys.CLASS.name())) {
       final String regex = "/\\*(?:.|[\\n\\r])*?\\*/";
-      assertThat(
-          "Cannot validate: ClassJavaDoc", Pattern.compile(regex).matcher(result).find(), is(true));
+      MatcherAssert.assertThat(
+        "Cannot validate: ClassJavaDoc", Pattern.compile(regex).matcher(result).find(), CoreMatchers.is(true));
     }
 
     //        assertThat("enu", StringUtils.countMatches(result, "public enfum AnyName"), is(1));
@@ -239,9 +236,9 @@ public abstract class ParentClassBuilderTest {
           "convert to amount")
         .build();
 
-    assertThat(
+    MatcherAssert.assertThat(
       result,
-      containsString("public static Currency get(String value) { return java.util.stream.Stream.of(values()).filter(code -> code.name.equalsIgnoreCase(value)).findFirst().get(); }"));
+      CoreMatchers.containsString("public static Currency get(String value) { return java.util.stream.Stream.of(values()).filter(code -> code.name.equalsIgnoreCase(value)).findFirst().get(); }"));
   }
 
 }

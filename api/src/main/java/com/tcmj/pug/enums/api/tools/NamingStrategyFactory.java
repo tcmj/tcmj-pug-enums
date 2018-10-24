@@ -56,6 +56,13 @@ public class NamingStrategyFactory {
     return value -> value == null ? null : value.replace(".", "");
   }
 
+  public static NamingStrategy removeCommas() {
+    return value -> value == null ? null : value.replace(",", "");
+  }
+
+  public static NamingStrategy aToZandNumbersOnly() {
+    return value -> value == null ? null : value.replaceAll("[^a-zA-Z0-9 ]", "");
+  }
   /**
    * simple camel case meaning that the first character will always uppered and each character after
    * a space or a underline will be uppered. All other characters will be ignored

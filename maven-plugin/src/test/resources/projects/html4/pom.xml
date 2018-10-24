@@ -26,7 +26,7 @@
                 <configuration>
                     <className>com.tcmj.html.test.JavaCodesEnum</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
-                    <url>file:/D:/gitwork/workspace-tcmj-iso/tcmj-pug-enums/maven-plugin/target/test-projects/GenerateEnumHtmlMojoTest_staticHtmlFile_html4/javacodes.html</url>
+                    <url>src/test/resources/projects/html4/javacodes.html</url>
                     <tableCssSelector>table.scrollTable</tableCssSelector>
                     <constantColumn>2</constantColumn>
                     <subDataColumns>
