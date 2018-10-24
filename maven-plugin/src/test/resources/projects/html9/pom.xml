@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.tcmj.plugins.test</groupId>
+    <artifactId>pug-enum-maven-plugin-test09</artifactId>
+    <version>TEST</version>
+    <packaging>jar</packaging>
+
+    <description>
+        Html usage example which didn't work at a first try so i decided to put it to the examples.
+        We have some skippings to handle grouping. we could also skip rows by its number (like so '#4'.)
+        Result can be found here: ..\target\generated-test-sources\project-to-test\com\tcmj\html\test\AnotherCountriesEnumCase9
+        Further new things: use of new NamingStrategy 'removeCommas'
+    </description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.tcmj.plugins</groupId>
+                <artifactId>pug-enum-maven-plugin</artifactId>
+                <version>LATEST_VERSION</version>
+                <configuration>
+                    <className>com.tcmj.html.test.AnotherCountriesEnumCase9</className>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <url>src/test/resources/projects/html9/example.html</url>
+                    <tableCssSelector>table#CountryCode</tableCssSelector>
+                    <constantColumn>2</constantColumn>
+                    <subDataColumns>
+                        <value>3</value>
+                        <value>4</value>
+                        <value>5</value>
+                    </subDataColumns>
+                    <subFieldNames>
+                        <value>Alpha2Code</value>
+                        <value>Alpha3-Code</value>
+                        <value>UN-Code</value>
+                    </subFieldNames>
+                    <namingStrategyConstants>
+                        <!--<value>removeProhibitedSpecials</value>-->
+                        <!-- name can be written in any case (upper/lower/strict) -->
+                        <value>space2underline</value>
+                        <value>upperCase</value>
+                        <value>minus2underline</value>
+                        <value>replaceAtoZ</value>
+                        <value>extractParenthesis</value>
+                        <value>removeCommas</value>
+                        <value>removeProhibitedSpecials</value>
+                    </namingStrategyConstants>
+                    <valuesToSkip>
+                        <value>B</value>
+                        <value>C</value>
+                        <value>D</value>
+                        <value>E</value>
+                        <value>F</value>
+                        <value>G</value>
+                        <value>H</value>
+                        <value>I</value>
+                        <value>J</value>
+                        <value>K</value>
+                        <value>L</value>
+                        <value>M</value>
+                        <value>N</value>
+                        <value>O</value>
+                        <value>P</value>
+                        <value>Q</value>
+                        <value>R</value>
+                        <value>S</value>
+                        <value>T</value>
+                        <value>U</value>
+                        <value>V</value>
+                        <value>W</value>
+                        <value>Y-Z</value>
+                    </valuesToSkip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

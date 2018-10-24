@@ -9,3 +9,8 @@
 /examples-api/target/
 /maven-plugin/target/
 /maven-plugin/nbproject/
+**/target
+**/nbproject
+*.log
+*.jar
+*.iml
