@@ -46,19 +46,22 @@ import static com.tcmj.plugins.LogFormatter.getLine;
 /**
  * Extract data from a URL and create a java enum source file.
  *
+ * @author Thomas Deutsch (tcmj)
  * @since 2017
+ * @version 1.3 (2018)
  */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
+  /** Reference to the maven project. Used to add the additional source directory. */
   @Component
   private MavenProject project;
 
-  /** Mandatory Property which data provider should be used. This class name should be created in the {@link #getDataProvider()} method. */
+  /** Mandatory Property to define a data provider. Defaults to URLXPathHtmlDataProvider. Not allowed to be changed. */
   @Parameter(property = "com.tcmj.pug.enums.dataprovider", defaultValue = "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")
   private String dataProvider;
 
-  /** Mandatory Property which defines the full class name (including packages). It defaults to 'com.tcmj.generated.MyEnum'. */
+  /** Mandatory Property to define the full class name (including packages). It defaults to 'com.tcmj.generated.MyEnum'. */
   @Parameter(property = "com.tcmj.pug.enums.classname", defaultValue = "com.tcmj.generated.MyEnum", required = true)
   private String className;
 
@@ -115,6 +118,7 @@ public class GenerateEnumMojo extends AbstractMojo {
   private String[] valuesToSkip;
   private List<String> lstValuesToSkip = new ArrayList<>();
 
+  /** Result enum object. Mainly used to validate unit tests. */
   private EnumResult currentEnumResult;
 
   private static <T> boolean isParameterSet(T[] param) {
