@@ -51,9 +51,6 @@ import static com.tcmj.plugins.LogFormatter.getLine;
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
-  @Parameter(defaultValue = "${project.build.sourceEncoding}", readonly = true)
-  private String encoding;
-
   @Component
   private MavenProject project;
 
@@ -76,6 +73,10 @@ public class GenerateEnumMojo extends AbstractMojo {
   /** Mandatory Property which defines the location (url) where to load the input data. */
   @Parameter(property = "com.tcmj.pug.enums.url", required = true)
   private String url;
+
+  /** Optional Property to define a specific charset used to write the java enum source file. Defaults to '${project.build.sourceEncoding}'. */
+  @Parameter(defaultValue = "${project.build.sourceEncoding}", readonly = true)
+  private String encoding;
 
   /** Optional Property to override the column names used for the sub fields in the java enum class. */
   @Parameter(property = "com.tcmj.pug.enums.subfieldnames")
