@@ -65,9 +65,9 @@ public class GenerateEnumMojo extends AbstractMojo {
   @Parameter(property = "com.tcmj.pug.enums.classname", defaultValue = "com.tcmj.generated.MyEnum", required = true)
   private String className;
 
-  /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to mavens 'project.build.sourceDirectory'. */
-  @Parameter(property = "com.tcmj.pug.enums.sourcedirectory", defaultValue = "${project.build.sourceDirectory}", required = true)
-  private File sourceDirectory;
+  /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to '${project.build.directory}/generated-sources/pug-enums'. */
+  @Parameter(property = "com.tcmj.pug.enums.outputdirectory", defaultValue = "${project.build.directory}/generated-sources/pug-enums", required = true)
+  private File outputDirectory;
 
   /** Property which defines the path where the pom.xml is located. It defaults to mavens 'baseDir'. */
   @Parameter(property = "com.tcmj.pug.enums.basedir", defaultValue = "${basedir}", required = true)
@@ -139,7 +139,7 @@ public class GenerateEnumMojo extends AbstractMojo {
     getLog().info(arrange("Starting 'tcmj-pug-enum-maven-plugin' !"));
     getLog().info(getLine());
     getLog().info(arrange("ClassNameToBeCreated: " + this.className));
-    getLog().info(arrange("SourceOutputDirectory: '" + getSourceDirectory() + "', OutputEncoding: " + getEncoding()));
+    getLog().info(arrange("SourceOutputDirectory: '" + getOutputDirectory() + "', OutputEncoding: " + getEncoding()));
     getLog().info(arrange("FetchURL: " + this.url));
 
     if (isParameterSet(this.subFieldNames)) {
@@ -277,7 +277,7 @@ public class GenerateEnumMojo extends AbstractMojo {
       EnumResult eResult = EnumResult.of(data, mySourceFormatter, myEnum);
 
       //add option for JavaSourceFileExporter: as global option
-      eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, getSourceDirectory());
+      eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, getOutputDirectory());
       eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_ENCODING, getEncoding());
 
       myEnumExporter.export(eResult);
@@ -321,14 +321,13 @@ public class GenerateEnumMojo extends AbstractMojo {
   }
 
   /**
-   * Output path to save the generated enum java files.
-   * It defaults to mavens 'project.build.sourceDirectory'.
+   * Output path where to save the generated enum java files.
+   * It defaults to '${project.build.directory}/generated-sources/pug-enums'.
    * Mandatory Property.
-   *
    * @return a java file object pointing to the source output directory
    */
-  public File getSourceDirectory() {
-    return sourceDirectory;
+  public File getOutputDirectory() {
+    return outputDirectory;
   }
 
   public String getInputUrl() {

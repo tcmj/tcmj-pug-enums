@@ -23,7 +23,7 @@
                 <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.Revenues8</className>
-                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <outputDirectory>target/generated-test-sources/project-to-test</outputDirectory>
                     <url>src/test/resources/projects/html8/example.html</url>
                     <tableCssSelector>table</tableCssSelector>
                     <constantColumn>1</constantColumn>
