@@ -51,7 +51,7 @@ import static com.tcmj.plugins.LogFormatter.getLine;
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
-  @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
+  @Parameter(defaultValue = "${project.build.sourceEncoding}", readonly = true)
   private String encoding;
 
   @Component
