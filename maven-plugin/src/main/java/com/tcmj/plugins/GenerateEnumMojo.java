@@ -44,11 +44,11 @@ import static com.tcmj.plugins.LogFormatter.encloseJavaDoc;
 import static com.tcmj.plugins.LogFormatter.getLine;
 
 /**
- * Main Mojo which extracts data from a URL and creates a java enum source file.
+ * Extract data from a URL and create a java enum source file.
  *
  * @since 2017
  */
-@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true, threadSafe = true, aggregator = true)
+@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
