@@ -23,7 +23,7 @@
                 <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.MyCountriesEnum1</className>
-                    <outputDirectory>target/generated-test-sources/project-to-test</outputDirectory>
+                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
                     <!--Live URL can be:
                       <url>http://www.nationsonline.org/oneworld/country_code_list.htm</url>
                     -->

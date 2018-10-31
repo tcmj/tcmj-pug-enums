@@ -47,8 +47,8 @@ import static com.tcmj.plugins.LogFormatter.getLine;
  * Extract data from a URL and create a java enum source file.
  *
  * @author Thomas Deutsch (tcmj)
- * @since 2017
  * @version 1.3 (2018)
+ * @since 2017
  */
 @Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
@@ -68,6 +68,16 @@ public class GenerateEnumMojo extends AbstractMojo {
   /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to '${project.build.directory}/generated-sources/pug-enums'. */
   @Parameter(property = "com.tcmj.pug.enums.outputdirectory", defaultValue = "${project.build.directory}/generated-sources/pug-enums", required = true)
   private File outputDirectory;
+
+  /**
+   * Mandatory Property which defines the output path to save the generated enum java files. It defaults to '${project.build.sourceDirectory}'.
+   *
+   * @deprecated renamed to outputDirectory since version 1.3.4
+   */
+  @Deprecated
+  @Parameter(property = "com.tcmj.pug.enums.sourcedirectory")
+  private File sourceDirectory;
+
 
   /** Property which defines the path where the pom.xml is located. It defaults to mavens 'baseDir'. */
   @Parameter(property = "com.tcmj.pug.enums.basedir", defaultValue = "${basedir}", required = true)
@@ -324,9 +334,14 @@ public class GenerateEnumMojo extends AbstractMojo {
    * Output path where to save the generated enum java files.
    * It defaults to '${project.build.directory}/generated-sources/pug-enums'.
    * Mandatory Property.
+   *
    * @return a java file object pointing to the source output directory
    */
   public File getOutputDirectory() {
+    if (this.sourceDirectory != null) {
+      getLog().warn("Usage of parameter 'sourceDirectory' is deprecated! Please update your config to use 'outputDirectory'!");
+      return this.sourceDirectory;
+    }
     return outputDirectory;
   }
 
