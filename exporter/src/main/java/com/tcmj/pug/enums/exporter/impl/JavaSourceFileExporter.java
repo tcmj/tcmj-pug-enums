@@ -21,6 +21,7 @@ public class JavaSourceFileExporter implements EnumExporter {
 
   public static final String OPTION_EXPORT_PATH_PREFIX = "com.tcmj.iso.exporter.JavaSourceFileExporter.path.prefix";
   public static final String OPTION_EXPORT_ENCODING = "com.tcmj.iso.exporter.JavaSourceFileExporter.encoding";
+  public static final String OPTION_RESULT_PATH = "com.tcmj.iso.exporter.JavaSourceFileExporter.sourcefile";
 
   /** Directory to store the enum. Of course the package structure will also be built in this folder. */
   private String baseDirectory;
@@ -79,12 +80,22 @@ public class JavaSourceFileExporter implements EnumExporter {
 
       Files.write(exportPath, finalContent.getBytes(getEncoding(enumResult)));
 
-      LOG.info("Finished! Your formatted Enum resists at: '{}'", exportPath.toAbsolutePath());
+      Path existingFile = appendExistingFile(exportPath, enumResult);
+      LOG.info("Finished! Your formatted Enum resists at: '{}'", existingFile);
     } catch (Exception e) {
       LOG.error("Cannot write Enum '{}' to '{}'", fileName, directories, e);
       throw new JavaFileHasNotBeenCreatedException(e);
     }
     return enumResult;
+  }
+
+  private Path appendExistingFile(Path path, EnumResult enumResult) {
+    Path absolutePath = path.toAbsolutePath();
+    if (Files.isRegularFile(absolutePath)) {
+      enumResult.addOption(JavaSourceFileExporter.OPTION_RESULT_PATH, absolutePath);
+      return absolutePath;
+    }
+    return null;
   }
 
   private Charset getEncoding(EnumResult enumResult) {
@@ -93,7 +104,7 @@ public class JavaSourceFileExporter implements EnumExporter {
     try {
       String charsetName = (String) someEncoding;
       charset = Charset.forName(charsetName);
-      LOG.info("Using charset: '{}' to export our enum", charset);
+      LOG.debug("Using charset: '{}' to export our enum", charset);
     } catch (Exception e) {
       charset = Charset.defaultCharset();
       LOG.error("Cannot determine output charset from {}! Fallback to the default charset: {}, ErrMsg={}", someEncoding, charset, e.getMessage());

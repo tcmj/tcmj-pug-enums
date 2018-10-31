@@ -37,6 +37,10 @@ public class EnumResult {
     return options.get(key);
   }
 
+  public boolean optionExists(String key) {
+    return options.containsKey(key);
+  }
+
   public Object getOption(String key, Object value) {
     return options.getOrDefault(key, value);
   }

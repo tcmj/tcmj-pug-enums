@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -54,7 +53,7 @@ import static com.tcmj.plugins.LogFormatter.getLine;
 public class GenerateEnumMojo extends AbstractMojo {
 
   /** Reference to the maven project. Used to add the additional source directory. */
-  @Component
+  @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject project;
 
   /** Mandatory Property to define a data provider. Defaults to URLXPathHtmlDataProvider. Not allowed to be changed. */
@@ -281,12 +280,9 @@ public class GenerateEnumMojo extends AbstractMojo {
       }
 
       myClassBuilder.importData(data);
-
       String myEnum = myClassBuilder.build();
-
       EnumResult eResult = EnumResult.of(data, mySourceFormatter, myEnum);
 
-      //add option for JavaSourceFileExporter: as global option
       eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, getOutputDirectory());
       eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_ENCODING, getEncoding());
 
@@ -295,8 +291,14 @@ public class GenerateEnumMojo extends AbstractMojo {
       getLog().info(arrange(String.format("Enum successfully created with %s characters!", myEnum.length())));
 
       this.currentEnumResult = eResult;
+
+      if (this.project != null && eResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH)) {
+        this.project.addCompileSourceRoot(getOutputDirectory().getPath());
+        getLog().debug("Successfully added CompileSourceRoot: " + getOutputDirectory().getPath());
+      }
+
     } catch (Exception e) {
-      getLog().error("Cannot create your enum: " + className + "!", e);
+      getLog().error("Cannot create your enum: " + className, e);
       throw new MojoExecutionException("ExecutionFailure!", e);
     }
   }
