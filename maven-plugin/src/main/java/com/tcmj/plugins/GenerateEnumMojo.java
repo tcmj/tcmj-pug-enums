@@ -145,36 +145,37 @@ public class GenerateEnumMojo extends AbstractMojo {
 
   private void displayYoureWelcome() {
     getLog().info(getLine());
-    getLog().info(arrange("Starting 'tcmj-pug-enum-maven-plugin' !"));
+    getLog().info(arrange("Generating a new enum class: \t" + getClassName()));
     getLog().info(getLine());
-    getLog().info(arrange("ClassNameToBeCreated: " + this.className));
-    getLog().info(arrange("SourceOutputDirectory: '" + getOutputDirectory() + "', OutputEncoding: " + getEncoding()));
-    getLog().info(arrange("FetchURL: " + this.url));
+    getLog().info(arrange("Output-Directory   : " + getOutputDirectory() + ", OutputEncoding: " + getEncoding()));
+    getLog().info(arrange("Fetching from URL  : " + this.url));
 
     if (isParameterSet(this.subFieldNames)) {
-      getLog().info(arrange("SubFieldNames fixed to: " + Arrays.toString(this.subFieldNames)));
+      getLog().info(arrange("SubFieldNames      : fixed to " + Arrays.toString(this.subFieldNames)));
     } else {
-      getLog().info(arrange("SubFieldNames: <not defined, will be computed then>"));
+      getLog().info(arrange("SubFieldNames      : <not defined, will be computed>"));
     }
+
     if (isParameterSet(this.namingStrategyConstants)) {
-      getLog().info(arrange("NamingStrategy Constants: " + Arrays.toString(this.namingStrategyConstants)));
+      getLog().info(arrange("NamingStrategy Constants (custom)  : " + Arrays.toString(this.namingStrategyConstants)));
     } else {
-      getLog().info(arrange("NamingStrategy Constants: <default>"));
+      getLog().info(arrange("NamingStrategy Constants (default) : [minus2underline, flattenGermanUmlauts, space2underline, replaceAtoZ, removeProhibitedSpecials, removeDots, upperCase]"));
     }
+
     if (isParameterSet(this.namingStrategyFieldNames)) {
-      getLog().info(arrange("NamingStrategy FieldNames: " + Arrays.toString(this.namingStrategyFieldNames)));
+      getLog().info(arrange("NamingStrategy FieldNames (custom) : " + Arrays.toString(this.namingStrategyFieldNames)));
     } else {
-      getLog().info(arrange("NamingStrategy FieldNames: <default>"));
+      getLog().info(arrange("NamingStrategy FieldNames (default): [extractParenthesis, removeProhibitedSpecials, camelStrict, harmonize, lowerCaseFirstLetter]"));
     }
     if (isParameterSet(this.javadocClassLevel)) {
       Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
     } else {
       getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
     }
-    getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
-    getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
-    getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
-    getLog().info(arrange("KeepFirstRow: " + this.keepFirstRow));
+
+    getLog().info(arrange("CSS Locator used to locate the table: \t" + this.tableCssSelector));
+    getLog().info(arrange("Column position used for Enum Constants: \t" + this.constantColumn +
+      ", Keep-First-Row: \t" + this.keepFirstRow));
 
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
@@ -249,13 +250,13 @@ public class GenerateEnumMojo extends AbstractMojo {
       displayYoureWelcome();
 
       final DataProvider myDataProvider = Objects.requireNonNull(getDataProvider(), "getDataProvider() delivers a NULL DataProvider object!");
-      getLog().info(arrange("DataProvider: " + myDataProvider));
+      getLog().debug(arrange("DataProvider: " + myDataProvider));
 
       final ClassBuilder myClassBuilder = Objects.requireNonNull(getClassBuilder(), "getClassBuilder() delivers a NULL ClassBuilder object!");
-      getLog().info(arrange("ClassBuilder: " + myClassBuilder));
+      getLog().debug(arrange("ClassBuilder: " + myClassBuilder));
 
       final SourceFormatter mySourceFormatter = Objects.requireNonNull(getSourceFormatter(), "getSourceFormatter() delivers a NULL SourceFormatter object!");
-      getLog().info(arrange("SourceFormatter: " + mySourceFormatter));
+      getLog().debug(arrange("SourceFormatter: " + mySourceFormatter));
 
       final EnumExporter myEnumExporter = Objects.requireNonNull(getEnumExporter(), "getEnumExporter() delivers a NULL EnumExporter object!");
 
@@ -263,7 +264,7 @@ public class GenerateEnumMojo extends AbstractMojo {
         myDataProvider.load(),
         "DataProvider.load() returns a NULL EnumData object!");
       Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
-      data.setClassName(className);
+      data.setClassName(getClassName());
 
       if (isParameterSet(this.subFieldNames)) {
         //Overriding the field names usually fetched by the data provider implementation!
@@ -288,7 +289,7 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       myEnumExporter.export(eResult);
 
-      getLog().info(arrange(String.format("Enum successfully created with %s characters!", myEnum.length())));
+      getLog().info(String.format("Enum successfully created with %s characters!", myEnum.length()));
 
       this.currentEnumResult = eResult;
 
@@ -297,8 +298,9 @@ public class GenerateEnumMojo extends AbstractMojo {
         getLog().debug("Successfully added CompileSourceRoot: " + getOutputDirectory().getPath());
       }
 
+      getLog().info("");
     } catch (Exception e) {
-      getLog().error("Cannot create your enum: " + className, e);
+      getLog().error("Cannot create your enum: " + getClassName(), e);
       throw new MojoExecutionException("ExecutionFailure!", e);
     }
   }
@@ -364,18 +366,18 @@ public class GenerateEnumMojo extends AbstractMojo {
   private URI parseUrl(final String urlToLoad, final File baseDirectory) {
     try {
       if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
-        getLog().info("URL seems to be external: " + urlToLoad);
+        getLog().debug("URL seems to be external: " + urlToLoad);
         return URI.create(urlToLoad);
       }
 
       if (StringUtils.startsWith(urlToLoad, "file:")) {
-        getLog().info("Trying 'file:' protocol to load a html: " + urlToLoad);
+        getLog().debug("Trying 'file:' protocol to load a html: " + urlToLoad);
         URI baseURI = URI.create("file:/");
         URI uri = URI.create(urlToLoad);
         URI resultURI = baseURI.resolve(uri);
         Path pathFile = Paths.get(resultURI);
         if (Files.exists(pathFile)) {
-          getLog().info("Successfully found file: " + pathFile);
+          getLog().debug("Successfully found file: " + pathFile);
           return resultURI;
         }
       }
@@ -387,7 +389,7 @@ public class GenerateEnumMojo extends AbstractMojo {
         URI resultOfMavenBaseUri = mavenBaseDirUri.resolve(urlToLoad);
         Path resultPath = Paths.get(resultOfMavenBaseUri);
         if (Files.exists(resultPath)) {
-          getLog().info("Successfully found file in base directory: " + resultPath);
+          getLog().debug("Successfully found file in base directory: " + resultPath);
           return resultPath.toUri();
         }
       }
@@ -399,7 +401,7 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       Path resultPath = Paths.get(urlToLoad);
       if (Files.exists(resultPath)) {
-        getLog().info("Successfully found file in base directory: " + resultPath);
+        getLog().debug("Successfully found file in base directory: " + resultPath);
         return resultPath.toAbsolutePath().toUri();
       }
 
@@ -410,5 +412,9 @@ public class GenerateEnumMojo extends AbstractMojo {
     } catch (Exception e) {
       throw new IllegalStateException("Error validating source url!", e);
     }
+  }
+
+  public String getClassName() {
+    return this.className;
   }
 }
