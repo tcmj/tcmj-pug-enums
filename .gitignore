@@ -1,3 +1,4 @@
+*.class
 /api/target/
 /builder/target/
 /datasources/target/
