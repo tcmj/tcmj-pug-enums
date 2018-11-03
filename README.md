@@ -1,3 +1,5 @@
+
+
 # tcmj-pug-enums
 The tcmj pug enums project is a toolkit to create high quality java enum classes from several datasources like html pages or json data. 
 A highlight of the project is our maven plugin which allows you to create a java enum class simply by configuration.
@@ -47,11 +49,11 @@ Output: https://github.com/tcmj/tcmj-pug-enums/wiki/Example-Output-Result
 ---
 <br/><br/>
 
-# Current Release Version: `1.3.3`
-# Current Development Snapshot: `1.3.4-SNAPSHOT`
-# Next Release Version: `1.3.4` (not yet available)
+# Current Release Version: [ ![Download](https://api.bintray.com/packages/tcmj/tcmj-pug-enums/tcmj-pug-enums/images/download.svg) ](https://bintray.com/tcmj/tcmj-pug-enums/tcmj-pug-enums/_latestVersion)
 
-Here you can grab the dependency configuration: https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
+
+Here you can grab the dependency configuration:
+https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
 
 
 
