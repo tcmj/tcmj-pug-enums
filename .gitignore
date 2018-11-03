@@ -1,17 +1,20 @@
 *.class
-/api/target/
-/builder/target/
-/datasources/target/
-/exporter/target/
-/generator/target/
-/iso-maven-plugin/target/
-/api/nbproject/
-/api-examples/target/
-/examples-api/target/
-/maven-plugin/target/
-/maven-plugin/nbproject/
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IDE project files and build dirs
 **/target
 **/nbproject
-*.log
-*.jar
 *.iml
+
+# Logging Files
+*.log
