@@ -18,7 +18,7 @@ public class GenerateEnumMojoTestCase extends AbstractMojoTestCase {
     super.setUp();
   }
 
-  public void testNumber7() throws Exception {
+  public void testNumber7b() throws Exception {
 
     //our base-dir is relative to the projects folder
     String pomPath = "src\\test\\resources\\projects\\html7\\pom.xml";
@@ -45,15 +45,6 @@ public class GenerateEnumMojoTestCase extends AbstractMojoTestCase {
     GenerateEnumMojo mojo = (GenerateEnumMojo) lookupMojo("generate-enum", testPom);
 
     setVariableValueToObject(mojo, "className", "com.tcmj.html.test.ColorEnum70");
-
-    //setVariableValueToObject(mojo, "log", new SystemStreamLog());
-    //setVariableValueToObject(mojo, "projectArtifact", new ArtifactStub());
-    //setVariableValueToObject(mojo, "compilePath", Collections.EMPTY_LIST);
-    //setVariableValueToObject(mojo, "session", getMockMavenSession());
-    //setVariableValueToObject(mojo, "project", getMockMavenProject());
-    //setVariableValueToObject(mojo, "mojoExecution", getMockMojoExecution());
-    //setVariableValueToObject( mojo, "source", source );
-    //setVariableValueToObject( mojo, "target", target );
 
     return mojo;
   }
