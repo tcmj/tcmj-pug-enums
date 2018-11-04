@@ -5,15 +5,16 @@
     <parent>
         <groupId>com.tcmj.pug</groupId>
         <artifactId>tcmj-pug-enums</artifactId>
-        <version>1.3.3</version>
+        <version>1.3.4</version>
     </parent>
     
     <groupId>com.tcmj.pug</groupId>
     <artifactId>pug-enum-examples-api</artifactId>
 
-    <name>tcmj-pug-enum-examples-api</name>
+    <name>tcmj-pug-enum-examples</name>
     <description>
         Usage examples of the whole tcmj pug enum api.
+        And also a execution example of the maven plugin
     </description>
     <dependencies>
         <dependency>
@@ -74,14 +75,11 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
     <build>
         <plugins>
             <plugin>
                 <groupId>com.tcmj.plugins</groupId>
                 <artifactId>pug-enum-maven-plugin</artifactId>
-                <version>1.3.2-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>my-country-enum</id>
@@ -93,7 +91,7 @@
                 </executions>
                 <configuration>
                     <className>com.tcmj.Planets</className>
-                    <sourceDirectory>src/main/generated</sourceDirectory>
+                    <outputDirectory>src/main/generated</outputDirectory>
                     <url>src/main/resources/example.html</url>
                     <tableCssSelector>html>body>table</tableCssSelector>
                     <constantColumn>2</constantColumn>

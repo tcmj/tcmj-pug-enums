@@ -29,7 +29,7 @@
                 <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.JavaCodesEnum6</className>
-                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <outputDirectory>target/generated-test-sources/project-to-test</outputDirectory>
                     <url>src/test/resources/projects/html6/eu.html</url>
                     <tableCssSelector>table</tableCssSelector>
                     <constantColumn>1</constantColumn>

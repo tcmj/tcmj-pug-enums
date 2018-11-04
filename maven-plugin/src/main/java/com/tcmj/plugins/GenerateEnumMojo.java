@@ -17,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -44,30 +43,40 @@ import static com.tcmj.plugins.LogFormatter.encloseJavaDoc;
 import static com.tcmj.plugins.LogFormatter.getLine;
 
 /**
- * Main Mojo which extracts data from a URL and creates a java enum source file.
+ * Extract data from a URL and create a java enum source file.
  *
+ * @author Thomas Deutsch (tcmj)
+ * @version 1.3 (2018)
  * @since 2017
  */
-@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.PROCESS_RESOURCES, requiresProject = true, threadSafe = true, aggregator = true)
+@Mojo(name = "generate-enum", defaultPhase = LifecyclePhase.GENERATE_SOURCES, threadSafe = true)
 public class GenerateEnumMojo extends AbstractMojo {
 
-  @Parameter(defaultValue = "${project.build.sourceEncoding}", required = true, readonly = true)
-  private String encoding;
-
-  @Component
+  /** Reference to the maven project. Used to add the additional source directory. */
+  @Parameter(defaultValue = "${project}", readonly = true)
   private MavenProject project;
 
-  /** Mandatory Property which data provider should be used. This class name should be created in the {@link #getDataProvider()} method. */
+  /** Mandatory Property to define a data provider. Defaults to URLXPathHtmlDataProvider. Not allowed to be changed. */
   @Parameter(property = "com.tcmj.pug.enums.dataprovider", defaultValue = "com.tcmj.pug.enums.datasources.impl.URLXPathHtmlDataProvider")
   private String dataProvider;
 
-  /** Mandatory Property which defines the full class name (including packages). It defaults to 'com.tcmj.generated.MyEnum'. */
+  /** Mandatory Property to define the full class name (including packages). It defaults to 'com.tcmj.generated.MyEnum'. */
   @Parameter(property = "com.tcmj.pug.enums.classname", defaultValue = "com.tcmj.generated.MyEnum", required = true)
   private String className;
 
-  /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to mavens 'project.build.sourceDirectory'. */
-  @Parameter(property = "com.tcmj.pug.enums.sourcedirectory", defaultValue = "${project.build.sourceDirectory}", required = true)
+  /** Mandatory Property which defines the output path to save the generated enum java files. It defaults to '${project.build.directory}/generated-sources/pug-enums'. */
+  @Parameter(property = "com.tcmj.pug.enums.outputdirectory", defaultValue = "${project.build.directory}/generated-sources/pug-enums", required = true)
+  private File outputDirectory;
+
+  /**
+   * Mandatory Property which defines the output path to save the generated enum java files. It defaults to '${project.build.sourceDirectory}'.
+   *
+   * @deprecated renamed to outputDirectory since version 1.3.4
+   */
+  @Deprecated
+  @Parameter(property = "com.tcmj.pug.enums.sourcedirectory")
   private File sourceDirectory;
+
 
   /** Property which defines the path where the pom.xml is located. It defaults to mavens 'baseDir'. */
   @Parameter(property = "com.tcmj.pug.enums.basedir", defaultValue = "${basedir}", required = true)
@@ -76,6 +85,10 @@ public class GenerateEnumMojo extends AbstractMojo {
   /** Mandatory Property which defines the location (url) where to load the input data. */
   @Parameter(property = "com.tcmj.pug.enums.url", required = true)
   private String url;
+
+  /** Optional Property to define a specific charset used to write the java enum source file. Defaults to '${project.build.sourceEncoding}'. */
+  @Parameter(defaultValue = "${project.build.sourceEncoding}", readonly = true)
+  private String encoding;
 
   /** Optional Property to override the column names used for the sub fields in the java enum class. */
   @Parameter(property = "com.tcmj.pug.enums.subfieldnames")
@@ -114,6 +127,7 @@ public class GenerateEnumMojo extends AbstractMojo {
   private String[] valuesToSkip;
   private List<String> lstValuesToSkip = new ArrayList<>();
 
+  /** Result enum object. Mainly used to validate unit tests. */
   private EnumResult currentEnumResult;
 
   private static <T> boolean isParameterSet(T[] param) {
@@ -131,40 +145,40 @@ public class GenerateEnumMojo extends AbstractMojo {
 
   private void displayYoureWelcome() {
     getLog().info(getLine());
-    getLog().info(arrange("Starting 'tcmj-pug-enum-maven-plugin' !"));
+    getLog().info(arrange("Generating a new enum class: \t" + getClassName()));
     getLog().info(getLine());
-    getLog().info(arrange("ClassNameToBeCreated: " + this.className));
-    getLog().info(arrange("SourceOutputDirectory: '" + getSourceDirectory() + "', OutputEncoding: " + getEncoding()));
-    getLog().info(arrange("FetchURL: " + this.url));
+    getLog().info(arrange("Output-Directory   : " + getOutputDirectory() + ", OutputEncoding: " + getEncoding()));
+    getLog().info(arrange("Fetching from URL  : " + this.url));
+    getLog().info(arrange("CSS Locator used to locate the table: \t" + this.tableCssSelector));
 
-    if (isParameterSet(this.subFieldNames)) {
-      getLog().info(arrange("SubFieldNames fixed to: " + Arrays.toString(this.subFieldNames)));
-    } else {
-      getLog().info(arrange("SubFieldNames: <not defined, will be computed then>"));
-    }
     if (isParameterSet(this.namingStrategyConstants)) {
-      getLog().info(arrange("NamingStrategy Constants: " + Arrays.toString(this.namingStrategyConstants)));
+      getLog().info(arrange("NamingStrategy Constants (custom)  : " + Arrays.toString(this.namingStrategyConstants)));
     } else {
-      getLog().info(arrange("NamingStrategy Constants: <default>"));
+      getLog().info(arrange("NamingStrategy Constants (default) : [minus2underline, flattenGermanUmlauts, space2underline, replaceAtoZ, removeProhibitedSpecials, removeDots, upperCase]"));
     }
-    if (isParameterSet(this.namingStrategyFieldNames)) {
-      getLog().info(arrange("NamingStrategy FieldNames: " + Arrays.toString(this.namingStrategyFieldNames)));
-    } else {
-      getLog().info(arrange("NamingStrategy FieldNames: <default>"));
-    }
-    if (isParameterSet(this.javadocClassLevel)) {
-      Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
-    } else {
-      getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
-    }
-    getLog().info(arrange("Extracts EnumData from a table of a html document using a URLXPathHtmlDataProvider!"));
-    getLog().info(arrange("CSS Locator used to locate the table: " + this.tableCssSelector));
-    getLog().info(arrange("Constant column used in Enum: " + this.constantColumn));
-    getLog().info(arrange("KeepFirstRow: " + this.keepFirstRow));
 
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
+
+      if (isParameterSet(this.subFieldNames)) {
+        getLog().info(arrange("SubFieldNames      : fixed to " + Arrays.toString(this.subFieldNames)));
+      } else {
+        getLog().info(arrange("SubFieldNames      : <not defined, will be computed>"));
+      }
+
+      if (isParameterSet(this.namingStrategyFieldNames)) {
+        getLog().info(arrange("NamingStrategy FieldNames (custom) : " + Arrays.toString(this.namingStrategyFieldNames)));
+      } else {
+        getLog().info(arrange("NamingStrategy FieldNames (default): [extractParenthesis, removeProhibitedSpecials, camelStrict, harmonize, lowerCaseFirstLetter]"));
+      }
     }
+
+    getLog().info(arrange("Column position used for Enum Constants: \t" + this.constantColumn));
+
+    if (isParameterSet(this.javadocClassLevel)) {
+      Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
+    }
+
 
     if (this.keepFirstRow == Boolean.FALSE) {
       this.lstValuesToSkip.add("#1");
@@ -235,13 +249,13 @@ public class GenerateEnumMojo extends AbstractMojo {
       displayYoureWelcome();
 
       final DataProvider myDataProvider = Objects.requireNonNull(getDataProvider(), "getDataProvider() delivers a NULL DataProvider object!");
-      getLog().info(arrange("DataProvider: " + myDataProvider));
+      getLog().debug(arrange("DataProvider: " + myDataProvider));
 
       final ClassBuilder myClassBuilder = Objects.requireNonNull(getClassBuilder(), "getClassBuilder() delivers a NULL ClassBuilder object!");
-      getLog().info(arrange("ClassBuilder: " + myClassBuilder));
+      getLog().debug(arrange("ClassBuilder: " + myClassBuilder));
 
       final SourceFormatter mySourceFormatter = Objects.requireNonNull(getSourceFormatter(), "getSourceFormatter() delivers a NULL SourceFormatter object!");
-      getLog().info(arrange("SourceFormatter: " + mySourceFormatter));
+      getLog().debug(arrange("SourceFormatter: " + mySourceFormatter));
 
       final EnumExporter myEnumExporter = Objects.requireNonNull(getEnumExporter(), "getEnumExporter() delivers a NULL EnumExporter object!");
 
@@ -249,7 +263,7 @@ public class GenerateEnumMojo extends AbstractMojo {
         myDataProvider.load(),
         "DataProvider.load() returns a NULL EnumData object!");
       Objects.requireNonNull(data.getData(), "EnumData has no records loaded! It's empty!");
-      data.setClassName(className);
+      data.setClassName(getClassName());
 
       if (isParameterSet(this.subFieldNames)) {
         //Overriding the field names usually fetched by the data provider implementation!
@@ -266,22 +280,25 @@ public class GenerateEnumMojo extends AbstractMojo {
       }
 
       myClassBuilder.importData(data);
-
       String myEnum = myClassBuilder.build();
-
       EnumResult eResult = EnumResult.of(data, mySourceFormatter, myEnum);
 
-      //add option for JavaSourceFileExporter: as global option
-      eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, getSourceDirectory());
+      eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, getOutputDirectory());
       eResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_ENCODING, getEncoding());
 
       myEnumExporter.export(eResult);
 
-      getLog().info(arrange(String.format("Enum successfully created with %s characters!", myEnum.length())));
-
+      getLog().info("Finished: " + eResult.getOption(JavaSourceFileExporter.OPTION_RESULT_PATH));
       this.currentEnumResult = eResult;
+
+      if (this.project != null && eResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH)) {
+        this.project.addCompileSourceRoot(getOutputDirectory().getPath());
+        getLog().debug("Successfully added CompileSourceRoot: " + getOutputDirectory().getPath());
+      }
+
+      getLog().info("");
     } catch (Exception e) {
-      getLog().error("Cannot create your enum: " + className + "!", e);
+      getLog().error("Cannot create your enum: " + getClassName(), e);
       throw new MojoExecutionException("ExecutionFailure!", e);
     }
   }
@@ -316,14 +333,18 @@ public class GenerateEnumMojo extends AbstractMojo {
   }
 
   /**
-   * Output path to save the generated enum java files.
-   * It defaults to mavens 'project.build.sourceDirectory'.
+   * Output path where to save the generated enum java files.
+   * It defaults to '${project.build.directory}/generated-sources/pug-enums'.
    * Mandatory Property.
    *
    * @return a java file object pointing to the source output directory
    */
-  public File getSourceDirectory() {
-    return sourceDirectory;
+  public File getOutputDirectory() {
+    if (this.sourceDirectory != null) {
+      getLog().warn("Usage of parameter 'sourceDirectory' is deprecated! Please update your config to use 'outputDirectory'!");
+      return this.sourceDirectory;
+    }
+    return outputDirectory;
   }
 
   public String getInputUrl() {
@@ -343,18 +364,18 @@ public class GenerateEnumMojo extends AbstractMojo {
   private URI parseUrl(final String urlToLoad, final File baseDirectory) {
     try {
       if (StringUtils.startsWithAny(urlToLoad, "http:", "https:")) {
-        getLog().info("URL seems to be external: " + urlToLoad);
+        getLog().debug("URL seems to be external: " + urlToLoad);
         return URI.create(urlToLoad);
       }
 
       if (StringUtils.startsWith(urlToLoad, "file:")) {
-        getLog().info("Trying 'file:' protocol to load a html: " + urlToLoad);
+        getLog().debug("Trying 'file:' protocol to load a html: " + urlToLoad);
         URI baseURI = URI.create("file:/");
         URI uri = URI.create(urlToLoad);
         URI resultURI = baseURI.resolve(uri);
         Path pathFile = Paths.get(resultURI);
         if (Files.exists(pathFile)) {
-          getLog().info("Successfully found file: " + pathFile);
+          getLog().debug("Successfully found file: " + pathFile);
           return resultURI;
         }
       }
@@ -366,7 +387,7 @@ public class GenerateEnumMojo extends AbstractMojo {
         URI resultOfMavenBaseUri = mavenBaseDirUri.resolve(urlToLoad);
         Path resultPath = Paths.get(resultOfMavenBaseUri);
         if (Files.exists(resultPath)) {
-          getLog().info("Successfully found file in base directory: " + resultPath);
+          getLog().debug("Successfully found file in base directory: " + resultPath);
           return resultPath.toUri();
         }
       }
@@ -378,7 +399,7 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       Path resultPath = Paths.get(urlToLoad);
       if (Files.exists(resultPath)) {
-        getLog().info("Successfully found file in base directory: " + resultPath);
+        getLog().debug("Successfully found file in base directory: " + resultPath);
         return resultPath.toAbsolutePath().toUri();
       }
 
@@ -389,5 +410,9 @@ public class GenerateEnumMojo extends AbstractMojo {
     } catch (Exception e) {
       throw new IllegalStateException("Error validating source url!", e);
     }
+  }
+
+  public String getClassName() {
+    return this.className;
   }
 }

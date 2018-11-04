@@ -25,7 +25,7 @@
                 <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.StatesEnum</className>
-                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <outputDirectory>target/generated-test-sources/project-to-test</outputDirectory>
                     <url>https://en.wikipedia.org/wiki/States_of_Germany</url>
                     <tableCssSelector>table.sortable</tableCssSelector>
                     <constantColumn>3</constantColumn>

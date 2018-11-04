@@ -20,7 +20,7 @@
             <plugin>
                 <groupId>com.tcmj.plugins</groupId>
                 <artifactId>pug-enum-maven-plugin</artifactId>
-                <version>1.3.2-SNAPSHOT</version>
+                <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.MyCountriesEnum1</className>
                     <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>

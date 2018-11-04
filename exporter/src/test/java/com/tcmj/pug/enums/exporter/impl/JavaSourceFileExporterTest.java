@@ -1,5 +1,11 @@
 package com.tcmj.pug.enums.exporter.impl;
 
+import com.tcmj.pug.enums.api.EnumExporter;
+import com.tcmj.pug.enums.api.EnumResult;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -7,11 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import com.tcmj.pug.enums.api.EnumExporter;
-import com.tcmj.pug.enums.api.EnumResult;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,16 +62,17 @@ public class JavaSourceFileExporterTest {
   }
 
   @Test
-  public void shouldWorkUsingGlobalOptions() throws Exception {
+  public void shouldWorkUsingGlobalOptions() {
     EnumResult er = EnumResult.of(data.getExtendedEnum()).addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, testFiles.toString());
     JavaSourceFileExporter exporter = new JavaSourceFileExporter();
     exporter.export(er);
     Path exportPath = Paths.get(testFiles.toString(), "org/Animal.java");
     assertThat("File may not exist?", Files.exists(exportPath), is(Boolean.TRUE));
+    assertThat("AbsoluteExistingFileSet", er.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH), is(Boolean.TRUE));
   }
 
   @Test
-  public void testExportSuccessful() throws Exception {
+  public void testExportSuccessful() {
     //given is a String containing a valid java enum object
     String pckg = "com.tcmj.iso.exporter.impl";
     String name = "Writers";
@@ -87,6 +89,7 @@ public class JavaSourceFileExporterTest {
     Path exportPath = Paths.get(testFiles.toString(), fullPath);
 
     assertThat("Files may not exist?", Files.exists(exportPath), is(Boolean.TRUE));
+    assertThat("AbsoluteExistingFileSet", enumResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH), is(Boolean.TRUE));
   }
 
   @Test
@@ -97,6 +100,7 @@ public class JavaSourceFileExporterTest {
       new JavaSourceFileExporter().export(enumResult);
       //we expect exporting to working dir extracting file name and package-directories from the content:
       assertThat("Files may not exist?", Files.exists(Paths.get(".", "one/two/three/SimpleEnum.java")), is(Boolean.TRUE));
+      assertThat("AbsoluteExistingFileSet", enumResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH), is(Boolean.TRUE));
     } catch (Exception e) {
       fail("We don't want a Exception at this point: " + e.getMessage());
     } finally {
@@ -105,11 +109,10 @@ public class JavaSourceFileExporterTest {
   }
 
   @Test(expected = JavaSourceFileExporter.JavaFileHasNotBeenCreatedException.class)
-  public void testExportWithInvalidOptions() throws Exception {
+  public void testExportWithInvalidOptions() {
     EnumExporter exporter = new JavaSourceFileExporter();
     EnumResult enumResult = EnumResult.of(data.getSimpleEnum());
     enumResult.addOption(JavaSourceFileExporter.OPTION_EXPORT_PATH_PREFIX, "::;;§$\\\\\\%§$%M;,§$% def;ectiveP,ath $§§");
     exporter.export(enumResult);
-
   }
 }

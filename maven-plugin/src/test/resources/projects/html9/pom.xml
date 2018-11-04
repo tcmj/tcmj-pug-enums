@@ -22,7 +22,7 @@
                 <version>LATEST_VERSION</version>
                 <configuration>
                     <className>com.tcmj.html.test.AnotherCountriesEnumCase9</className>
-                    <sourceDirectory>target/generated-test-sources/project-to-test</sourceDirectory>
+                    <outputDirectory>target/generated-test-sources/project-to-test</outputDirectory>
                     <url>src/test/resources/projects/html9/example.html</url>
                     <tableCssSelector>table#CountryCode</tableCssSelector>
                     <constantColumn>2</constantColumn>
