@@ -149,12 +149,7 @@ public class GenerateEnumMojo extends AbstractMojo {
     getLog().info(getLine());
     getLog().info(arrange("Output-Directory   : " + getOutputDirectory() + ", OutputEncoding: " + getEncoding()));
     getLog().info(arrange("Fetching from URL  : " + this.url));
-
-    if (isParameterSet(this.subFieldNames)) {
-      getLog().info(arrange("SubFieldNames      : fixed to " + Arrays.toString(this.subFieldNames)));
-    } else {
-      getLog().info(arrange("SubFieldNames      : <not defined, will be computed>"));
-    }
+    getLog().info(arrange("CSS Locator used to locate the table: \t" + this.tableCssSelector));
 
     if (isParameterSet(this.namingStrategyConstants)) {
       getLog().info(arrange("NamingStrategy Constants (custom)  : " + Arrays.toString(this.namingStrategyConstants)));
@@ -162,24 +157,28 @@ public class GenerateEnumMojo extends AbstractMojo {
       getLog().info(arrange("NamingStrategy Constants (default) : [minus2underline, flattenGermanUmlauts, space2underline, replaceAtoZ, removeProhibitedSpecials, removeDots, upperCase]"));
     }
 
-    if (isParameterSet(this.namingStrategyFieldNames)) {
-      getLog().info(arrange("NamingStrategy FieldNames (custom) : " + Arrays.toString(this.namingStrategyFieldNames)));
-    } else {
-      getLog().info(arrange("NamingStrategy FieldNames (default): [extractParenthesis, removeProhibitedSpecials, camelStrict, harmonize, lowerCaseFirstLetter]"));
-    }
-    if (isParameterSet(this.javadocClassLevel)) {
-      Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
-    } else {
-      getLog().info(arrange("JavaDocClassLevel: <will be computed>"));
-    }
-
-    getLog().info(arrange("CSS Locator used to locate the table: \t" + this.tableCssSelector));
-    getLog().info(arrange("Column position used for Enum Constants: \t" + this.constantColumn +
-      ", Keep-First-Row: \t" + this.keepFirstRow));
-
     if (isParameterSet(this.subDataColumns)) {
       getLog().info(arrange("SubData columns to include: " + Arrays.toString(this.subDataColumns)));
+
+      if (isParameterSet(this.subFieldNames)) {
+        getLog().info(arrange("SubFieldNames      : fixed to " + Arrays.toString(this.subFieldNames)));
+      } else {
+        getLog().info(arrange("SubFieldNames      : <not defined, will be computed>"));
+      }
+
+      if (isParameterSet(this.namingStrategyFieldNames)) {
+        getLog().info(arrange("NamingStrategy FieldNames (custom) : " + Arrays.toString(this.namingStrategyFieldNames)));
+      } else {
+        getLog().info(arrange("NamingStrategy FieldNames (default): [extractParenthesis, removeProhibitedSpecials, camelStrict, harmonize, lowerCaseFirstLetter]"));
+      }
     }
+
+    getLog().info(arrange("Column position used for Enum Constants: \t" + this.constantColumn));
+
+    if (isParameterSet(this.javadocClassLevel)) {
+      Stream.of(this.javadocClassLevel).map((v) -> arrange("JavaDocClassLevel: " + v)).forEach((t) -> getLog().info(t));
+    }
+
 
     if (this.keepFirstRow == Boolean.FALSE) {
       this.lstValuesToSkip.add("#1");
@@ -289,8 +288,7 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       myEnumExporter.export(eResult);
 
-      getLog().info(String.format("Enum successfully created with %s characters!", myEnum.length()));
-
+      getLog().info("Finished: " + eResult.getOption(JavaSourceFileExporter.OPTION_RESULT_PATH));
       this.currentEnumResult = eResult;
 
       if (this.project != null && eResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH)) {

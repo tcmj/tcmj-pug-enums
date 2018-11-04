@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,10 +67,6 @@ public class GenerateEnumHtmlMojoTest {
     File html = new File(this.resources.getBasedir("html4"), "javacodes.html");
     assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
 
-    URL myUrl = html.toURI().toURL();
-    System.out.println("myUrl=" + myUrl);
-
-    //..continue with regular test...
     GenerateEnumMojo mojo = getMojo("html4");
     mojo.execute();
 
@@ -83,10 +78,6 @@ public class GenerateEnumHtmlMojoTest {
     File html = new File(this.resources.getBasedir("html5"), "eu.html");
     assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
 
-    URL myUrl = html.toURI().toURL();
-    System.out.println("myUrl=" + myUrl);
-
-    //..continue with regular test...
     GenerateEnumMojo mojo = getMojo("html5");
     mojo.execute();
 
@@ -98,10 +89,6 @@ public class GenerateEnumHtmlMojoTest {
     File html = new File(this.resources.getBasedir("html6"), "eu.html");
     assertThat("Html file is not available", Files.isRegularFile(html.toPath()), is(true));
 
-    URL myUrl = html.toURI().toURL();
-    System.out.println("myUrl=" + myUrl);
-
-    //..continue with regular test...
     GenerateEnumMojo mojo = getMojo("html6");
     mojo.execute();
 

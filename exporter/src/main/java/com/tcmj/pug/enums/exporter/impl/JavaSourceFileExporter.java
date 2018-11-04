@@ -72,7 +72,7 @@ public class JavaSourceFileExporter implements EnumExporter {
 
       Path exportDir = Paths.get(exportPathPrefix, directories);
       Path exportPath = Paths.get(exportPathPrefix, directories, fileName);
-      LOG.info("Writing Enum to {}", exportPath);
+      LOG.info("Writing : {}", exportPath);
 
       Files.createDirectories(exportDir);
 
@@ -81,7 +81,6 @@ public class JavaSourceFileExporter implements EnumExporter {
       Files.write(exportPath, finalContent.getBytes(getEncoding(enumResult)));
 
       Path existingFile = appendExistingFile(exportPath, enumResult);
-      LOG.info("Finished! Your formatted Enum resists at: '{}'", existingFile);
     } catch (Exception e) {
       LOG.error("Cannot write Enum '{}' to '{}'", fileName, directories, e);
       throw new JavaFileHasNotBeenCreatedException(e);
