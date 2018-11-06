@@ -1,31 +1,35 @@
 ---
-name: Report a bug :skull_and_crossbones:
+name: Report a bug
 about: Something didn't work as expected, please help...
 
 ---
 
-#BUG Report :disappointed:
+# BUG Report 
 
-##Describe the bug
-A clear and concise description of what the bug is.
+## Error Description
+> A clear and concise description of what the bug is.
 
-## Expectation
-Instead of the described behavour i would expect to... 
 
-##Reproduction Steps
-* Go to '...'
-* Click on '....'
-Scroll down to '....'
-See error
+## Expectation / How should it work
+:heavy_check_mark:
+>Instead of the described behavour i would expect to... 
 
-##Log
+
+## Log / Exception / Stacktrace
 ```
 paste here
 ```
 
-##Environment
-* OS: [e.g. Linux]
-* Java Version [e.g. chrome, safari]
-* Maven Version [e.g. 22]
-* pug-enums Version [e.g. 22]
-* Additional context
+
+## maven-plugin configuration / source code snippet
+```
+paste here
+```
+
+
+## Environment
+|:radio_button:| Java Version       |**OpenJDK v 1.8 on Ubuntu**|
+|---|:-----------------|:---------------------------|
+|:radio_button:| Maven Version      |**3.3**|
+|:radio_button:| pug-enums Version  |**1.x.x**|
+|:radio_button:| Additional         |**...**|
