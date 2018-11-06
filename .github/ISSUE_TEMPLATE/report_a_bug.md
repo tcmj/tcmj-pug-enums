@@ -1,3 +1,9 @@
+---
+name: Report a bug :skull_and_crossbones:
+about: Something didn't work as expected, please help...
+
+---
+
 #BUG Report :disappointed:
 
 ##Describe the bug
