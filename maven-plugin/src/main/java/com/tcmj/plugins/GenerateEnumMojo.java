@@ -16,7 +16,6 @@ import com.tcmj.pug.enums.model.EnumData;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -241,7 +240,7 @@ public class GenerateEnumMojo extends AbstractMojo {
 
 
   @Override
-  public void execute() throws MojoExecutionException, MojoFailureException {
+  public void execute() throws MojoExecutionException {
     StaticLoggerBinder.getSingleton().setMavenLog(getLog());
 
     try {
@@ -288,7 +287,10 @@ public class GenerateEnumMojo extends AbstractMojo {
 
       myEnumExporter.export(eResult);
 
-      getLog().info("Finished: " + eResult.getOption(JavaSourceFileExporter.OPTION_RESULT_PATH));
+      final Object resultFromExporter = eResult.getOption(JavaSourceFileExporter.OPTION_RESULT_PATH);
+      if (resultFromExporter != null) {
+        getLog().info("Created : " + resultFromExporter);
+      }
       this.currentEnumResult = eResult;
 
       if (this.project != null && eResult.optionExists(JavaSourceFileExporter.OPTION_RESULT_PATH)) {
@@ -296,7 +298,6 @@ public class GenerateEnumMojo extends AbstractMojo {
         getLog().debug("Successfully added CompileSourceRoot: " + getOutputDirectory().getPath());
       }
 
-      getLog().info("");
     } catch (Exception e) {
       getLog().error("Cannot create your enum: " + getClassName(), e);
       throw new MojoExecutionException("ExecutionFailure!", e);

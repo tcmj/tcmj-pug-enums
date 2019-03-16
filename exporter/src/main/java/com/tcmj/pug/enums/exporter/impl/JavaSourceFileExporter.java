@@ -72,15 +72,17 @@ public class JavaSourceFileExporter implements EnumExporter {
 
       Path exportDir = Paths.get(exportPathPrefix, directories);
       Path exportPath = Paths.get(exportPathPrefix, directories, fileName);
-      LOG.info("Writing : {}", exportPath);
 
-      Files.createDirectories(exportDir);
-
-      String finalContent = Objects.requireNonNull(enumResult.getResultFormatted(), "EnumResult.ResultFormatted");
-
-      Files.write(exportPath, finalContent.getBytes(getEncoding(enumResult)));
-
-      Path existingFile = appendExistingFile(exportPath, enumResult);
+      if (Files.exists(exportPath)) {
+        LOG.warn("File: {}", exportPath);
+        LOG.warn("...already exists and will not be touched! Consider using maven-clean plugin!");
+      } else {
+        LOG.info("Writing : {}", exportPath);
+        Files.createDirectories(exportDir);
+        String finalContent = Objects.requireNonNull(enumResult.getResultFormatted(), "EnumResult.ResultFormatted");
+        Files.write(exportPath, finalContent.getBytes(getEncoding(enumResult)));
+        appendResultFile(exportPath, enumResult);
+      }
     } catch (Exception e) {
       LOG.error("Cannot write Enum '{}' to '{}'", fileName, directories, e);
       throw new JavaFileHasNotBeenCreatedException(e);
@@ -88,13 +90,11 @@ public class JavaSourceFileExporter implements EnumExporter {
     return enumResult;
   }
 
-  private Path appendExistingFile(Path path, EnumResult enumResult) {
+  private void appendResultFile(Path path, EnumResult enumResult) {
     Path absolutePath = path.toAbsolutePath();
     if (Files.isRegularFile(absolutePath)) {
       enumResult.addOption(JavaSourceFileExporter.OPTION_RESULT_PATH, absolutePath);
-      return absolutePath;
     }
-    return null;
   }
 
   private Charset getEncoding(EnumResult enumResult) {
