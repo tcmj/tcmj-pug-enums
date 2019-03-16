@@ -10,6 +10,7 @@ A highlight of the project is our maven plugin which allows you to create a java
 
 ## Where to start
 * Wiki: https://github.com/tcmj/tcmj-pug-enums/wiki
+* https://github.com/tcmj/tcmj-pug-enums/wiki/Setup-Installation
 
 ***
 <br/><br/>
